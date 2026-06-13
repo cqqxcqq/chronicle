@@ -1,0 +1,51 @@
+[
+  {
+    "year": 1815,
+    "name": "Napoleonic Wars",
+    "type": "war",
+    "severity": 6,
+    "description": "The Napoleonic Wars ravaged Europe for over a decade, leaving millions dead and disrupting the early gains of the industrial revolution."
+  },
+  {
+    "year": 1847,
+    "name": "The Great Irish Famine",
+    "type": "famine",
+    "severity": 6,
+    "description": "A catastrophic failure of the potato crop led to the death of one million Irish citizens and the emigration of another million, a wound still felt generations later."
+  },
+  {
+    "year": 1914,
+    "name": "The First World War",
+    "type": "war",
+    "severity": 9,
+    "description": "The Great War shattered the long peace of the 19th century, introducing industrial slaughter and destroying four empires. Over 20 million would die before it ended."
+  },
+  {
+    "year": 1918,
+    "name": "The Spanish Flu",
+    "type": "pandemic",
+    "severity": 10,
+    "description": "In one terrible year, the influenza pandemic killed an estimated 50 million people worldwide, more than all combat deaths of the First World War."
+  },
+  {
+    "year": 1939,
+    "name": "The Second World War",
+    "type": "war",
+    "severity": 10,
+    "description": "The deadliest conflict in human history claimed over 70 million lives and ushered in the nuclear age. Civilization itself, for a time, seemed to hang in the balance."
+  },
+  {
+    "year": 1959,
+    "name": "The Great Chinese Famine",
+    "type": "famine",
+    "severity": 8,
+    "description": "A combination of agricultural mismanagement and severe weather led to the deadliest famine in recorded history, claiming tens of millions of lives."
+  },
+  {
+    "year": 1985,
+    "name": "The HIV/AIDS Crisis",
+    "type": "pandemic",
+    "severity": 7,
+    "description": "A new virus emerged that would eventually claim over 40 million lives, devastating communities across Africa and reshaping global public health institutions."
+  }
+]

@@ -1,0 +1,63 @@
+:root {
+  --color-void: #080808;
+  --color-canvas: #070609;
+  --color-surface: #0f0f0f;
+  --color-surface-raised: #141210;
+  --color-border: rgba(212, 175, 55, 0.18);
+  --color-border-bright: rgba(212, 175, 55, 0.45);
+  --color-gold: #d4af37;
+  --color-amber: #f5a623;
+  --color-sage: #4a7c59;
+  --color-sage-glow: #7fba94;
+  --color-frost: #a8c8e8;
+  --color-blood: #8b1a1a;
+  --color-crimson: #c0392b;
+  --color-bone: #e8e0d0;
+  --color-bone-dim: rgba(232, 224, 208, 0.5);
+  --color-bone-ghost: rgba(232, 224, 208, 0.2);
+  --color-bone-bright: rgba(232, 224, 208, 0.95);
+  --color-fog-deep: #1a0a0a;
+  --color-fog-mid: #2d1010;
+  --color-star: #e8d5a3;
+  --color-star-glow: #f5e6c8;
+  --color-co2-dark: #0d1a0d;
+  --color-co2-sick: #1a2d1a;
+  --color-rupture: #3d0000;
+  --font-display: 'Cinzel', serif;
+  --font-body: 'EB Garamond', serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-void);
+  color: var(--color-bone);
+  font-family: var(--font-body);
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  background: var(--color-void);
+  color: var(--color-bone);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(212, 175, 55, 0.2);
+  color: var(--color-bone);
+}

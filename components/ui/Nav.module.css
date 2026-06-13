@@ -1,0 +1,75 @@
+.nav {
+  height: 48px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: rgba(8, 8, 8, 0.9);
+  background-image: url('/textures/paper-noise.png');
+  background-blend-mode: soft-light;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.4em;
+  color: var(--color-gold);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.separator {
+  width: 1px;
+  height: 24px;
+  background: var(--color-border);
+}
+
+.tagline {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-bone-ghost);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.link {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-bone-dim);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  padding-bottom: 2px;
+}
+
+.link:hover {
+  color: var(--color-bone);
+}
+
+.active {
+  color: var(--color-bone);
+  border-bottom: 1px solid var(--color-gold);
+}

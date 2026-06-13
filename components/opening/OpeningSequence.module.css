@@ -1,0 +1,44 @@
+.container {
+  position: fixed;
+  inset: 0;
+  background: var(--color-void);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 72px;
+  color: var(--color-bone);
+  letter-spacing: 0.3em;
+  text-align: center;
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--color-bone-dim);
+  text-align: center;
+  margin-top: 24px;
+}
+
+.prompt {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: var(--color-bone-ghost);
+  text-align: center;
+  margin-top: 48px;
+}

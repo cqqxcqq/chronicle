@@ -1,0 +1,123 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 6, 4, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.panel {
+  max-width: 520px;
+  width: 90vw;
+  background-color: rgba(8, 6, 4, 0.96);
+  background-image: url('/textures/paper-noise.png');
+  background-blend-mode: soft-light;
+  border: 1px solid var(--color-border-bright);
+  border-radius: 2px;
+  padding: 36px;
+  box-shadow: 0 8px 60px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(212, 175, 55, 0.04);
+}
+
+.eraLabel {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--color-bone-ghost);
+  margin-bottom: 4px;
+}
+
+.yearLabel {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--color-gold);
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
+}
+
+.divider {
+  border: none;
+  height: 1px;
+  background: var(--color-border);
+  margin-bottom: 16px;
+}
+
+.question {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--color-bone);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.choiceBtn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background 0.3s ease;
+  text-align: left;
+}
+
+.choiceBtn:hover {
+  border-color: var(--color-border-bright);
+  background: var(--color-surface-raised);
+}
+
+.choiceLabel {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--color-bone);
+  line-height: 1.5;
+}
+
+.outcome {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.outcomeLabel {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--color-bone-ghost);
+}
+
+.outcomeText {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--color-bone-dim);
+  line-height: 1.8;
+}
+
+.continueBtn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: var(--color-gold);
+  align-self: center;
+  margin-top: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.continueBtn:hover {
+  border-color: var(--color-border-bright);
+}

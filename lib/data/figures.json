@@ -1,0 +1,44 @@
+[
+  {
+    "year": 1854,
+    "name": "Florence Nightingale",
+    "role": "Nurse & Statistician",
+    "quote": "How very little can be done under the spirit of fear."
+  },
+  {
+    "year": 1882,
+    "name": "Charles Darwin",
+    "role": "Naturalist",
+    "quote": "It is not the strongest of the species that survives, nor the most intelligent, but the one most responsive to change."
+  },
+  {
+    "year": 1903,
+    "name": "Marie Curie",
+    "role": "Physicist & Chemist",
+    "quote": "Nothing in life is to be feared, it is only to be understood. Now is the time to understand more, so that we may fear less."
+  },
+  {
+    "year": 1948,
+    "name": "Eleanor Roosevelt",
+    "role": "Human Rights Advocate",
+    "quote": "Where, after all, do universal human rights begin? In small places, close to home — so close and so small that they cannot be seen on any map of the world."
+  },
+  {
+    "year": 1955,
+    "name": "Albert Einstein",
+    "role": "Theoretical Physicist",
+    "quote": "The release of atom power has changed everything except our way of thinking, and thus we drift toward unparalleled catastrophe."
+  },
+  {
+    "year": 1964,
+    "name": "Nelson Mandela",
+    "role": "Freedom Fighter",
+    "quote": "Education is the most powerful weapon which you can use to change the world."
+  },
+  {
+    "year": 2015,
+    "name": "Malala Yousafzai",
+    "role": "Education Activist",
+    "quote": "One child, one teacher, one book, one pen can change the world. Education is the only solution."
+  }
+]

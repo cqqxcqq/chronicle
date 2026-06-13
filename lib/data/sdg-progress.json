@@ -1,0 +1,138 @@
+[
+  {
+    "number": 1,
+    "name": "No Poverty",
+    "description": "Extreme poverty has fallen from nearly 10% to 8.5% of the global population, but progress has slowed and the pandemic reversed years of gains.",
+    "progress": 72,
+    "trend": "stagnating",
+    "color": "#e63946"
+  },
+  {
+    "number": 2,
+    "name": "Zero Hunger",
+    "description": "Hunger is rising after decades of decline. Nearly 10% of the world's population faces chronic undernourishment.",
+    "progress": 35,
+    "trend": "regressing",
+    "color": "#d4a373"
+  },
+  {
+    "number": 3,
+    "name": "Good Health and Well-Being",
+    "description": "Child mortality has fallen to historic lows and life expectancy continues to rise, but universal health coverage remains elusive.",
+    "progress": 68,
+    "trend": "improving",
+    "color": "#4a7c59"
+  },
+  {
+    "number": 4,
+    "name": "Quality Education",
+    "description": "Global literacy has reached 87% and primary enrollment is near universal, but learning outcomes remain deeply unequal.",
+    "progress": 65,
+    "trend": "improving",
+    "color": "#c0392b"
+  },
+  {
+    "number": 5,
+    "name": "Gender Equality",
+    "description": "Girls' education has improved dramatically, but legal rights, political representation, and economic participation still lag far behind.",
+    "progress": 45,
+    "trend": "stagnating",
+    "color": "#e67e22"
+  },
+  {
+    "number": 6,
+    "name": "Clean Water and Sanitation",
+    "description": "Billions have gained access to safe drinking water since 2000, but 2 billion still lack basic sanitation services.",
+    "progress": 55,
+    "trend": "improving",
+    "color": "#3498db"
+  },
+  {
+    "number": 7,
+    "name": "Affordable and Clean Energy",
+    "description": "Access to electricity has expanded to 90% of the world, but renewable energy adoption must accelerate dramatically to meet climate targets.",
+    "progress": 60,
+    "trend": "improving",
+    "color": "#f1c40f"
+  },
+  {
+    "number": 8,
+    "name": "Decent Work and Economic Growth",
+    "description": "The global economy has grown fivefold since 1950, but productivity gains have not been shared equitably and decent work deficits persist.",
+    "progress": 52,
+    "trend": "stagnating",
+    "color": "#a21942"
+  },
+  {
+    "number": 9,
+    "name": "Industry, Innovation and Infrastructure",
+    "description": "Internet access and mobile connectivity have transformed the developing world, but the digital divide remains deep.",
+    "progress": 58,
+    "trend": "improving",
+    "color": "#f39c12"
+  },
+  {
+    "number": 10,
+    "name": "Reduced Inequalities",
+    "description": "Inequality within and between countries remains stubbornly high. The pandemic widened the gap between richest and poorest.",
+    "progress": 28,
+    "trend": "regressing",
+    "color": "#e74c3c"
+  },
+  {
+    "number": 11,
+    "name": "Sustainable Cities and Communities",
+    "description": "Urbanization continues at an unprecedented pace. More than 1 billion people live in informal settlements without adequate housing.",
+    "progress": 40,
+    "trend": "stagnating",
+    "color": "#f5a623"
+  },
+  {
+    "number": 12,
+    "name": "Responsible Consumption and Production",
+    "description": "Global material footprint continues to rise. The circular economy remains an aspiration rather than a reality.",
+    "progress": 25,
+    "trend": "regressing",
+    "color": "#d4af37"
+  },
+  {
+    "number": 13,
+    "name": "Climate Action",
+    "description": "Global CO2 emissions continue to rise, now exceeding 37 billion tonnes annually. The window to limit warming to 1.5°C is closing rapidly.",
+    "progress": 18,
+    "trend": "regressing",
+    "color": "#2c3e50"
+  },
+  {
+    "number": 14,
+    "name": "Life Below Water",
+    "description": "Ocean acidification, overfishing, and plastic pollution threaten marine ecosystems that sustain billions of people.",
+    "progress": 22,
+    "trend": "regressing",
+    "color": "#2980b9"
+  },
+  {
+    "number": 15,
+    "name": "Life on Land",
+    "description": "Deforestation continues at an alarming rate. Biodiversity loss threatens the ecological systems upon which civilization depends.",
+    "progress": 30,
+    "trend": "regressing",
+    "color": "#27ae60"
+  },
+  {
+    "number": 16,
+    "name": "Peace, Justice and Strong Institutions",
+    "description": "Global peace has deteriorated since 2010. Access to justice and accountable institutions remain distant goals for many.",
+    "progress": 32,
+    "trend": "regressing",
+    "color": "#7f8c8d"
+  },
+  {
+    "number": 17,
+    "name": "Partnerships for the Goals",
+    "description": "Development financing and international cooperation must be strengthened significantly to meet the 2030 deadline.",
+    "progress": 38,
+    "trend": "stagnating",
+    "color": "#2c3e50"
+  }
+]
