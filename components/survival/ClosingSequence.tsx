@@ -75,7 +75,7 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
   }, [onEnd]);
 
   return (
-    <div className={styles.container} onClick={handleClick}>
+    <div className={styles.container}>
       <AnimatePresence mode="wait">
         {!showTitle && lineIdx >= 0 && lineIdx < lines.length && (
           <motion.div
@@ -135,6 +135,7 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
+              onClick={handleClick}
             >
               CLICK TO BEGIN AGAIN
             </motion.p>

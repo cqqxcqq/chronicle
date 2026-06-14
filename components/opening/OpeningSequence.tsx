@@ -75,20 +75,8 @@ export default function OpeningSequence() {
     setTimeout(() => router.push("/timeline"), 800);
   }, [router]);
 
-  useEffect(() => {
-    const handler = () => exit();
-    window.addEventListener("keydown", handler);
-    window.addEventListener("wheel", handler, { passive: true });
-    window.addEventListener("touchstart", handler, { passive: true });
-    return () => {
-      window.removeEventListener("keydown", handler);
-      window.removeEventListener("wheel", handler);
-      window.removeEventListener("touchstart", handler);
-    };
-  }, [exit]);
-
   return (
-    <div className={styles.container} onClick={exit}>
+    <div className={styles.container}>
       <AnimatePresence mode="wait">
         {sequence === "line1" && (
           <motion.div
@@ -161,6 +149,7 @@ export default function OpeningSequence() {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
+              onClick={exit}
             >
               CLICK TO BEGIN
             </motion.p>
