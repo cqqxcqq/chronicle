@@ -128,6 +128,13 @@ export default function SurvivalGame() {
     setRollingNumber(0);
   }, [clearTimers]);
 
+  // ─── Stop sounds on closing ───
+  useEffect(() => {
+    if (phase === "closing") {
+      soundEngine.stopAll();
+    }
+  }, [phase]);
+
   // ─── CLOSING SCREEN ───
   if (phase === "closing") {
     return <ClosingSequence onEnd={handleRetry} />;

@@ -142,6 +142,7 @@ export default function TimelineContainer({
     return () => {
       isRunning = false;
       cancelAnimationFrame(animationId);
+      soundEngine.stopAll();
       window.removeEventListener("resize", resize);
       canvas.removeEventListener("mousemove", onMouseMove);
       canvas.removeEventListener("mouseleave", onMouseLeave);
