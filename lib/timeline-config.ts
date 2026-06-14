@@ -38,7 +38,7 @@ export interface MilestoneStat {
 export const MILESTONE_STATS: MilestoneStat[] = [
   {
     hook: "Nine in ten were born into poverty. The average life was shorter than a single loan.",
-    context: "The world's population was 1 billion. Most humans farmed with tools unchanged since the Bronze Age. Childhood was a gamble — nearly half of all children died before age five. The idea that life could get better for the next generation was not yet a普遍 belief.",
+    context: "The world's population was 1 billion. Most humans farmed with tools unchanged since the Bronze Age. Childhood was a gamble — nearly half of all children died before age five. The idea that life could get better for the next generation was not yet a universal belief.",
     keyFact: "In 1800, only 12% of the world could read. Electricity was a parlor trick. The fastest transportation was a horse.",
     poverty: 89,
     lifeExpectancy: 29,

@@ -96,3 +96,41 @@
   white-space: nowrap;
   pointer-events: none;
 }
+
+@media (max-width: 768px) {
+  .track {
+    margin: 0 24px;
+  }
+
+  .eraLabel {
+    display: none;
+  }
+
+  .milestone {
+    width: 20px;
+    height: 20px;
+  }
+
+  .milestoneDot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .handle {
+    height: 20px;
+  }
+
+  .handleLabel {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .track {
+    margin: 0 16px;
+  }
+
+  .bar {
+    height: 40px;
+  }
+}

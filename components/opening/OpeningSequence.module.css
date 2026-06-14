@@ -6,7 +6,28 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  cursor: pointer;
+}
+
+.lineBlock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 48px;
+}
+
+.line {
+  font-family: var(--font-body);
+  font-size: 28px;
+  font-style: italic;
+  color: var(--color-bone);
+  text-align: center;
+  line-height: 1.7;
+  max-width: 700px;
+}
+
+.char {
+  display: inline;
 }
 
 .titleBlock {
@@ -41,4 +62,34 @@
   color: var(--color-bone-ghost);
   text-align: center;
   margin-top: 48px;
+}
+
+@media (max-width: 768px) {
+  .line {
+    font-size: 20px;
+    padding: 0 16px;
+  }
+
+  .title {
+    font-size: 40px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .line {
+    font-size: 17px;
+  }
+
+  .title {
+    font-size: 28px;
+    letter-spacing: 0.15em;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
 }

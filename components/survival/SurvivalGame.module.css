@@ -447,3 +447,154 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+@media (max-width: 768px) {
+  .startTitle {
+    font-size: 32px;
+  }
+
+  .startSubtitle {
+    font-size: 15px;
+    padding: 0 16px;
+  }
+
+  .startWarning {
+    font-size: 13px;
+    padding: 0 16px;
+  }
+
+  .btnStart {
+    padding: 12px 32px;
+    font-size: 12px;
+  }
+
+  .playingScreen {
+    padding: 60px 16px 120px;
+    max-width: 100%;
+  }
+
+  .yearDisplay {
+    font-size: 52px;
+  }
+
+  .ageDisplay {
+    font-size: 17px;
+    margin-bottom: 20px;
+  }
+
+  .roundTitle {
+    font-size: 13px;
+    letter-spacing: 0.2em;
+  }
+
+  .contextText {
+    font-size: 18px;
+    line-height: 1.7;
+    min-height: 60px;
+    padding: 0 8px;
+  }
+
+  .eraContext {
+    font-size: 14px;
+    padding: 0 8px;
+  }
+
+  .rollPercent {
+    font-size: 44px;
+    min-height: 56px;
+  }
+
+  .resultNarrative {
+    font-size: 17px;
+    padding: 0 8px;
+  }
+
+  .deathTitle {
+    font-size: 44px;
+  }
+
+  .deathSubtitle {
+    font-size: 17px;
+    padding: 0 16px;
+  }
+
+  .deathYear {
+    font-size: 22px;
+  }
+
+  .statsRow {
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .statValue {
+    font-size: 18px;
+  }
+
+  .shockFacts {
+    padding: 16px;
+    margin: 0 16px 28px;
+  }
+
+  .deathActions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btnRetry {
+    padding: 12px 32px;
+    font-size: 12px;
+  }
+
+  .btnClosing {
+    padding: 12px 24px;
+    font-size: 11px;
+  }
+
+  .completeTitle {
+    font-size: 32px;
+  }
+
+  .completeSubtitle {
+    font-size: 16px;
+    padding: 0 16px;
+  }
+
+  .btnAgain {
+    padding: 12px 32px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .startTitle {
+    font-size: 26px;
+    letter-spacing: 0.12em;
+  }
+
+  .yearDisplay {
+    font-size: 40px;
+  }
+
+  .contextText {
+    font-size: 16px;
+  }
+
+  .rollPercent {
+    font-size: 36px;
+  }
+
+  .deathTitle {
+    font-size: 32px;
+  }
+
+  .statValue {
+    font-size: 16px;
+  }
+
+  .completeTitle {
+    font-size: 26px;
+    letter-spacing: 0.12em;
+  }
+}

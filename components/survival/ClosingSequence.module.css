@@ -35,7 +35,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
+  gap: 24px;
   width: 100%;
   max-width: 800px;
   padding: 0 32px;
@@ -46,6 +46,30 @@
   font-size: 12px;
   letter-spacing: 0.4em;
   color: var(--color-gold);
+}
+
+.yearCounter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.yearValue {
+  font-family: var(--font-display);
+  font-size: 80px;
+  color: var(--color-bone);
+  letter-spacing: 0.08em;
+  line-height: 1;
+  opacity: 0.88;
+}
+
+.yearLabel {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-bone-ghost);
+  letter-spacing: 0.15em;
 }
 
 .countersGrid {
@@ -122,4 +146,71 @@
   text-align: center;
   margin-top: 48px;
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .line {
+    font-size: 20px;
+    padding: 0 16px;
+  }
+
+  .lineBlock {
+    padding: 0 24px;
+  }
+
+  .yearValue {
+    font-size: 52px;
+  }
+
+  .countersGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 32px;
+  }
+
+  .counterValue {
+    font-size: 36px;
+  }
+
+  .counterLabel {
+    font-size: 12px;
+  }
+
+  .title {
+    font-size: 44px;
+  }
+
+  .subtitle,
+  .closing {
+    font-size: 15px;
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .line {
+    font-size: 17px;
+  }
+
+  .yearValue {
+    font-size: 40px;
+  }
+
+  .countersGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .counterValue {
+    font-size: 28px;
+  }
+
+  .title {
+    font-size: 32px;
+    letter-spacing: 0.15em;
+  }
+
+  .subtitle,
+  .closing {
+    font-size: 13px;
+  }
 }

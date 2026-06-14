@@ -73,3 +73,31 @@
   color: var(--color-bone);
   border-bottom: 1px solid var(--color-gold);
 }
+
+@media (max-width: 768px) {
+  .inner {
+    padding: 0 16px;
+  }
+  .tagline {
+    display: none;
+  }
+  .separator {
+    display: none;
+  }
+  .right {
+    gap: 16px;
+  }
+  .link {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .right {
+    gap: 12px;
+  }
+  .link {
+    font-size: 10px;
+    letter-spacing: 0.05em;
+  }
+}

@@ -60,9 +60,8 @@ function AnimatedCounter({
   from,
   to,
   suffix = "",
-  prefix = "",
   decimals = 0,
-  duration = 2000,
+  duration = 3500,
   delay = 0,
   label,
 }: CounterProps) {
@@ -97,9 +96,58 @@ function AnimatedCounter({
   return (
     <div className={styles.counter}>
       <p className={styles.counterValue}>
-        {prefix}{display}{suffix}
+        {display}{suffix}
       </p>
       <p className={styles.counterLabel}>{label}</p>
+    </div>
+  );
+}
+
+function YearCounter({ delay = 0, duration = 6000 }: { delay?: number; duration?: number }) {
+  const [year, setYear] = useState(1800);
+  const [started, setStarted] = useState(false);
+  const ref = useRef<number>(0);
+
+  useEffect(() => {
+    const t = setTimeout(() => setStarted(true), delay);
+    return () => clearTimeout(t);
+  }, [delay]);
+
+  useEffect(() => {
+    if (!started) return;
+    const start = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = 1800 + (2024 - 1800) * eased;
+      setYear(Math.round(current));
+      if (progress < 1) {
+        ref.current = requestAnimationFrame(animate);
+      }
+    };
+    ref.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(ref.current);
+  }, [started, duration]);
+
+  return (
+    <div className={styles.yearCounter}>
+      <motion.p
+        className={styles.yearValue}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: started ? 1 : 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        {year}
+      </motion.p>
+      <motion.p
+        className={styles.yearLabel}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: started ? 1 : 0 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+      >
+        1800 — 2024
+      </motion.p>
     </div>
   );
 }
@@ -127,9 +175,11 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
     }
   }, [lineIdx]);
 
-  const handleCountersComplete = useCallback(() => {
-    setTimeout(() => setShowTitle(true), 1500);
-  }, []);
+  useEffect(() => {
+    if (!showCounters) return;
+    const t = setTimeout(() => setShowTitle(true), 9000);
+    return () => clearTimeout(t);
+  }, [showCounters]);
 
   const handleClick = useCallback(() => {
     onEnd();
@@ -158,14 +208,14 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.8 } }}
             transition={{ duration: 1.0 }}
-            onAnimationComplete={handleCountersComplete}
           >
             <p className={styles.countersLabel}>WHAT CHANGED</p>
+            <YearCounter delay={500} duration={7000} />
             <div className={styles.countersGrid}>
-              <AnimatedCounter from={89} to={8.5} suffix="%" label="poverty" delay={500} duration={2500} decimals={1} />
-              <AnimatedCounter from={460} to={37} label="child deaths per 1,000" delay={1000} duration={2500} />
-              <AnimatedCounter from={12} to={87} suffix="%" label="literacy" delay={1500} duration={2500} />
-              <AnimatedCounter from={29} to={73} suffix=" yr" label="life expectancy" delay={2000} duration={2500} />
+              <AnimatedCounter from={89} to={8.5} suffix="%" label="poverty" delay={1000} duration={3500} decimals={1} />
+              <AnimatedCounter from={460} to={37} label="child deaths per 1,000" delay={1800} duration={3500} />
+              <AnimatedCounter from={12} to={87} suffix="%" label="literacy" delay={2600} duration={3500} />
+              <AnimatedCounter from={29} to={73} suffix=" yr" label="life expectancy" delay={3400} duration={3500} />
             </div>
           </motion.div>
         )}

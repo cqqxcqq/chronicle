@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cinzel, EB_Garamond } from "next/font/google";
+import PageTransition from "@/components/ui/PageTransition";
 import "./globals.css";
 
 const cinzel = Cinzel({
@@ -30,7 +31,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${cinzel.variable} ${ebGaramond.variable}`}>
-      <body>{children}</body>
+      <body>
+        <PageTransition>{children}</PageTransition>
+      </body>
     </html>
   );
 }

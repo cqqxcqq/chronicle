@@ -199,3 +199,81 @@
   background: var(--color-gold);
   color: var(--color-void);
 }
+
+@media (max-width: 768px) {
+  .year {
+    font-size: 72px;
+  }
+
+  .eraTitle {
+    font-size: 12px;
+    letter-spacing: 0.25em;
+  }
+
+  .hook {
+    font-size: 17px;
+    max-width: 90vw;
+    padding: 0 16px;
+  }
+
+  .stats {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .statValue {
+    font-size: 28px;
+  }
+
+  .statLabel {
+    font-size: 11px;
+  }
+
+  .statDivider {
+    display: none;
+  }
+
+  .figureQuote {
+    font-size: 12px;
+    padding: 0 16px;
+  }
+
+  .advanceBtn {
+    padding: 10px 24px;
+    font-size: 10px;
+  }
+
+  .retreatBtn {
+    padding: 10px 16px;
+    font-size: 11px;
+  }
+
+  .survivalBtn {
+    padding: 12px 24px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .year {
+    font-size: 56px;
+  }
+
+  .hook {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .statValue {
+    font-size: 24px;
+  }
+
+  .stats {
+    gap: 12px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
