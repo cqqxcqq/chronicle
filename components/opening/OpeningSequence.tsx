@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { soundEngine } from "@/lib/sound-engine";
+import DustCanvas from "./DustCanvas";
 import styles from "./OpeningSequence.module.css";
 
 const line1 = "In 1800, nine of every ten people on earth lived in extreme poverty.";
@@ -100,6 +101,7 @@ export default function OpeningSequence() {
 
   return (
     <div className={styles.container}>
+      <DustCanvas />
       <AnimatePresence mode="wait">
         {(sequence === "line1" || sequence === "line2" || sequence === "line3") && (
           <motion.div

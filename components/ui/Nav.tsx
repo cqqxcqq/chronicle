@@ -42,7 +42,7 @@ export default function Nav() {
             );
           })}
           <button
-            className={styles.soundBtn}
+            className={`${styles.soundBtn} ${!muted ? styles.soundActive : ""}`}
             onClick={toggle}
             aria-label={muted ? "Unmute sound" : "Mute sound"}
           >

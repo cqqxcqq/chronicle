@@ -274,7 +274,7 @@ export default function SurvivalGame() {
             PLAY AGAIN
           </button>
           <button className={styles.btnClosing} onClick={() => setPhase("closing")}>
-            THE STORY CONTINUES →
+            SEE YOUR LEGACY →
           </button>
         </div>
       </div>

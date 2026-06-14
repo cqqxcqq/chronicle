@@ -117,6 +117,7 @@ export class SoundEngine {
   private currentEraNodes: EraNodes | null = null;
   private muted = true;
   private initialized = false;
+  private pendingTimeouts: number[] = [];
 
   init() {
     if (this.initialized) return;
@@ -129,10 +130,11 @@ export class SoundEngine {
 
   private ensureContext() {
     if (!this.ctx || !this.masterGain) {
-      this.init();
+      try { this.init(); } catch { return; }
     }
-    if (this.ctx!.state === "suspended") {
-      this.ctx!.resume();
+    if (!this.ctx) return;
+    if (this.ctx.state === "suspended") {
+      this.ctx.resume();
     }
   }
 
@@ -179,11 +181,12 @@ export class SoundEngine {
     oldGain.linearRampToValueAtTime(0, now + FADE_OUT);
 
     const oldSources = oldNodes.sources;
-    setTimeout(() => {
+    const tid = window.setTimeout(() => {
       oldSources.forEach((s) => {
         try { s.stop(); } catch {}
       });
     }, (FADE_OUT + 0.2) * 1000);
+    this.pendingTimeouts.push(tid);
 
     this.buildEraSound(newEra, true, now + FADE_IN * 0.3);
   }
@@ -385,17 +388,20 @@ export class SoundEngine {
       g.setValueAtTime(g.value, now);
       g.linearRampToValueAtTime(0, now + 0.5);
       const sources = this.currentEraNodes.sources;
-      setTimeout(() => {
+      const tid = window.setTimeout(() => {
         sources.forEach((s) => {
           try { s.stop(); } catch {}
         });
       }, 700);
+      this.pendingTimeouts.push(tid);
       this.currentEraNodes = null;
     }
     this.currentEra = null;
   }
 
   destroy() {
+    this.pendingTimeouts.forEach(clearTimeout);
+    this.pendingTimeouts = [];
     this.stopAll();
     this.ctx?.close();
     this.ctx = null;

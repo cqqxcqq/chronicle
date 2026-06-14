@@ -62,7 +62,7 @@ export const drawPovertyFog = ({
     ctx.lineTo(width, height);
     ctx.closePath();
 
-    const alpha = (0.15 + l * 0.18) * strength;
+    const alpha = (0.25 + l * 0.25) * strength;
     const gradient = ctx.createLinearGradient(0, boundaryY - layerOffset, 0, height);
     gradient.addColorStop(0, `${palette.fogTop} 0)`);
     gradient.addColorStop(0.1, `${palette.fogMid} ${0.15 * alpha})`);

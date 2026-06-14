@@ -92,6 +92,11 @@
   border-color: var(--color-border-bright);
 }
 
+.soundActive {
+  color: var(--color-gold);
+  border-color: var(--color-gold);
+}
+
 @media (max-width: 768px) {
   .inner {
     padding: 0 16px;
