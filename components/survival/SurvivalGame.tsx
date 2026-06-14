@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { SURVIVAL_ROUNDS } from "@/lib/survival-data";
+import ClosingSequence from "./ClosingSequence";
 import styles from "./SurvivalGame.module.css";
 
-type Phase = "start" | "context" | "rolling" | "result" | "dead" | "complete";
+type Phase = "start" | "context" | "rolling" | "result" | "dead" | "complete" | "closing";
 
 export default function SurvivalGame() {
   const [phase, setPhase] = useState<Phase>("start");
@@ -123,6 +124,11 @@ export default function SurvivalGame() {
     setRollingNumber(0);
   }, [clearTimers]);
 
+  // ─── CLOSING SCREEN ───
+  if (phase === "closing") {
+    return <ClosingSequence onEnd={handleRetry} />;
+  }
+
   // ─── START SCREEN ───
   if (phase === "start") {
     return (
@@ -173,9 +179,20 @@ export default function SurvivalGame() {
           When you were born, {Math.round(round.survivalChance * 100)}% of people
           survived this stage.
         </p>
-        <button className={styles.btnRetry} onClick={handleRetry}>
-          TRY AGAIN
-        </button>
+        <div className={styles.shockFacts}>
+          <p className={styles.shockLabel}>HISTORICAL SHOCK</p>
+          {round.shockFacts.map((fact, i) => (
+            <p key={i} className={styles.shockFact}>{fact}</p>
+          ))}
+        </div>
+        <div className={styles.deathActions}>
+          <button className={styles.btnRetry} onClick={handleRetry}>
+            TRY AGAIN
+          </button>
+          <button className={styles.btnClosing} onClick={() => setPhase("closing")}>
+            THE STORY CONTINUES →
+          </button>
+        </div>
       </div>
     );
   }
@@ -205,9 +222,20 @@ export default function SurvivalGame() {
         <p className={styles.rarityNote}>
           You are 1 in 3 million. Most never lived past 40.
         </p>
-        <button className={styles.btnAgain} onClick={handleRetry}>
-          PLAY AGAIN
-        </button>
+        <div className={styles.shockFacts}>
+          <p className={styles.shockLabel}>WHAT YOU WITNESSED</p>
+          {SURVIVAL_ROUNDS[SURVIVAL_ROUNDS.length - 1].shockFacts.map((fact, i) => (
+            <p key={i} className={styles.shockFact}>{fact}</p>
+          ))}
+        </div>
+        <div className={styles.deathActions}>
+          <button className={styles.btnAgain} onClick={handleRetry}>
+            PLAY AGAIN
+          </button>
+          <button className={styles.btnClosing} onClick={() => setPhase("closing")}>
+            THE STORY CONTINUES →
+          </button>
+        </div>
       </div>
     );
   }

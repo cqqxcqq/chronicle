@@ -1,0 +1,77 @@
+.container {
+  position: fixed;
+  inset: 0;
+  background: var(--color-void);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.lineBlock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 48px;
+}
+
+.line {
+  font-family: var(--font-body);
+  font-size: 28px;
+  font-style: italic;
+  color: var(--color-bone);
+  text-align: center;
+  line-height: 1.7;
+  max-width: 700px;
+}
+
+.char {
+  display: inline;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 72px;
+  color: var(--color-bone);
+  letter-spacing: 0.3em;
+  text-align: center;
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--color-bone-dim);
+  text-align: center;
+  margin-top: 24px;
+}
+
+.closing {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--color-gold);
+  text-align: center;
+  margin-top: 32px;
+  max-width: 500px;
+  line-height: 1.7;
+}
+
+.prompt {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: var(--color-bone-ghost);
+  text-align: center;
+  margin-top: 48px;
+}

@@ -1,9 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, useCallback } from "react";
-import crossroadsData from "@/lib/data/crossroads.json";
-import CrossroadPanel from "./crossroads/CrossroadPanel";
-import { AnimatePresence } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 import {
   START_YEAR,
   LERP_RATE,
@@ -45,28 +42,8 @@ export default function TimelineContainer({
   const cursorRef = useRef({ x: -999, y: -999 });
 
   const [uiYear, setUiYear] = useState(START_YEAR);
-  const [activeCrossroad, setActiveCrossroad] = useState<typeof crossroadsData[0] | null>(null);
-  const frozenYearRef = useRef<number | null>(null);
-  const processedCrossroadsRef = useRef<Set<number>>(new Set());
 
   targetYearRef.current = targetYear;
-
-  useEffect(() => {
-    if (activeCrossroad) return;
-    const nearCrossroad = (crossroadsData as typeof crossroadsData).find(
-      (cr) => Math.abs(targetYear - cr.year) <= 1 && !processedCrossroadsRef.current.has(cr.year)
-    );
-    if (nearCrossroad) {
-      processedCrossroadsRef.current.add(nearCrossroad.year);
-      frozenYearRef.current = nearCrossroad.year;
-      setActiveCrossroad(nearCrossroad);
-    }
-  }, [targetYear, activeCrossroad]);
-
-  const handleCrossroadContinue = useCallback(() => {
-    frozenYearRef.current = null;
-    setActiveCrossroad(null);
-  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -105,13 +82,10 @@ export default function TimelineContainer({
       if (!isRunning) return;
       const time = timestamp / 1000;
 
-      const yearTarget = frozenYearRef.current !== null
-        ? frozenYearRef.current
-        : targetYearRef.current;
-      const gap = Math.abs(yearTarget - displayYearRef.current);
+      const gap = Math.abs(targetYearRef.current - displayYearRef.current);
       const rate = gap > 5 ? 0.025 : LERP_RATE;
       displayYearRef.current +=
-        (yearTarget - displayYearRef.current) * rate;
+        (targetYearRef.current - displayYearRef.current) * rate;
 
       const currentYear = displayYearRef.current;
       const roundYear = Math.round(currentYear);
@@ -158,16 +132,6 @@ export default function TimelineContainer({
   return (
     <div className={styles.container}>
       <canvas ref={canvasRef} className={styles.canvas} />
-
-      <AnimatePresence>
-        {activeCrossroad && (
-          <CrossroadPanel
-            key={`crossroad-${activeCrossroad.year}`}
-            crossroad={activeCrossroad}
-            onContinue={handleCrossroadContinue}
-          />
-        )}
-      </AnimatePresence>
 
       <EraNarrative
         displayYear={uiYear}
