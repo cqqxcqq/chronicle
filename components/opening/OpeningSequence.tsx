@@ -71,45 +71,54 @@ export default function OpeningSequence() {
     }, 3000);
   }, []);
 
+  const skipToEnd = useCallback(() => {
+    setSequence("fadeout");
+    setTimeout(() => setSequence("title"), 600);
+  }, []);
+
   const exit = useCallback(() => {
     if (!soundEngine.isMuted()) soundEngine.playClick();
     setSequence("exit");
     setTimeout(() => router.push("/timeline"), 800);
   }, [router]);
 
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === " " || e.key === "Enter") {
+        if (sequence === "title") {
+          exit();
+        } else if (sequence !== "exit" && sequence !== "init") {
+          skipToEnd();
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [sequence, exit, skipToEnd]);
+
+  const showSkip = sequence === "line1" || sequence === "line2" || sequence === "line3";
+
   return (
     <div className={styles.container}>
       <AnimatePresence mode="wait">
-        {sequence === "line1" && (
+        {(sequence === "line1" || sequence === "line2" || sequence === "line3") && (
           <motion.div
-            key="s1"
+            key={`s-${sequence}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.5 } }}
+            className={styles.lineBlock}
           >
-            <StaggeredLine text={line1} onComplete={onLine1Complete} />
-          </motion.div>
-        )}
-
-        {sequence === "line2" && (
-          <motion.div
-            key="s2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.5 } }}
-          >
-            <StaggeredLine text={line2} onComplete={onLine2Complete} />
-          </motion.div>
-        )}
-
-        {sequence === "line3" && (
-          <motion.div
-            key="s3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.5 } }}
-          >
-            <StaggeredLine text={line3} onComplete={onLine3Complete} />
+            <StaggeredLine
+              text={sequence === "line1" ? line1 : sequence === "line2" ? line2 : line3}
+              onComplete={
+                sequence === "line1"
+                  ? onLine1Complete
+                  : sequence === "line2"
+                  ? onLine2Complete
+                  : onLine3Complete
+              }
+            />
           </motion.div>
         )}
 
@@ -158,6 +167,18 @@ export default function OpeningSequence() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showSkip && (
+        <motion.button
+          className={styles.skipBtn}
+          onClick={skipToEnd}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.4 }}
+          whileHover={{ opacity: 0.8 }}
+        >
+          SKIP →
+        </motion.button>
+      )}
     </div>
   );
 }

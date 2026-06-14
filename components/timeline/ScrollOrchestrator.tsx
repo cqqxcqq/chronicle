@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { MILESTONES } from "@/lib/timeline-config";
 import TimelineBar from "./TimelineBar";
 import styles from "./ScrollOrchestrator.module.css";
@@ -53,6 +53,25 @@ export default function ScrollOrchestrator({
     setMilestoneIndex(index);
     setFreeYear(MILESTONES[index].year);
   }, []);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        onAdvance();
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        onRetreat();
+      } else if (e.key >= "1" && e.key <= "6") {
+        const idx = parseInt(e.key) - 1;
+        if (idx < MILESTONES.length) {
+          onSnapToMilestone(idx);
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onAdvance, onRetreat, onSnapToMilestone]);
 
   const ctx: ScrollContext = {
     displayYear: freeYear,

@@ -26,6 +26,16 @@
   line-height: 1.2;
 }
 
+.startBridge {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--color-bone-dim);
+  max-width: 450px;
+  line-height: 1.6;
+  margin-top: -8px;
+}
+
 .startSubtitle {
   font-family: var(--font-body);
   font-size: 19px;
@@ -206,6 +216,61 @@
 .btnContinue:hover {
   background: var(--color-gold);
   color: var(--color-void);
+}
+
+/* --- CHOICES --- */
+.choiceArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.choiceLabel {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  color: var(--color-gold);
+  margin-bottom: 4px;
+}
+
+.choiceBtn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  padding: 12px 32px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--color-bone);
+  max-width: 500px;
+  width: 100%;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.choiceBtn:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.choiceResult {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--color-bone-ghost);
+  margin-top: 4px;
+}
+
+/* --- DEATH COUNT --- */
+.deathCount {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-blood);
+  font-style: italic;
+  margin-top: 8px;
 }
 
 /* --- DEATH SCREEN --- */

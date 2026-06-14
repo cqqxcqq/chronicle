@@ -132,6 +132,56 @@
   margin: 0;
 }
 
+.expandBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--color-bone-ghost);
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+
+.expandBtn:hover {
+  color: var(--color-gold);
+}
+
+.details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.6s ease, opacity 0.4s ease;
+  opacity: 0;
+  width: 100%;
+  max-width: 520px;
+}
+
+.detailsOpen {
+  max-height: 300px;
+  opacity: 1;
+}
+
+.context {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-bone-dim);
+  line-height: 1.7;
+  text-align: center;
+  margin: 8px 0;
+}
+
+.keyFact {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--color-gold);
+  line-height: 1.6;
+  text-align: center;
+  margin: 0 0 8px;
+  opacity: 0.8;
+}
+
 .actions {
   display: flex;
   gap: 20px;

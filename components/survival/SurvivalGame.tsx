@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { SURVIVAL_ROUNDS } from "@/lib/survival-data";
+import { SURVIVAL_ROUNDS, getTotalDeaths, addDeath } from "@/lib/survival-data";
 import { soundEngine } from "@/lib/sound-engine";
 import ClosingSequence from "./ClosingSequence";
 import styles from "./SurvivalGame.module.css";
 
-type Phase = "start" | "context" | "rolling" | "result" | "dead" | "complete" | "closing";
+type Phase = "start" | "context" | "choice" | "rolling" | "result" | "dead" | "complete" | "closing";
 
 export default function SurvivalGame() {
   const [phase, setPhase] = useState<Phase>("start");
@@ -16,10 +16,13 @@ export default function SurvivalGame() {
   const [lives, setLives] = useState(0);
   const [bestAge, setBestAge] = useState(0);
   const [rollingNumber, setRollingNumber] = useState(0);
-  const [showRollBtn, setShowRollBtn] = useState(false);
   const [showContinueBtn, setShowContinueBtn] = useState(false);
   const [contextVisible, setContextVisible] = useState(false);
   const [eraVisible, setEraVisible] = useState(false);
+  const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
+  const [totalDeaths, setTotalDeaths] = useState(0);
+  const [deathRound, setDeathRound] = useState<number>(0);
+  const [deathAge, setDeathAge] = useState<number>(0);
 
   const round = SURVIVAL_ROUNDS[roundIdx];
   const timersRef = useRef<number[]>([]);
@@ -35,6 +38,10 @@ export default function SurvivalGame() {
   }, []);
 
   useEffect(() => {
+    setTotalDeaths(getTotalDeaths());
+  }, []);
+
+  useEffect(() => {
     return () => {
       clearTimers();
       if (rollIntervalRef.current) {
@@ -44,28 +51,30 @@ export default function SurvivalGame() {
     };
   }, [clearTimers]);
 
-  // Phase transition to "context"
   useEffect(() => {
     if (phase !== "context") return;
     setRollValue(null);
     setSurvived(null);
-    setShowRollBtn(false);
     setShowContinueBtn(false);
     setContextVisible(false);
     setEraVisible(false);
+    setSelectedChoice(null);
 
     const t1 = window.setTimeout(() => setContextVisible(true), 500);
-    const t2 = window.setTimeout(() => setEraVisible(true), 1400);
-    const t3 = window.setTimeout(() => setShowRollBtn(true), 2400);
+    const t2 = window.setTimeout(() => setEraVisible(true), 1200);
+    const t3 = window.setTimeout(() => setPhase("choice"), 2000);
     addTimer(t1); addTimer(t2); addTimer(t3);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [phase, roundIdx, addTimer]);
 
-  const handleRoll = useCallback(() => {
-    if (rollIntervalRef.current) return;
+  const handleChoice = useCallback((choiceIdx: number) => {
+    setSelectedChoice(choiceIdx);
     setPhase("rolling");
     if (!soundEngine.isMuted()) soundEngine.playHeartbeat();
-    const thresholdPct = Math.round(round.survivalChance * 100);
+
+    const choice = round.choices[choiceIdx];
+    const effectiveChance = Math.min(0.95, round.survivalChance + choice.modifier);
+    const thresholdPct = Math.round(effectiveChance * 100);
     let count = 0;
 
     rollIntervalRef.current = window.setInterval(() => {
@@ -95,12 +104,16 @@ export default function SurvivalGame() {
       return () => clearTimeout(t);
     } else {
       if (!soundEngine.isMuted()) soundEngine.playDeath();
+      const newDeaths = addDeath();
+      setTotalDeaths(newDeaths);
+      setDeathRound(roundIdx);
+      setDeathAge(round.age);
       setLives((prev) => prev + 1);
       const t = window.setTimeout(() => setPhase("dead"), 2200);
       addTimer(t);
       return () => clearTimeout(t);
     }
-  }, [phase, survived, round.age, addTimer]);
+  }, [phase, survived, round.age, addTimer, roundIdx]);
 
   const handleContinue = useCallback(() => {
     if (roundIdx < SURVIVAL_ROUNDS.length - 1) {
@@ -121,31 +134,45 @@ export default function SurvivalGame() {
     setRoundIdx(0);
     setRollValue(null);
     setSurvived(null);
-    setShowRollBtn(false);
     setShowContinueBtn(false);
     setContextVisible(false);
     setEraVisible(false);
     setRollingNumber(0);
+    setSelectedChoice(null);
   }, [clearTimers]);
 
-  // ─── Stop sounds on closing ───
   useEffect(() => {
-    if (phase === "closing") {
-      soundEngine.stopAll();
-    }
-  }, [phase]);
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === " " || e.key === "Enter") {
+        if (phase === "choice" && selectedChoice === null) return;
+        if (phase === "result" && survived && showContinueBtn) handleContinue();
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [phase, survived, showContinueBtn, handleContinue, selectedChoice]);
 
-  // ─── CLOSING SCREEN ───
+  const canSkipToClosing = totalDeaths >= 3;
+
   if (phase === "closing") {
-    return <ClosingSequence onEnd={handleRetry} />;
+    return (
+      <ClosingSequence
+        onEnd={handleRetry}
+        totalDeaths={totalDeaths}
+        diedAtRound={deathRound}
+        diedAtAge={deathAge}
+      />
+    );
   }
 
-  // ─── START SCREEN ───
   if (phase === "start") {
     return (
       <div className={styles.container}>
         <div className={styles.startScreen}>
           <p className={styles.startTitle}>YOU WERE BORN IN 1800</p>
+          <p className={styles.startBridge}>
+            You have seen two centuries of progress. Now it is your turn.
+          </p>
           <p className={styles.startSubtitle}>
             Two hundred years of human history. One human life.
             <br />
@@ -154,6 +181,9 @@ export default function SurvivalGame() {
           <p className={styles.startWarning}>
             Most people born in 1800 never saw 40.
           </p>
+          {totalDeaths > 0 && (
+            <p className={styles.deathCount}>You have died {totalDeaths} time{totalDeaths !== 1 ? "s" : ""}.</p>
+          )}
           <button className={styles.btnStart} onClick={() => { if (!soundEngine.isMuted()) soundEngine.playClick(); setPhase("context"); }}>
             BEGIN
           </button>
@@ -162,7 +192,6 @@ export default function SurvivalGame() {
     );
   }
 
-  // ─── DEATH SCREEN ───
   if (phase === "dead") {
     return (
       <div className={styles.deathOverlay}>
@@ -174,8 +203,8 @@ export default function SurvivalGame() {
         <p className={styles.deathCause}>{round.title}</p>
         <div className={styles.statsRow}>
           <div className={styles.statBlock}>
-            <p className={styles.statLabel}>Lives</p>
-            <p className={styles.statValue}>{lives}</p>
+            <p className={styles.statLabel}>Deaths</p>
+            <p className={styles.statValue}>{totalDeaths}</p>
           </div>
           <div className={styles.statBlock}>
             <p className={styles.statLabel}>Best Age</p>
@@ -200,15 +229,16 @@ export default function SurvivalGame() {
           <button className={styles.btnRetry} onClick={handleRetry}>
             TRY AGAIN
           </button>
-          <button className={styles.btnClosing} onClick={() => setPhase("closing")}>
-            THE STORY CONTINUES →
-          </button>
+          {canSkipToClosing && (
+            <button className={styles.btnClosing} onClick={() => setPhase("closing")}>
+              THE STORY CONTINUES →
+            </button>
+          )}
         </div>
       </div>
     );
   }
 
-  // ─── COMPLETE SCREEN ───
   if (phase === "complete") {
     return (
       <div className={styles.completeOverlay}>
@@ -251,7 +281,6 @@ export default function SurvivalGame() {
     );
   }
 
-  // ─── ROLLING ANIMATION ───
   if (phase === "rolling") {
     return (
       <div className={styles.container}>
@@ -267,9 +296,7 @@ export default function SurvivalGame() {
     );
   }
 
-  // ─── RESULT SCREEN ───
   if (phase === "result" && rollValue !== null && survived !== null) {
-    const threshold = Math.round(round.survivalChance * 100);
     return (
       <div className={styles.container}>
         <div className={styles.playingScreen}>
@@ -291,6 +318,11 @@ export default function SurvivalGame() {
             >
               {survived ? round.surviveNarrative : round.deathNarrative}
             </p>
+            {selectedChoice !== null && (
+              <p className={styles.choiceResult}>
+                You chose: {round.choices[selectedChoice].text}
+              </p>
+            )}
             {survived && showContinueBtn && (
               <button
                 className={styles.btnContinue}
@@ -307,7 +339,6 @@ export default function SurvivalGame() {
     );
   }
 
-  // ─── CONTEXT SCREEN ───
   return (
     <div className={styles.container}>
       <div className={styles.playingScreen}>
@@ -325,14 +356,18 @@ export default function SurvivalGame() {
             {round.eraContext}
           </p>
         )}
-        {showRollBtn && (
-          <div className={styles.rollArea}>
-            <p className={styles.eraContext} style={{ fontSize: "13px", marginBottom: 0 }}>
-              Survival chance: {Math.round(round.survivalChance * 100)}%
-            </p>
-            <button className={styles.btnRoll} onClick={handleRoll}>
-              ROLL FOR SURVIVAL
-            </button>
+        {phase === "choice" && (
+          <div className={styles.choiceArea} style={{ animation: "fadeIn 0.5s ease-out" }}>
+            <p className={styles.choiceLabel}>WHAT DO YOU DO?</p>
+            {round.choices.map((choice, i) => (
+              <button
+                key={i}
+                className={styles.choiceBtn}
+                onClick={() => { if (!soundEngine.isMuted()) soundEngine.playClick(); handleChoice(i); }}
+              >
+                {choice.text}
+              </button>
+            ))}
           </div>
         )}
       </div>

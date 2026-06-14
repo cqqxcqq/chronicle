@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { MILESTONES, MILESTONE_STATS, ERAS } from "@/lib/timeline-config";
 import figuresData from "@/lib/data/figures.json";
@@ -37,6 +38,7 @@ export default function EraNarrative({
   onAdvance,
   onRetreat,
 }: EraNarrativeProps) {
+  const [expanded, setExpanded] = useState(false);
   const milestone = MILESTONES[milestoneIndex];
   const stat = MILESTONE_STATS[milestoneIndex];
   const isLast = milestoneIndex === MILESTONES.length - 1;
@@ -77,18 +79,31 @@ export default function EraNarrative({
           </div>
         </div>
 
+        <button
+          className={styles.expandBtn}
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? "LESS" : "READ MORE"}
+        </button>
+
+        <div className={`${styles.details} ${expanded ? styles.detailsOpen : ""}`}>
+          <p className={styles.context}>{stat.context}</p>
+          <p className={styles.keyFact}>{stat.keyFact}</p>
+        </div>
+
         {figure && (
           <div className={styles.figure}>
             <hr className={styles.divider} />
             <p className={styles.figureQuote}>&ldquo;{figure.quote}&rdquo;</p>
             <p className={styles.figureName}>{figure.name}</p>
+            <p className={styles.figureRole}>{figure.role}</p>
           </div>
         )}
 
         <div className={styles.actions}>
           {canRetreat && (
             <button className={styles.retreatBtn} onClick={onRetreat}>
-              ← back
+              ← BACK
             </button>
           )}
 

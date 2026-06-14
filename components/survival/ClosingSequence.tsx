@@ -4,12 +4,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./ClosingSequence.module.css";
 
-const lines = [
-  "You have seen two hundred years of human struggle.",
-  "From darkness to light. From ignorance to knowledge.",
-  "The story is not over.",
-];
-
 const CHAR_DELAY = 0.05;
 
 function StaggeredLine({
@@ -104,20 +98,42 @@ function AnimatedCounter({
 
 interface ClosingSequenceProps {
   onEnd: () => void;
+  totalDeaths?: number;
+  diedAtRound?: number;
+  diedAtAge?: number;
 }
 
-export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
+export default function ClosingSequence({ onEnd, totalDeaths = 0, diedAtRound, diedAtAge }: ClosingSequenceProps) {
+  const didDie = diedAtRound !== undefined && diedAtAge !== undefined;
+
+  const lines = didDie
+    ? [
+        `You died at age ${diedAtAge} in the year ${1800 + diedAtRound * 25}.`,
+        "You did not live to see what came next.",
+        "But billions did. This is their story.",
+      ]
+    : [
+        "You have seen two hundred years of human struggle.",
+        "From darkness to light. From ignorance to knowledge.",
+        "The story is not over.",
+      ];
+
   const [lineIdx, setLineIdx] = useState(-1);
   const [showYear, setShowYear] = useState(false);
   const [showCounters, setShowCounters] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
+  const [showSkip, setShowSkip] = useState(false);
 
   const [year, setYear] = useState(1800);
   const yearRef = useRef<number>(0);
-  const yearStartedRef = useRef(false);
 
   useEffect(() => {
     const t = setTimeout(() => setLineIdx(0), 1000);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => setShowSkip(true), 2000);
     return () => clearTimeout(t);
   }, []);
 
@@ -128,7 +144,7 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
     } else {
       setTimeout(() => setShowYear(true), 1500);
     }
-  }, [lineIdx]);
+  }, [lineIdx, lines.length]);
 
   useEffect(() => {
     if (!showYear) return;
@@ -161,6 +177,24 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
   const handleClick = useCallback(() => {
     onEnd();
   }, [onEnd]);
+
+  const handleSkip = useCallback(() => {
+    setShowTitle(true);
+    setShowYear(false);
+    setShowCounters(false);
+  }, []);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if ((e.key === " " || e.key === "Enter") && showTitle) {
+        onEnd();
+      } else if (e.key === "Escape" && !showTitle) {
+        handleSkip();
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [showTitle, onEnd, handleSkip]);
 
   return (
     <div className={styles.container}>
@@ -249,6 +283,16 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
             >
               A history of human progress.
             </motion.p>
+            {didDie && totalDeaths > 0 && (
+              <motion.p
+                className={styles.deathNote}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.0, delay: 1.2 }}
+              >
+                You died {totalDeaths} time{totalDeaths !== 1 ? "s" : ""}. Most people born in 1800 did not survive.
+              </motion.p>
+            )}
             <motion.p
               className={styles.closing}
               initial={{ opacity: 0 }}
@@ -277,6 +321,18 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showSkip && !showTitle && (
+        <motion.button
+          className={styles.skipBtn}
+          onClick={handleSkip}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.4 }}
+          whileHover={{ opacity: 0.8 }}
+        >
+          SKIP →
+        </motion.button>
+      )}
     </div>
   );
 }
