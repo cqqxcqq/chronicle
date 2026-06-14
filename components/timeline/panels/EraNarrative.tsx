@@ -60,22 +60,22 @@ export default function EraNarrative({
         <div className={styles.stats}>
           <div className={styles.stat}>
             <span className={styles.statValue}>{stat.poverty}%</span>
-            <span className={styles.statLabel}>poverty</span>
+            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 1</span> · poverty</span>
           </div>
           <div className={styles.statDivider} />
           <div className={styles.stat}>
             <span className={styles.statValue}>{stat.lifeExpectancy} yr</span>
-            <span className={styles.statLabel}>life expectancy</span>
+            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 3</span> · life expectancy</span>
           </div>
           <div className={styles.statDivider} />
           <div className={styles.stat}>
             <span className={styles.statValue}>{stat.childMortality}</span>
-            <span className={styles.statLabel}>infant deaths</span>
+            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 3</span> · infant deaths</span>
           </div>
           <div className={styles.statDivider} />
           <div className={styles.stat}>
             <span className={styles.statValue}>{stat.literacy}%</span>
-            <span className={styles.statLabel}>can read</span>
+            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 4</span> · literacy</span>
           </div>
         </div>
 

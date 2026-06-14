@@ -147,7 +147,7 @@ export default function OpeningSequence() {
               animate={{ opacity: 1 }}
               transition={{ duration: 1.0, delay: 0.8 }}
             >
-              Two centuries of human progress.
+              Tracking humanity's progress toward the Sustainable Development Goals.
             </motion.p>
             <motion.p
               className={styles.prompt}

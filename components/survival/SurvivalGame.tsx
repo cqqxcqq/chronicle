@@ -248,16 +248,16 @@ export default function SurvivalGame() {
         </p>
         <div className={styles.completeStats}>
           <p className={styles.completeStat}>
-            Poverty: <span>89% → 8.5%</span>
+            <span className={styles.sdgNum}>SDG 1</span> · Poverty: <span>89% → 8.5%</span>
           </p>
           <p className={styles.completeStat}>
-            Child mortality: <span>460 → 37</span> per 1,000
+            <span className={styles.sdgNum}>SDG 3</span> · Child mortality: <span>460 → 37</span> per 1,000
           </p>
           <p className={styles.completeStat}>
-            Literacy: <span>12% → 87%</span>
+            <span className={styles.sdgNum}>SDG 4</span> · Literacy: <span>12% → 87%</span>
           </p>
           <p className={styles.completeStat}>
-            Life expectancy: <span>29 → 73</span> years
+            <span className={styles.sdgNum}>SDG 3</span> · Life expectancy: <span>29 → 73</span> years
           </p>
         </div>
         <p className={styles.rarityNote}>

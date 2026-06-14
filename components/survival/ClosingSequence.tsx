@@ -250,10 +250,10 @@ export default function ClosingSequence({ onEnd, totalDeaths = 0, diedAtRound, d
           >
             <p className={styles.countersLabel}>WHAT CHANGED</p>
             <div className={styles.countersGrid}>
-              <AnimatedCounter from={89} to={8.5} suffix="%" label="poverty" delay={500} duration={3000} decimals={1} />
-              <AnimatedCounter from={460} to={37} label="child deaths per 1,000" delay={1000} duration={3000} />
-              <AnimatedCounter from={12} to={87} suffix="%" label="literacy" delay={1500} duration={3000} />
-              <AnimatedCounter from={29} to={73} suffix=" yr" label="life expectancy" delay={2000} duration={3000} />
+              <AnimatedCounter from={89} to={8.5} suffix="%" label="SDG 1 · poverty" delay={500} duration={3000} decimals={1} />
+              <AnimatedCounter from={460} to={37} label="SDG 3 · child deaths" delay={1000} duration={3000} />
+              <AnimatedCounter from={12} to={87} suffix="%" label="SDG 4 · literacy" delay={1500} duration={3000} />
+              <AnimatedCounter from={29} to={73} suffix=" yr" label="SDG 3 · life expectancy" delay={2000} duration={3000} />
             </div>
           </motion.div>
         )}
