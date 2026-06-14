@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { SURVIVAL_ROUNDS } from "@/lib/survival-data";
 import { soundEngine } from "@/lib/sound-engine";
-import { useSound } from "@/components/ui/SoundProvider";
 import ClosingSequence from "./ClosingSequence";
 import styles from "./SurvivalGame.module.css";
 
@@ -25,7 +24,6 @@ export default function SurvivalGame() {
   const round = SURVIVAL_ROUNDS[roundIdx];
   const timersRef = useRef<number[]>([]);
   const rollIntervalRef = useRef<number | null>(null);
-  const { muted } = useSound();
 
   const clearTimers = useCallback(() => {
     timersRef.current.forEach(clearTimeout);
@@ -66,7 +64,7 @@ export default function SurvivalGame() {
   const handleRoll = useCallback(() => {
     if (rollIntervalRef.current) return;
     setPhase("rolling");
-    if (!muted) soundEngine.playHeartbeat();
+    if (!soundEngine.isMuted()) soundEngine.playHeartbeat();
     const thresholdPct = Math.round(round.survivalChance * 100);
     let count = 0;
 
@@ -90,19 +88,19 @@ export default function SurvivalGame() {
   useEffect(() => {
     if (phase !== "result" || survived === null) return;
     if (survived) {
-      if (!muted) soundEngine.playSurvive();
+      if (!soundEngine.isMuted()) soundEngine.playSurvive();
       setBestAge((prev) => Math.max(prev, round.age));
       const t = window.setTimeout(() => setShowContinueBtn(true), 2200);
       addTimer(t);
       return () => clearTimeout(t);
     } else {
-      if (!muted) soundEngine.playDeath();
+      if (!soundEngine.isMuted()) soundEngine.playDeath();
       setLives((prev) => prev + 1);
       const t = window.setTimeout(() => setPhase("dead"), 2200);
       addTimer(t);
       return () => clearTimeout(t);
     }
-  }, [phase, survived, round.age, addTimer, muted]);
+  }, [phase, survived, round.age, addTimer]);
 
   const handleContinue = useCallback(() => {
     if (roundIdx < SURVIVAL_ROUNDS.length - 1) {
@@ -149,7 +147,7 @@ export default function SurvivalGame() {
           <p className={styles.startWarning}>
             Most people born in 1800 never saw 40.
           </p>
-          <button className={styles.btnStart} onClick={() => { if (!muted) soundEngine.playClick(); setPhase("context"); }}>
+          <button className={styles.btnStart} onClick={() => { if (!soundEngine.isMuted()) soundEngine.playClick(); setPhase("context"); }}>
             BEGIN
           </button>
         </div>

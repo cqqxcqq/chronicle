@@ -8,6 +8,7 @@ interface SoundConfig {
   filterFreq: number;
   filterQ: number;
   gain: number;
+  rainGain?: number;
 }
 
 const ERA_CONFIGS: Record<EraSound, SoundConfig> = {
@@ -18,7 +19,8 @@ const ERA_CONFIGS: Record<EraSound, SoundConfig> = {
     lfoDepth: 15,
     filterFreq: 300,
     filterQ: 0.5,
-    gain: 0.12,
+    gain: 0.35,
+    rainGain: 0.12,
   },
   industry: {
     noiseColor: "pink",
@@ -27,7 +29,7 @@ const ERA_CONFIGS: Record<EraSound, SoundConfig> = {
     lfoDepth: 30,
     filterFreq: 500,
     filterQ: 1.2,
-    gain: 0.1,
+    gain: 0.3,
   },
   catastrophe: {
     noiseColor: "brown",
@@ -36,7 +38,7 @@ const ERA_CONFIGS: Record<EraSound, SoundConfig> = {
     lfoDepth: 10,
     filterFreq: 200,
     filterQ: 2.0,
-    gain: 0.14,
+    gain: 0.4,
   },
   recovery: {
     noiseColor: "pink",
@@ -45,7 +47,7 @@ const ERA_CONFIGS: Record<EraSound, SoundConfig> = {
     lfoDepth: 20,
     filterFreq: 800,
     filterQ: 0.8,
-    gain: 0.08,
+    gain: 0.25,
   },
   acceleration: {
     noiseColor: "white",
@@ -54,7 +56,7 @@ const ERA_CONFIGS: Record<EraSound, SoundConfig> = {
     lfoDepth: 50,
     filterFreq: 1200,
     filterQ: 1.5,
-    gain: 0.06,
+    gain: 0.2,
   },
   goals: {
     noiseColor: "pink",
@@ -63,7 +65,7 @@ const ERA_CONFIGS: Record<EraSound, SoundConfig> = {
     lfoDepth: 25,
     filterFreq: 2000,
     filterQ: 0.6,
-    gain: 0.07,
+    gain: 0.22,
   },
 };
 
@@ -103,16 +105,18 @@ function createNoiseBuffer(ctx: AudioContext, type: "pink" | "brown" | "white"):
   return buffer;
 }
 
+interface EraNodes {
+  sources: (AudioBufferSourceNode | OscillatorNode)[];
+  gain: GainNode;
+}
+
 export class SoundEngine {
   private ctx: AudioContext | null = null;
   private masterGain: GainNode | null = null;
   private currentEra: EraSound | null = null;
-  private activeNodes: AudioNode[] = [];
-  private muted = false;
+  private currentEraNodes: EraNodes | null = null;
+  private muted = true;
   private initialized = false;
-
-  private rainOsc: OscillatorNode | null = null;
-  private rainGain: GainNode | null = null;
 
   init() {
     if (this.initialized) return;
@@ -134,10 +138,12 @@ export class SoundEngine {
 
   setMuted(muted: boolean) {
     this.muted = muted;
-    if (this.masterGain) {
+    if (this.masterGain && this.ctx) {
+      this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, this.ctx.currentTime);
       this.masterGain.gain.linearRampToValueAtTime(
         muted ? 0 : 1,
-        this.ctx!.currentTime + 0.3
+        this.ctx.currentTime + 0.5
       );
     }
   }
@@ -149,15 +155,45 @@ export class SoundEngine {
   playEra(era: EraSound) {
     this.ensureContext();
     if (this.currentEra === era) return;
+
+    const prevEra = this.currentEra;
     this.currentEra = era;
-    this.stopAll();
-    this.buildEraSound(era);
+
+    if (prevEra && this.currentEraNodes) {
+      this.crossfadeEra(prevEra, era);
+    } else {
+      this.buildEraSound(era, false);
+    }
   }
 
-  private buildEraSound(era: EraSound) {
+  private crossfadeEra(_oldEra: EraSound, newEra: EraSound) {
+    if (!this.ctx || !this.masterGain || !this.currentEraNodes) return;
+    const now = this.ctx.currentTime;
+    const FADE_OUT = 2.0;
+    const FADE_IN = 2.5;
+
+    const oldNodes = this.currentEraNodes;
+    const oldGain = oldNodes.gain.gain as AudioParam;
+    oldGain.cancelScheduledValues(now);
+    oldGain.setValueAtTime(oldGain.value, now);
+    oldGain.linearRampToValueAtTime(0, now + FADE_OUT);
+
+    const oldSources = oldNodes.sources;
+    setTimeout(() => {
+      oldSources.forEach((s) => {
+        try { s.stop(); } catch {}
+      });
+    }, (FADE_OUT + 0.2) * 1000);
+
+    this.buildEraSound(newEra, true, now + FADE_IN * 0.3);
+  }
+
+  private buildEraSound(era: EraSound, delayed = false, startTime?: number) {
     if (!this.ctx || !this.masterGain) return;
     const config = ERA_CONFIGS[era];
     const now = this.ctx.currentTime;
+    const startAt = startTime ?? now;
+    const FADE_IN = delayed ? 2.5 : 3.0;
 
     const noiseBuffer = createNoiseBuffer(this.ctx, config.noiseColor);
     const noiseSource = this.ctx.createBufferSource();
@@ -179,11 +215,11 @@ export class SoundEngine {
     baseOsc.type = "sine";
     baseOsc.frequency.value = config.baseFreq;
     const baseGain = this.ctx.createGain();
-    baseGain.gain.value = 0.03;
+    baseGain.gain.value = 0.06;
 
     const eraGain = this.ctx.createGain();
     eraGain.gain.value = 0;
-    eraGain.gain.linearRampToValueAtTime(config.gain, now + 3.0);
+    eraGain.gain.linearRampToValueAtTime(config.gain, startAt + FADE_IN);
 
     lfo.connect(lfoGain);
     lfoGain.connect(filter.frequency);
@@ -196,18 +232,19 @@ export class SoundEngine {
 
     eraGain.connect(this.masterGain!);
 
-    noiseSource.start(now);
-    lfo.start(now);
-    baseOsc.start(now);
+    noiseSource.start(startAt);
+    lfo.start(startAt);
+    baseOsc.start(startAt);
 
-    this.activeNodes.push(noiseSource, filter, lfo, lfoGain, baseOsc, baseGain, eraGain);
+    const sources: (AudioBufferSourceNode | OscillatorNode)[] = [noiseSource, lfo, baseOsc];
+    this.currentEraNodes = { sources, gain: eraGain };
 
-    if (era === "want") {
-      this.addRain(now);
+    if (era === "want" && config.rainGain) {
+      this.addRain(startAt, config.rainGain);
     }
   }
 
-  private addRain(now: number) {
+  private addRain(startAt: number, targetGain: number) {
     if (!this.ctx || !this.masterGain) return;
 
     const rainBuffer = createNoiseBuffer(this.ctx, "white");
@@ -220,16 +257,19 @@ export class SoundEngine {
     rainFilter.frequency.value = 3000;
     rainFilter.Q.value = 0.3;
 
-    this.rainGain = this.ctx.createGain();
-    this.rainGain.gain.value = 0;
-    this.rainGain.gain.linearRampToValueAtTime(0.04, now + 2.0);
+    const rainGain = this.ctx.createGain();
+    rainGain.gain.value = 0;
+    rainGain.gain.linearRampToValueAtTime(targetGain, startAt + 2.5);
 
     rainSource.connect(rainFilter);
-    rainFilter.connect(this.rainGain);
-    this.rainGain.connect(this.masterGain);
+    rainFilter.connect(rainGain);
+    rainGain.connect(this.masterGain);
 
-    rainSource.start(now);
-    this.activeNodes.push(rainSource, rainFilter, this.rainGain);
+    rainSource.start(startAt);
+
+    if (this.currentEraNodes) {
+      this.currentEraNodes.sources.push(rainSource);
+    }
   }
 
   playHeartbeat() {
@@ -246,13 +286,11 @@ export class SoundEngine {
 
       const gain = this.ctx.createGain();
       gain.gain.value = 0;
-
-      gain.gain.linearRampToValueAtTime(0.15, time + 0.02);
+      gain.gain.linearRampToValueAtTime(0.2, time + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
 
       osc.connect(gain);
       gain.connect(this.masterGain);
-
       osc.start(time);
       osc.stop(time + 0.2);
 
@@ -262,13 +300,11 @@ export class SoundEngine {
 
       const gain2 = this.ctx.createGain();
       gain2.gain.value = 0;
-
-      gain2.gain.linearRampToValueAtTime(0.1, time + 0.12);
+      gain2.gain.linearRampToValueAtTime(0.15, time + 0.12);
       gain2.gain.exponentialRampToValueAtTime(0.001, time + 0.28);
 
       osc2.connect(gain2);
       gain2.connect(this.masterGain);
-
       osc2.start(time + 0.1);
       osc2.stop(time + 0.35);
     };
@@ -291,12 +327,11 @@ export class SoundEngine {
     osc.frequency.linearRampToValueAtTime(40, now + duration);
 
     const gain = this.ctx.createGain();
-    gain.gain.value = 0.12;
+    gain.gain.value = 0.15;
     gain.gain.linearRampToValueAtTime(0, now + duration);
 
     osc.connect(gain);
     gain.connect(this.masterGain);
-
     osc.start(now);
     osc.stop(now + duration + 0.1);
   }
@@ -314,12 +349,11 @@ export class SoundEngine {
 
     const gain = this.ctx.createGain();
     gain.gain.value = 0;
-    gain.gain.linearRampToValueAtTime(0.08, now + 0.05);
+    gain.gain.linearRampToValueAtTime(0.12, now + 0.05);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
 
     osc.connect(gain);
     gain.connect(this.masterGain);
-
     osc.start(now);
     osc.stop(now + 0.6);
   }
@@ -334,29 +368,31 @@ export class SoundEngine {
     osc.frequency.value = 800;
 
     const gain = this.ctx.createGain();
-    gain.gain.value = 0.06;
+    gain.gain.value = 0.08;
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
 
     osc.connect(gain);
     gain.connect(this.masterGain);
-
     osc.start(now);
     osc.stop(now + 0.06);
   }
 
-  private stopAll() {
-    const now = this.ctx?.currentTime ?? 0;
-    this.activeNodes.forEach((node) => {
-      try {
-        if (node instanceof GainNode) {
-          node.gain.linearRampToValueAtTime(0, now + 1.0);
-        }
-        if (node instanceof OscillatorNode || node instanceof AudioBufferSourceNode) {
-          node.stop(now + 1.2);
-        }
-      } catch {}
-    });
-    this.activeNodes = [];
+  stopAll() {
+    if (this.currentEraNodes) {
+      const now = this.ctx?.currentTime ?? 0;
+      const g = this.currentEraNodes.gain.gain as AudioParam;
+      g.cancelScheduledValues(now);
+      g.setValueAtTime(g.value, now);
+      g.linearRampToValueAtTime(0, now + 0.5);
+      const sources = this.currentEraNodes.sources;
+      setTimeout(() => {
+        sources.forEach((s) => {
+          try { s.stop(); } catch {}
+        });
+      }, 700);
+      this.currentEraNodes = null;
+    }
+    this.currentEra = null;
   }
 
   destroy() {

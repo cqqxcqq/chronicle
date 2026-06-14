@@ -14,7 +14,6 @@ import { drawEraBackground } from "./phenomena/EraBackground";
 import { drawAtmosphericDarkness } from "./phenomena/AtmosphericDarkness";
 import { drawHistoricalRupture } from "./phenomena/HistoricalRupture";
 import { soundEngine } from "@/lib/sound-engine";
-import { useSound } from "@/components/ui/SoundProvider";
 import EraNarrative from "./panels/EraNarrative";
 import EventCallout from "./panels/EventCallout";
 import eventsData from "@/lib/data/events.json";
@@ -52,7 +51,6 @@ export default function TimelineContainer({
   const lastYearRef = useRef(-1);
   const lastEraRef = useRef<string | null>(null);
   const cursorRef = useRef({ x: -999, y: -999 });
-  const { muted } = useSound();
 
   const [uiYear, setUiYear] = useState(START_YEAR);
 
@@ -121,7 +119,7 @@ export default function TimelineContainer({
 
       if (era && era.id !== lastEraRef.current) {
         lastEraRef.current = era.id;
-        if (!muted) {
+        if (!soundEngine.isMuted()) {
           const soundEra = ERA_SOUND_MAP[era.id];
           if (soundEra) soundEngine.playEra(soundEra);
         }

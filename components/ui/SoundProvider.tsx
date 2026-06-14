@@ -21,21 +21,31 @@ export function useSound() {
 
 export function SoundProvider({ children }: { children: React.ReactNode }) {
   const [muted, setMuted] = useState(true);
-  const [initialized, setInitialized] = useState(false);
 
   const init = useCallback(() => {
-    if (!initialized) {
-      soundEngine.init();
-      setInitialized(true);
-    }
-  }, [initialized]);
+    soundEngine.init();
+  }, []);
 
   const toggle = useCallback(() => {
-    init();
+    soundEngine.init();
     const next = !muted;
     setMuted(next);
     soundEngine.setMuted(next);
-  }, [muted, init]);
+  }, [muted]);
+
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      soundEngine.init();
+      document.removeEventListener("click", handleFirstInteraction);
+      document.removeEventListener("keydown", handleFirstInteraction);
+    };
+    document.addEventListener("click", handleFirstInteraction);
+    document.addEventListener("keydown", handleFirstInteraction);
+    return () => {
+      document.removeEventListener("click", handleFirstInteraction);
+      document.removeEventListener("keydown", handleFirstInteraction);
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
