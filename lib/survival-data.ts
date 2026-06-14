@@ -132,10 +132,10 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     ]
   },
   {
-    year: 2024,
+    year: 2026,
     age: 224,
     title: "The Present",
-    context: "2024. Poverty: 89% to 8.5%. Child mortality: 460 to 37. Literacy: 12% to 87%. Life expectancy: 29 to 73. You saw it all.",
+    context: "2026. Poverty: 89% to 8.5%. Child mortality: 460 to 37. Literacy: 12% to 87%. Life expectancy: 29 to 73. You saw it all.",
     survivalChance: 0.03,
     surviveNarrative: "You are the bridge between two worlds. Born into darkness and hunger. Dying in a world of light and plenty. You witnessed the greatest transformation in human history.",
     deathNarrative: "At 224, you were the last living link to 1800. When you died, the world lost its only living witness to the age of want. But the story of how everything changed lives on.",

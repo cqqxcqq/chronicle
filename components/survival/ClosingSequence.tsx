@@ -124,9 +124,9 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
   const onLineComplete = useCallback(() => {
     const next = lineIdx + 1;
     if (next < lines.length) {
-      setTimeout(() => setLineIdx(next), 2000);
+      setTimeout(() => setLineIdx(next), 1200);
     } else {
-      setTimeout(() => setShowYear(true), 2500);
+      setTimeout(() => setShowYear(true), 1500);
     }
   }, [lineIdx]);
 
@@ -140,7 +140,7 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
       const elapsed = now - start;
       const progress = Math.min(elapsed / YEAR_DURATION, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      setYear(Math.round(1800 + (2024 - 1800) * eased));
+      setYear(Math.round(1800 + (2026 - 1800) * eased));
       if (progress < 1) {
         yearRef.current = requestAnimationFrame(animate);
       } else {
@@ -200,7 +200,7 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
               animate={{ opacity: 1 }}
               transition={{ duration: 1.0, delay: 0.5 }}
             >
-              1800 — 2024
+              1800 — 2026
             </motion.p>
           </motion.div>
         )}

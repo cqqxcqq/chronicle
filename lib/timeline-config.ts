@@ -1,5 +1,5 @@
 export const START_YEAR = 1800;
-export const END_YEAR = 2024;
+export const END_YEAR = 2026;
 export const TOTAL_YEARS = END_YEAR - START_YEAR;
 export const MAX_PARTICLES = 8000;
 export const LERP_RATE = 0.06;
@@ -22,7 +22,7 @@ export const MILESTONES: Milestone[] = [
 
 export const getMilestoneBounds = (index: number) => ({
   startYear: MILESTONES[index].year,
-  endYear: index < MILESTONES.length - 1 ? MILESTONES[index + 1].year : 2024,
+  endYear: index < MILESTONES.length - 1 ? MILESTONES[index + 1].year : 2026,
 });
 
 export interface MilestoneStat {
@@ -145,7 +145,7 @@ export const ERAS: Era[] = [
     id: "age-of-goals",
     label: "The Age of Goals",
     start: 2015,
-    end: 2024,
+    end: 2026,
     description:
       "The UN Sustainable Development Goals codified humanity's collective ambition. Eradicating extreme poverty, ending preventable child deaths, and healing the planet are no longer dreams but targets with deadlines.",
   },
