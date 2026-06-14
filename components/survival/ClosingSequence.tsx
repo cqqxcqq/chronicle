@@ -104,7 +104,7 @@ interface ClosingSequenceProps {
 }
 
 export default function ClosingSequence({ onEnd, totalDeaths = 0, diedAtRound, diedAtAge }: ClosingSequenceProps) {
-  const didDie = diedAtRound !== undefined && diedAtAge !== undefined;
+  const didDie = totalDeaths > 0 && diedAtRound !== undefined && diedAtAge !== undefined;
 
   const lines = didDie
     ? [

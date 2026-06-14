@@ -46,18 +46,11 @@
   line-height: 1.7;
 }
 
-.startWarning {
+.startInfo {
   font-family: var(--font-body);
-  font-size: 15px;
-  color: var(--color-blood);
-  font-style: italic;
-}
-
-.deathCount {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--color-blood);
-  font-style: italic;
+  font-size: 14px;
+  color: var(--color-bone-ghost);
+  letter-spacing: 0.05em;
 }
 
 .btnStart {
@@ -83,41 +76,80 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: 100%;
-  max-width: 820px;
-  padding: 48px 32px;
+  height: 100vh;
+  overflow-y: auto;
   text-align: center;
 }
 
-.yearDisplay {
+/* --- IMAGE STYLES --- */
+.roundImageContainer {
+  position: relative;
+  width: 100%;
+  height: 42vh;
+  min-height: 280px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.roundImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.5) brightness(0.6);
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 8, 8, 0.3) 0%,
+    rgba(8, 8, 8, 0.1) 40%,
+    rgba(8, 8, 8, 0.7) 80%,
+    rgba(8, 8, 8, 1) 100%
+  );
+}
+
+.imageYearOverlay {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.imageYear {
   font-family: var(--font-display);
-  font-size: 88px;
+  font-size: 72px;
   color: var(--color-gold);
   letter-spacing: 0.15em;
   line-height: 1;
-  margin-bottom: 4px;
+  text-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+  margin: 0;
 }
 
-.ageDisplay {
+.imageAge {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 18px;
   color: var(--color-bone-ghost);
   letter-spacing: 0.2em;
-  margin-bottom: 32px;
+  margin: 4px 0 0;
 }
 
-.eraDivider {
-  width: 60px;
-  height: 1px;
-  background: var(--color-gold);
-  opacity: 0.5;
-  margin-bottom: 28px;
+/* --- CONTEXT SECTION --- */
+.contextSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 32px 48px;
+  max-width: 700px;
+  width: 100%;
 }
 
 .roundTitle {
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 15px;
   color: var(--color-amber);
   letter-spacing: 0.3em;
   margin-bottom: 16px;
@@ -125,104 +157,22 @@
 
 .contextText {
   font-family: var(--font-body);
-  font-size: 24px;
+  font-size: 22px;
   color: var(--color-bone);
   line-height: 1.8;
   margin-bottom: 16px;
-  min-height: 80px;
+  min-height: 60px;
 }
 
 .eraContext {
   font-family: var(--font-body);
-  font-size: 17px;
+  font-size: 16px;
   color: var(--color-bone-ghost);
   font-style: italic;
   line-height: 1.6;
-  max-width: 600px;
+  max-width: 560px;
   margin-bottom: 28px;
   opacity: 0.7;
-}
-
-/* --- ROLL ANIMATION --- */
-.rollArea {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  margin: 8px 0;
-}
-
-.btnRoll {
-  background: transparent;
-  border: 1px solid var(--color-gold);
-  color: var(--color-bone);
-  font-family: var(--font-display);
-  font-size: 15px;
-  letter-spacing: 0.3em;
-  padding: 14px 48px;
-  cursor: pointer;
-  transition: background 0.3s, color 0.3s;
-}
-
-.btnRoll:hover {
-  background: var(--color-gold);
-  color: var(--color-void);
-}
-
-.rollContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.rollPercent {
-  font-family: var(--font-display);
-  font-size: 60px;
-  color: var(--color-gold);
-  letter-spacing: 0.1em;
-  min-height: 72px;
-  transition: color 0.5s;
-}
-
-.rollPercent.dead {
-  color: var(--color-blood);
-}
-
-.resultNarrative {
-  font-family: var(--font-body);
-  font-size: 22px;
-  line-height: 1.7;
-  max-width: 600px;
-  min-height: 60px;
-  margin-top: 8px;
-  animation: fadeIn 0.6s ease-out;
-}
-
-.resultNarrative.survived {
-  color: var(--color-sage);
-}
-
-.resultNarrative.died {
-  color: var(--color-blood);
-}
-
-.btnContinue {
-  margin-top: 12px;
-  background: transparent;
-  border: 1px solid var(--color-gold);
-  color: var(--color-bone);
-  font-family: var(--font-display);
-  font-size: 12px;
-  letter-spacing: 0.3em;
-  padding: 10px 36px;
-  cursor: pointer;
-  transition: background 0.3s, color 0.3s;
-}
-
-.btnContinue:hover {
-  background: var(--color-gold);
-  color: var(--color-void);
 }
 
 /* --- CHOICES --- */
@@ -279,94 +229,174 @@
   opacity: 1;
 }
 
+/* --- RESULT SECTION --- */
+.resultSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 32px 48px;
+  max-width: 700px;
+  width: 100%;
+}
+
+.resultContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.resultNarrative {
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--color-sage);
+  line-height: 1.7;
+  max-width: 560px;
+}
+
 .choiceResult {
   font-family: var(--font-body);
   font-size: 13px;
   font-style: italic;
   color: var(--color-bone-ghost);
-  margin-top: 4px;
 }
 
-/* --- DEATH SCREEN --- */
-.deathOverlay {
+/* --- PROGRESS SECTION --- */
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 32px 48px;
+  max-width: 700px;
+  width: 100%;
+  gap: 24px;
+}
+
+.progressLabel {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--color-gold);
+}
+
+.progressGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 48px;
+  width: 100%;
+  max-width: 560px;
+}
+
+.progressItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.progressValue {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--color-gold);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin: 0;
+}
+
+.progressItemLabel {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-bone-ghost);
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.sdgNum {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--color-gold);
+  opacity: 0.7;
+}
+
+/* --- CONTINUE BUTTON --- */
+.btnContinue {
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid var(--color-gold);
+  color: var(--color-bone);
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  padding: 12px 36px;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.btnContinue:hover {
+  background: var(--color-gold);
+  color: var(--color-void);
+}
+
+/* --- COMPLETE SCREEN --- */
+.completeOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 0, 0, 0.92);
+  background: radial-gradient(ellipse at center, rgba(20, 25, 10, 0.98), var(--color-void));
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   z-index: 50;
-  animation: fadeIn 1s ease-out;
+  animation: fadeIn 1.5s ease-out;
 }
 
-.deathTitle {
+.completeTitle {
   font-family: var(--font-display);
-  font-size: 80px;
-  color: var(--color-bone);
+  font-size: 52px;
+  color: var(--color-gold);
   letter-spacing: 0.2em;
-  margin-bottom: 8px;
-  text-shadow: 0 0 60px rgba(139, 26, 26, 0.5);
+  margin-bottom: 16px;
+  text-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
 }
 
-.deathSubtitle {
+.completeSubtitle {
   font-family: var(--font-body);
-  font-size: 22px;
+  font-size: 20px;
   font-style: italic;
-  color: var(--color-bone-dim);
+  color: var(--color-bone);
   max-width: 550px;
   line-height: 1.7;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
-.deathYear {
-  font-family: var(--font-display);
-  font-size: 28px;
-  color: var(--color-gold);
-  letter-spacing: 0.15em;
-  margin-bottom: 4px;
+.completeStats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
 }
 
-.deathCause {
+.completeStat {
   font-family: var(--font-body);
   font-size: 16px;
+  color: var(--color-bone-dim);
+  line-height: 1.5;
+}
+
+.completeStat span {
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+}
+
+.rarityNote {
+  font-family: var(--font-body);
+  font-size: 13px;
   color: var(--color-bone-ghost);
   font-style: italic;
-  margin-bottom: 32px;
-}
-
-.statsRow {
-  display: flex;
-  gap: 32px;
-  margin-bottom: 32px;
-}
-
-.statBlock {
-  text-align: center;
-}
-
-.statLabel {
-  font-family: var(--font-body);
-  font-size: 11px;
-  color: var(--color-bone-ghost);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-.statValue {
-  font-family: var(--font-display);
-  font-size: 22px;
-  color: var(--color-gold);
-  margin-top: 4px;
-}
-
-.livesRow {
-  display: flex;
-  gap: 24px;
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--color-bone-ghost);
+  opacity: 0.6;
   margin-bottom: 24px;
 }
 
@@ -424,111 +454,6 @@
   color: var(--color-void);
 }
 
-.btnRetry {
-  background: transparent;
-  border: 1px solid var(--color-border-bright);
-  color: var(--color-bone);
-  font-family: var(--font-display);
-  font-size: 14px;
-  letter-spacing: 0.3em;
-  padding: 14px 48px;
-  cursor: pointer;
-  transition: background 0.3s, color 0.3s;
-}
-
-.btnRetry:hover {
-  background: var(--color-gold);
-  color: var(--color-void);
-  border-color: var(--color-gold);
-}
-
-/* --- COMPLETE SCREEN --- */
-.completeOverlay {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(ellipse at center, rgba(20, 25, 10, 0.98), var(--color-void));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  z-index: 50;
-  animation: fadeIn 1.5s ease-out;
-}
-
-.completeTitle {
-  font-family: var(--font-display);
-  font-size: 52px;
-  color: var(--color-gold);
-  letter-spacing: 0.2em;
-  margin-bottom: 16px;
-  text-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
-}
-
-.completeSubtitle {
-  font-family: var(--font-body);
-  font-size: 20px;
-  font-style: italic;
-  color: var(--color-bone);
-  max-width: 550px;
-  line-height: 1.7;
-  margin-bottom: 24px;
-}
-
-.completeStats {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 28px;
-}
-
-.completeStat {
-  font-family: var(--font-body);
-  font-size: 16px;
-  color: var(--color-bone-dim);
-  line-height: 1.5;
-}
-
-.completeStat span {
-  color: var(--color-gold);
-  font-family: var(--font-display);
-  letter-spacing: 0.05em;
-}
-
-.sdgNum {
-  font-family: var(--font-display);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  color: var(--color-gold);
-  opacity: 0.7;
-}
-
-.rarityNote {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--color-bone-ghost);
-  font-style: italic;
-  opacity: 0.6;
-  margin-bottom: 24px;
-}
-
-.btnAgain {
-  background: transparent;
-  border: 1px solid var(--color-gold);
-  color: var(--color-bone);
-  font-family: var(--font-display);
-  font-size: 14px;
-  letter-spacing: 0.3em;
-  padding: 14px 48px;
-  cursor: pointer;
-  transition: background 0.3s, color 0.3s;
-}
-
-.btnAgain:hover {
-  background: var(--color-gold);
-  color: var(--color-void);
-}
-
 /* --- SHARED --- */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -545,28 +470,38 @@
     padding: 0 16px;
   }
 
-  .startWarning {
-    font-size: 13px;
-    padding: 0 16px;
-  }
-
   .btnStart {
     padding: 12px 32px;
     font-size: 12px;
   }
 
-  .playingScreen {
-    padding: 60px 16px 120px;
-    max-width: 100%;
+  .roundImageContainer {
+    height: 35vh;
+    min-height: 220px;
   }
 
-  .yearDisplay {
-    font-size: 52px;
+  .imageYear {
+    font-size: 48px;
   }
 
-  .ageDisplay {
-    font-size: 17px;
-    margin-bottom: 20px;
+  .imageAge {
+    font-size: 14px;
+  }
+
+  .contextSection,
+  .resultSection,
+  .progressSection {
+    padding: 24px 16px 40px;
+  }
+
+  .contextText {
+    font-size: 18px;
+    line-height: 1.7;
+    min-height: 48px;
+  }
+
+  .eraContext {
+    font-size: 14px;
   }
 
   .roundTitle {
@@ -574,58 +509,31 @@
     letter-spacing: 0.2em;
   }
 
-  .contextText {
-    font-size: 18px;
-    line-height: 1.7;
-    min-height: 60px;
-    padding: 0 8px;
-  }
-
-  .eraContext {
-    font-size: 14px;
-    padding: 0 8px;
-  }
-
   .choiceBtn {
     font-size: 15px;
     padding: 12px 24px;
   }
 
-  .deathTitle {
-    padding: 0 8px;
-  }
-
-  .rollPercent {
-    font-size: 44px;
-    min-height: 56px;
-  }
-
   .resultNarrative {
     font-size: 17px;
-    padding: 0 8px;
   }
 
-  .deathTitle {
-    font-size: 44px;
+  .progressGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 32px;
   }
 
-  .deathSubtitle {
-    font-size: 17px;
-    padding: 0 16px;
-  }
-
-  .deathYear {
+  .progressValue {
     font-size: 22px;
   }
 
-  .statsRow {
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
+  .completeTitle {
+    font-size: 32px;
   }
 
-  .statValue {
-    font-size: 18px;
+  .completeSubtitle {
+    font-size: 16px;
+    padding: 0 16px;
   }
 
   .shockFacts {
@@ -638,28 +546,9 @@
     gap: 12px;
   }
 
-  .btnRetry {
-    padding: 12px 32px;
-    font-size: 12px;
-  }
-
   .btnClosing {
     padding: 12px 24px;
     font-size: 11px;
-  }
-
-  .completeTitle {
-    font-size: 32px;
-  }
-
-  .completeSubtitle {
-    font-size: 16px;
-    padding: 0 16px;
-  }
-
-  .btnAgain {
-    padding: 12px 32px;
-    font-size: 12px;
   }
 }
 
@@ -669,24 +558,26 @@
     letter-spacing: 0.12em;
   }
 
-  .yearDisplay {
-    font-size: 40px;
+  .roundImageContainer {
+    height: 30vh;
+    min-height: 180px;
+  }
+
+  .imageYear {
+    font-size: 36px;
   }
 
   .contextText {
     font-size: 16px;
   }
 
-  .rollPercent {
-    font-size: 36px;
+  .progressGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
-  .deathTitle {
-    font-size: 32px;
-  }
-
-  .statValue {
-    font-size: 16px;
+  .progressValue {
+    font-size: 20px;
   }
 
   .completeTitle {
