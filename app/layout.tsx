@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cinzel, EB_Garamond } from "next/font/google";
+import { SoundProvider } from "@/components/ui/SoundProvider";
 import PageTransition from "@/components/ui/PageTransition";
 import "./globals.css";
 
@@ -32,7 +33,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cinzel.variable} ${ebGaramond.variable}`}>
       <body>
-        <PageTransition>{children}</PageTransition>
+        <SoundProvider>
+          <PageTransition>{children}</PageTransition>
+        </SoundProvider>
       </body>
     </html>
   );

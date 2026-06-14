@@ -13,10 +13,21 @@ import { drawLiteracyText } from "./phenomena/LiteracyText";
 import { drawEraBackground } from "./phenomena/EraBackground";
 import { drawAtmosphericDarkness } from "./phenomena/AtmosphericDarkness";
 import { drawHistoricalRupture } from "./phenomena/HistoricalRupture";
+import { soundEngine } from "@/lib/sound-engine";
+import { useSound } from "@/components/ui/SoundProvider";
 import EraNarrative from "./panels/EraNarrative";
 import EventCallout from "./panels/EventCallout";
 import eventsData from "@/lib/data/events.json";
 import styles from "./TimelineContainer.module.css";
+
+const ERA_SOUND_MAP: Record<string, "want" | "industry" | "catastrophe" | "recovery" | "acceleration" | "goals"> = {
+  "age-of-want": "want",
+  "age-of-industry": "industry",
+  "age-of-catastrophe": "catastrophe",
+  "age-of-recovery": "recovery",
+  "age-of-acceleration": "acceleration",
+  "age-of-goals": "goals",
+};
 
 interface TimelineContainerProps {
   displayYear: number;
@@ -39,7 +50,9 @@ export default function TimelineContainer({
   const displayYearRef = useRef(START_YEAR);
   const targetYearRef = useRef(START_YEAR);
   const lastYearRef = useRef(-1);
+  const lastEraRef = useRef<string | null>(null);
   const cursorRef = useRef({ x: -999, y: -999 });
+  const { muted } = useSound();
 
   const [uiYear, setUiYear] = useState(START_YEAR);
 
@@ -105,6 +118,14 @@ export default function TimelineContainer({
 
       const era = getEraForYear(roundYear);
       const palette = getEraPalette(era?.id ?? null);
+
+      if (era && era.id !== lastEraRef.current) {
+        lastEraRef.current = era.id;
+        if (!muted) {
+          const soundEra = ERA_SOUND_MAP[era.id];
+          if (soundEra) soundEngine.playEra(soundEra);
+        }
+      }
 
       drawEraBackground({ ctx, displayYear: currentYear, width: w, height: h, palette });
       drawAtmosphericDarkness({ ctx, displayYear: currentYear, time, width: w, height: h, palette, strength: 1 });

@@ -74,6 +74,24 @@
   border-bottom: 1px solid var(--color-gold);
 }
 
+.soundBtn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  padding: 5px 6px;
+  cursor: pointer;
+  color: var(--color-bone-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.soundBtn:hover {
+  color: var(--color-bone);
+  border-color: var(--color-border-bright);
+}
+
 @media (max-width: 768px) {
   .inner {
     padding: 0 16px;

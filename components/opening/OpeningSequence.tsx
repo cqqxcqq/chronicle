@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { soundEngine } from "@/lib/sound-engine";
+import { useSound } from "@/components/ui/SoundProvider";
 import styles from "./OpeningSequence.module.css";
 
 const line1 = "In 1800, nine of every ten people on earth lived in extreme poverty.";
@@ -46,6 +48,7 @@ function StaggeredLine({
 
 export default function OpeningSequence() {
   const router = useRouter();
+  const { muted } = useSound();
   const [sequence, setSequence] = useState<
     "init" | "line1" | "line2" | "line3" | "fadeout" | "title" | "exit"
   >("init");
@@ -71,9 +74,10 @@ export default function OpeningSequence() {
   }, []);
 
   const exit = useCallback(() => {
+    if (!muted) soundEngine.playClick();
     setSequence("exit");
     setTimeout(() => router.push("/timeline"), 800);
-  }, [router]);
+  }, [router, muted]);
 
   return (
     <div className={styles.container}>
