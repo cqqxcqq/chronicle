@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { SURVIVAL_ROUNDS } from "@/lib/survival-data";
 import { soundEngine } from "@/lib/sound-engine";
 import ClosingSequence from "./ClosingSequence";
@@ -20,10 +20,16 @@ export default function SurvivalGame() {
 
   const round = SURVIVAL_ROUNDS[roundIdx];
   const timersRef = useRef<number[]>([]);
+  const rafRef = useRef<number[]>([]);
 
   const clearTimers = useCallback(() => {
     timersRef.current.forEach(clearTimeout);
     timersRef.current = [];
+  }, []);
+
+  const clearRafs = useCallback(() => {
+    rafRef.current.forEach(cancelAnimationFrame);
+    rafRef.current = [];
   }, []);
 
   const addTimer = useCallback((id: number) => {
@@ -33,8 +39,9 @@ export default function SurvivalGame() {
   useEffect(() => {
     return () => {
       clearTimers();
+      clearRafs();
     };
-  }, [clearTimers]);
+  }, [clearTimers, clearRafs]);
 
   useEffect(() => {
     if (phase !== "context") return;
@@ -74,6 +81,7 @@ export default function SurvivalGame() {
     if (phase !== "progress") return;
     setProgressVisible(true);
 
+    clearRafs();
     round.sdgProgress.forEach((prog, i) => {
       const startVal = prog.from;
       const endVal = prog.to;
@@ -83,7 +91,8 @@ export default function SurvivalGame() {
       const animate = () => {
         const elapsed = Date.now() - startTime;
         if (elapsed < 0) {
-          requestAnimationFrame(animate);
+          const id = requestAnimationFrame(animate);
+          rafRef.current.push(id);
           return;
         }
         const progress = Math.min(elapsed / duration, 1);
@@ -91,12 +100,16 @@ export default function SurvivalGame() {
         const current = startVal + (endVal - startVal) * eased;
         setCounterValues(prev => ({ ...prev, [i]: current }));
         if (progress < 1) {
-          requestAnimationFrame(animate);
+          const id = requestAnimationFrame(animate);
+          rafRef.current.push(id);
         }
       };
-      requestAnimationFrame(animate);
+      const id = requestAnimationFrame(animate);
+      rafRef.current.push(id);
     });
-  }, [phase, round.sdgProgress]);
+
+    return () => clearRafs();
+  }, [phase, round.sdgProgress, clearRafs]);
 
   const handleContinue = useCallback(() => {
     if (roundIdx < SURVIVAL_ROUNDS.length - 1) {
@@ -109,6 +122,7 @@ export default function SurvivalGame() {
 
   const handleRestart = useCallback(() => {
     clearTimers();
+    clearRafs();
     setPhase("start");
     setRoundIdx(0);
     setSelectedChoice(null);
@@ -117,26 +131,70 @@ export default function SurvivalGame() {
     setResultVisible(false);
     setProgressVisible(false);
     setCounterValues({});
-  }, [clearTimers]);
+  }, [clearTimers, clearRafs]);
+
+  const firstRound = SURVIVAL_ROUNDS[0];
+  const lastRound = SURVIVAL_ROUNDS[SURVIVAL_ROUNDS.length - 1];
+
+  const completeStats = useMemo(() => {
+    const allSdgs = new Map<string, { label: string; from: number; to: number; suffix: string }>();
+    for (const r of SURVIVAL_ROUNDS) {
+      for (const p of r.sdgProgress) {
+        const key = `${p.sdg}-${p.label}`;
+        const existing = allSdgs.get(key);
+        if (existing) {
+          existing.to = p.to;
+        } else {
+          allSdgs.set(key, { label: p.label, from: p.from, to: p.to, suffix: p.suffix });
+        }
+      }
+    }
+    const results: { sdg: string; label: string; from: number; to: number; suffix: string }[] = [];
+    const seen = new Set<string>();
+    for (const r of SURVIVAL_ROUNDS) {
+      for (const p of r.sdgProgress) {
+        const key = `${p.sdg}-${p.label}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const entry = allSdgs.get(key)!;
+        results.push({ sdg: p.sdg, label: p.label, from: entry.from, to: entry.to, suffix: entry.suffix });
+      }
+    }
+    return results;
+  }, []);
 
   useEffect(() => {
+    if (phase !== "choice") return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "1" || e.key === "2") {
+        const idx = parseInt(e.key) - 1;
+        if (idx < round.choices.length) {
+          if (!soundEngine.isMuted()) soundEngine.playClick();
+          handleChoice(idx);
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [phase, round.choices.length, handleChoice]);
+
+  useEffect(() => {
+    if (phase !== "progress") return;
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === " " || e.key === "Enter") {
-        if (phase === "progress") handleContinue();
+        e.preventDefault();
+        handleContinue();
       }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [phase, handleContinue]);
 
+  if (!round) return null;
+
   if (phase === "closing") {
     return (
-      <ClosingSequence
-        onEnd={handleRestart}
-        totalDeaths={0}
-        diedAtRound={0}
-        diedAtAge={0}
-      />
+      <ClosingSequence onEnd={handleRestart} />
     );
   }
 
@@ -219,7 +277,7 @@ export default function SurvivalGame() {
           <div className={styles.resultSection}>
             <p className={styles.roundTitle}>{round.title}</p>
             {resultVisible && (
-              <div className={styles.resultContent} style={{ animation: "fadeIn 0.6s ease-out" }}>
+              <div className={`${styles.resultContent} ${styles.fadeIn}`}>
                 <p className={styles.resultNarrative}>{round.surviveNarrative}</p>
                 {selectedChoice !== null && (
                   <p className={styles.choiceResult}>
@@ -242,29 +300,22 @@ export default function SurvivalGame() {
           224 years. You witnessed the greatest transformation in human history.
         </p>
         <div className={styles.completeStats}>
-          <p className={styles.completeStat}>
-            <span className={styles.sdgNum}>SDG 1</span> &middot; Poverty: <span>89% &rarr; 8.5%</span>
-          </p>
-          <p className={styles.completeStat}>
-            <span className={styles.sdgNum}>SDG 3</span> &middot; Child mortality: <span>460 &rarr; 37</span> per 1,000
-          </p>
-          <p className={styles.completeStat}>
-            <span className={styles.sdgNum}>SDG 4</span> &middot; Literacy: <span>12% &rarr; 87%</span>
-          </p>
-          <p className={styles.completeStat}>
-            <span className={styles.sdgNum}>SDG 3</span> &middot; Life expectancy: <span>29 &rarr; 73</span> years
-          </p>
+          {completeStats.map((stat, i) => (
+            <p key={i} className={styles.completeStat}>
+              <span className={styles.sdgNum}>{stat.sdg}</span> &middot; {stat.label}: <span>{stat.from}{stat.suffix} &rarr; {stat.to}{stat.suffix}</span>
+            </p>
+          ))}
         </div>
         <p className={styles.rarityNote}>
           In 1800, no one imagined this world. You lived to see it.
         </p>
         <div className={styles.shockFacts}>
           <p className={styles.shockLabel}>WHAT YOU WITNESSED</p>
-          {SURVIVAL_ROUNDS[SURVIVAL_ROUNDS.length - 1].shockFacts.map((fact, i) => (
+          {lastRound.shockFacts.map((fact, i) => (
             <p key={i} className={styles.shockFact}>{fact}</p>
           ))}
         </div>
-        <div className={styles.deathActions}>
+        <div className={styles.completeActions}>
           <button className={styles.btnClosing} onClick={() => setPhase("closing")}>
             SEE YOUR LEGACY &rarr;
           </button>
@@ -287,17 +338,17 @@ export default function SurvivalGame() {
         <div className={styles.contextSection}>
           <p className={styles.roundTitle}>{round.title}</p>
           {contextVisible && (
-            <p className={styles.contextText} style={{ animation: "fadeIn 0.6s ease-out" }}>
+            <p className={`${styles.contextText} ${styles.fadeIn}`}>
               {round.context}
             </p>
           )}
           {eraVisible && (
-            <p className={styles.eraContext} style={{ animation: "fadeIn 0.6s ease-out" }}>
+            <p className={`${styles.eraContext} ${styles.fadeIn}`}>
               {round.eraContext}
             </p>
           )}
           {phase === "choice" && (
-            <div className={styles.choiceArea} style={{ animation: "fadeIn 0.5s ease-out" }}>
+            <div className={`${styles.choiceArea} ${styles.fadeIn}`}>
               <p className={styles.choiceLabel}>WHAT DO YOU DO?</p>
               {round.choices.map((choice, i) => (
                 <button
@@ -305,6 +356,7 @@ export default function SurvivalGame() {
                   className={styles.choiceBtn}
                   onClick={() => { if (!soundEngine.isMuted()) soundEngine.playClick(); handleChoice(i); }}
                 >
+                  <span className={styles.choiceKey}>{i + 1}</span>
                   {choice.text}
                 </button>
               ))}

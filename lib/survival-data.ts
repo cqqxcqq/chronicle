@@ -112,6 +112,7 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     ],
     sdgProgress: [
       { sdg: "SDG 3", label: "life expectancy", from: 30, to: 32, suffix: " yr" },
+      { sdg: "SDG 3", label: "child mortality", from: 375, to: 360, suffix: "" },
       { sdg: "SDG 4", label: "literacy", from: 17, to: 21, suffix: "%" },
     ]
   },
@@ -206,6 +207,7 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     ],
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 38, to: 10, suffix: "%" },
+      { sdg: "SDG 3", label: "life expectancy", from: 60, to: 72, suffix: " yr" },
       { sdg: "SDG 3", label: "child mortality", from: 125, to: 43, suffix: "" },
       { sdg: "SDG 4", label: "literacy", from: 65, to: 86, suffix: "%" },
     ]

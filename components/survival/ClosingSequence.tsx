@@ -98,25 +98,14 @@ function AnimatedCounter({
 
 interface ClosingSequenceProps {
   onEnd: () => void;
-  totalDeaths?: number;
-  diedAtRound?: number;
-  diedAtAge?: number;
 }
 
-export default function ClosingSequence({ onEnd, totalDeaths = 0, diedAtRound, diedAtAge }: ClosingSequenceProps) {
-  const didDie = totalDeaths > 0 && diedAtRound !== undefined && diedAtAge !== undefined;
-
-  const lines = didDie
-    ? [
-        `You died at age ${diedAtAge} in the year ${1800 + diedAtRound * 25}.`,
-        "You did not live to see what came next.",
-        "But billions did. This is their story.",
-      ]
-    : [
-        "You have seen two hundred years of human struggle.",
-        "From darkness to light. From ignorance to knowledge.",
-        "The story is not over.",
-      ];
+export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
+  const lines = [
+    "You have seen two hundred years of human struggle.",
+    "From darkness to light. From ignorance to knowledge.",
+    "The story is not over.",
+  ];
 
   const [lineIdx, setLineIdx] = useState(-1);
   const [showYear, setShowYear] = useState(false);
@@ -126,25 +115,43 @@ export default function ClosingSequence({ onEnd, totalDeaths = 0, diedAtRound, d
 
   const [year, setYear] = useState(1800);
   const yearRef = useRef<number>(0);
+  const timersRef = useRef<number[]>([]);
 
-  useEffect(() => {
-    const t = setTimeout(() => setLineIdx(0), 1000);
-    return () => clearTimeout(t);
+  const clearTimers = useCallback(() => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+  }, []);
+
+  const addTimer = useCallback((id: number) => {
+    timersRef.current.push(id);
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => setShowSkip(true), 2000);
+    return () => clearTimers();
+  }, [clearTimers]);
+
+  useEffect(() => {
+    const t = window.setTimeout(() => setLineIdx(0), 1000);
+    addTimer(t);
     return () => clearTimeout(t);
-  }, []);
+  }, [addTimer]);
+
+  useEffect(() => {
+    const t = window.setTimeout(() => setShowSkip(true), 2000);
+    addTimer(t);
+    return () => clearTimeout(t);
+  }, [addTimer]);
 
   const onLineComplete = useCallback(() => {
     const next = lineIdx + 1;
     if (next < lines.length) {
-      setTimeout(() => setLineIdx(next), 1200);
+      const t = window.setTimeout(() => setLineIdx(next), 1200);
+      addTimer(t);
     } else {
-      setTimeout(() => setShowYear(true), 1500);
+      const t = window.setTimeout(() => setShowYear(true), 1500);
+      addTimer(t);
     }
-  }, [lineIdx, lines.length]);
+  }, [lineIdx, lines.length, addTimer]);
 
   useEffect(() => {
     if (!showYear) return;
@@ -160,19 +167,21 @@ export default function ClosingSequence({ onEnd, totalDeaths = 0, diedAtRound, d
       if (progress < 1) {
         yearRef.current = requestAnimationFrame(animate);
       } else {
-        setTimeout(() => setShowCounters(true), HOLD_AFTER);
+        const t = window.setTimeout(() => setShowCounters(true), HOLD_AFTER);
+        addTimer(t);
       }
     };
 
     yearRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(yearRef.current);
-  }, [showYear]);
+  }, [showYear, addTimer]);
 
   useEffect(() => {
     if (!showCounters) return;
-    const t = setTimeout(() => setShowTitle(true), 7000);
+    const t = window.setTimeout(() => setShowTitle(true), 7000);
+    addTimer(t);
     return () => clearTimeout(t);
-  }, [showCounters]);
+  }, [showCounters, addTimer]);
 
   const handleClick = useCallback(() => {
     onEnd();
@@ -283,16 +292,6 @@ export default function ClosingSequence({ onEnd, totalDeaths = 0, diedAtRound, d
             >
               A history of human progress.
             </motion.p>
-            {didDie && totalDeaths > 0 && (
-              <motion.p
-                className={styles.deathNote}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1.0, delay: 1.2 }}
-              >
-                You died {totalDeaths} time{totalDeaths !== 1 ? "s" : ""}. Most people born in 1800 did not survive.
-              </motion.p>
-            )}
             <motion.p
               className={styles.closing}
               initial={{ opacity: 0 }}

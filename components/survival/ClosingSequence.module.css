@@ -101,14 +101,6 @@
   letter-spacing: 0.04em;
 }
 
-.sdgNum {
-  font-family: var(--font-display);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  color: var(--color-gold);
-  opacity: 0.7;
-}
-
 /* --- TITLE --- */
 .titleBlock {
   display: flex;

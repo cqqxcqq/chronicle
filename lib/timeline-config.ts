@@ -84,7 +84,7 @@ export const MILESTONE_STATS: MilestoneStat[] = [
   {
     hook: "The world agreed on a plan to end poverty, heal the planet, and leave no one behind.",
     context: "The Sustainable Development Goals represent humanity's most ambitious compact: 17 goals, 169 targets, one deadline. Progress is real but uneven. The question is no longer whether poverty can be ended, but whether we will choose to end it.",
-    keyFact: "Since 2000, extreme poverty has fallen from 29% to 10%. Child mortality has dropped from 76 to 37 per 1,000. Literacy has risen from 82% to 87%.",
+    keyFact: "Since 1970, extreme poverty has fallen from 38% to 10%. Child mortality has dropped from 125 to 43 per 1,000. Literacy has risen from 65% to 86%.",
     poverty: 10,
     lifeExpectancy: 72,
     childMortality: 43,
