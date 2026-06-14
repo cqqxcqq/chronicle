@@ -6,7 +6,6 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  cursor: pointer;
 }
 
 .lineBlock {
@@ -31,6 +30,54 @@
   display: inline;
 }
 
+/* --- COUNTERS --- */
+.countersBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  width: 100%;
+  max-width: 800px;
+  padding: 0 32px;
+}
+
+.countersLabel {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.4em;
+  color: var(--color-gold);
+}
+
+.countersGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px 64px;
+  width: 100%;
+}
+
+.counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.counterValue {
+  font-family: var(--font-display);
+  font-size: 56px;
+  color: var(--color-gold);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.counterLabel {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-bone-ghost);
+  letter-spacing: 0.04em;
+}
+
+/* --- TITLE --- */
 .titleBlock {
   display: flex;
   flex-direction: column;
@@ -74,4 +121,5 @@
   color: var(--color-bone-ghost);
   text-align: center;
   margin-top: 48px;
+  cursor: pointer;
 }

@@ -1,15 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./ClosingSequence.module.css";
 
 const lines = [
   "You have seen two hundred years of human struggle.",
   "From darkness to light. From ignorance to knowledge.",
-  "460 children per thousand once died before five. Now it is 37.",
-  "89% of humanity once lived in extreme poverty. Now it is 8.5%.",
-  "12% of the world could read. Now it is 87%.",
   "The story is not over.",
 ];
 
@@ -48,12 +45,72 @@ function StaggeredLine({
   );
 }
 
+interface CounterProps {
+  from: number;
+  to: number;
+  suffix?: string;
+  prefix?: string;
+  decimals?: number;
+  duration?: number;
+  delay?: number;
+  label: string;
+}
+
+function AnimatedCounter({
+  from,
+  to,
+  suffix = "",
+  prefix = "",
+  decimals = 0,
+  duration = 2000,
+  delay = 0,
+  label,
+}: CounterProps) {
+  const [value, setValue] = useState(from);
+  const [started, setStarted] = useState(false);
+  const ref = useRef<number>(0);
+
+  useEffect(() => {
+    const t = setTimeout(() => setStarted(true), delay);
+    return () => clearTimeout(t);
+  }, [delay]);
+
+  useEffect(() => {
+    if (!started) return;
+    const start = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = from + (to - from) * eased;
+      setValue(current);
+      if (progress < 1) {
+        ref.current = requestAnimationFrame(animate);
+      }
+    };
+    ref.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(ref.current);
+  }, [started, from, to, duration]);
+
+  const display = decimals > 0 ? value.toFixed(decimals) : Math.round(value);
+
+  return (
+    <div className={styles.counter}>
+      <p className={styles.counterValue}>
+        {prefix}{display}{suffix}
+      </p>
+      <p className={styles.counterLabel}>{label}</p>
+    </div>
+  );
+}
+
 interface ClosingSequenceProps {
   onEnd: () => void;
 }
 
 export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
   const [lineIdx, setLineIdx] = useState(-1);
+  const [showCounters, setShowCounters] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
 
   useEffect(() => {
@@ -66,9 +123,13 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
     if (next < lines.length) {
       setTimeout(() => setLineIdx(next), 2000);
     } else {
-      setTimeout(() => setShowTitle(true), 2500);
+      setTimeout(() => setShowCounters(true), 2500);
     }
   }, [lineIdx]);
+
+  const handleCountersComplete = useCallback(() => {
+    setTimeout(() => setShowTitle(true), 1500);
+  }, []);
 
   const handleClick = useCallback(() => {
     onEnd();
@@ -77,7 +138,7 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
   return (
     <div className={styles.container}>
       <AnimatePresence mode="wait">
-        {!showTitle && lineIdx >= 0 && lineIdx < lines.length && (
+        {!showCounters && !showTitle && lineIdx >= 0 && lineIdx < lines.length && (
           <motion.div
             key={`line-${lineIdx}`}
             className={styles.lineBlock}
@@ -86,6 +147,26 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
             exit={{ opacity: 0, transition: { duration: 0.5 } }}
           >
             <StaggeredLine text={lines[lineIdx]} onComplete={onLineComplete} />
+          </motion.div>
+        )}
+
+        {showCounters && !showTitle && (
+          <motion.div
+            key="counters"
+            className={styles.countersBlock}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.8 } }}
+            transition={{ duration: 1.0 }}
+            onAnimationComplete={handleCountersComplete}
+          >
+            <p className={styles.countersLabel}>WHAT CHANGED</p>
+            <div className={styles.countersGrid}>
+              <AnimatedCounter from={89} to={8.5} suffix="%" label="poverty" delay={500} duration={2500} decimals={1} />
+              <AnimatedCounter from={460} to={37} label="child deaths per 1,000" delay={1000} duration={2500} />
+              <AnimatedCounter from={12} to={87} suffix="%" label="literacy" delay={1500} duration={2500} />
+              <AnimatedCounter from={29} to={73} suffix=" yr" label="life expectancy" delay={2000} duration={2500} />
+            </div>
           </motion.div>
         )}
 
