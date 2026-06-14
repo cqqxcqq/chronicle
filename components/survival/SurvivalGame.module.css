@@ -14,13 +14,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
   text-align: center;
+  padding: 0 24px;
+  max-width: 600px;
 }
 
 .startTitle {
   font-family: var(--font-display);
-  font-size: 52px;
+  font-size: clamp(28px, 5vw, 48px);
   color: var(--color-gold);
   letter-spacing: 0.2em;
   line-height: 1.2;
@@ -33,35 +35,40 @@
   color: var(--color-bone-dim);
   max-width: 450px;
   line-height: 1.6;
-  margin-top: -8px;
 }
 
 .startSubtitle {
   font-family: var(--font-body);
-  font-size: 19px;
+  font-size: 18px;
   color: var(--color-bone-dim);
   font-style: italic;
-  max-width: 500px;
+  max-width: 450px;
   line-height: 1.7;
 }
 
 .startWarning {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 15px;
   color: var(--color-blood);
   font-style: italic;
-  margin-top: 8px;
+}
+
+.deathCount {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-blood);
+  font-style: italic;
 }
 
 .btnStart {
-  margin-top: 16px;
+  margin-top: 8px;
   background: transparent;
   border: 1px solid var(--color-gold);
   color: var(--color-bone);
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 13px;
   letter-spacing: 0.3em;
-  padding: 14px 48px;
+  padding: 12px 40px;
   cursor: pointer;
   transition: background 0.3s, color 0.3s;
 }
@@ -224,36 +231,52 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .choiceLabel {
   font-family: var(--font-display);
-  font-size: 11px;
-  letter-spacing: 0.35em;
+  font-size: 10px;
+  letter-spacing: 0.4em;
   color: var(--color-gold);
   margin-bottom: 4px;
 }
 
 .choiceBtn {
-  background: transparent;
+  background: rgba(212, 175, 55, 0.03);
   border: 1px solid var(--color-border);
   border-radius: 2px;
-  padding: 12px 32px;
+  padding: 14px 36px;
   cursor: pointer;
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 17px;
   font-style: italic;
   color: var(--color-bone);
-  max-width: 500px;
+  max-width: 480px;
   width: 100%;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.choiceBtn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.08), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
 
 .choiceBtn:hover {
   border-color: var(--color-gold);
   color: var(--color-gold);
-  background: rgba(212, 175, 55, 0.05);
+  background: rgba(212, 175, 55, 0.06);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.08);
+}
+
+.choiceBtn:hover::before {
+  opacity: 1;
 }
 
 .choiceResult {
@@ -262,15 +285,6 @@
   font-style: italic;
   color: var(--color-bone-ghost);
   margin-top: 4px;
-}
-
-/* --- DEATH COUNT --- */
-.deathCount {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--color-blood);
-  font-style: italic;
-  margin-top: 8px;
 }
 
 /* --- DEATH SCREEN --- */
@@ -561,6 +575,15 @@
 
   .eraContext {
     font-size: 14px;
+    padding: 0 8px;
+  }
+
+  .choiceBtn {
+    font-size: 15px;
+    padding: 12px 24px;
+  }
+
+  .deathTitle {
     padding: 0 8px;
   }
 
