@@ -152,7 +152,7 @@ export default function SurvivalGame() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [phase, survived, showContinueBtn, handleContinue, selectedChoice]);
 
-  const canSkipToClosing = totalDeaths >= 3;
+  const canSkipToClosing = totalDeaths >= 1;
 
   if (phase === "closing") {
     return (
