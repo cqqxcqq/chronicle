@@ -9,6 +9,8 @@ const line1 = "In 1800, nine of every ten people on earth lived in extreme pover
 const line2 = "Most children did not live to see their fifth birthday.";
 const line3 = "This is what happened next.";
 
+const CHAR_DELAY = 0.065;
+
 function StaggeredLine({
   text,
   onComplete,
@@ -16,26 +18,29 @@ function StaggeredLine({
   text: string;
   onComplete?: () => void;
 }) {
+  const revealTime = text.length * CHAR_DELAY + 0.5;
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      onComplete?.();
+    }, revealTime * 1000);
+    return () => clearTimeout(t);
+  }, [revealTime, onComplete]);
+
   return (
-    <motion.p
-      className={styles.line}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      onAnimationComplete={onComplete}
-    >
+    <p className={styles.line}>
       {text.split("").map((char, i) => (
         <motion.span
           key={i}
           className={styles.char}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: i * 0.065 }}
+          transition={{ duration: 0.4, delay: i * CHAR_DELAY }}
         >
           {char === " " ? "\u00A0" : char}
         </motion.span>
       ))}
-    </motion.p>
+    </p>
   );
 }
 
