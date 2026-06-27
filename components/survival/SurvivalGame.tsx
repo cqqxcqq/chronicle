@@ -6,7 +6,7 @@ import { soundEngine } from "@/lib/sound-engine";
 import ClosingSequence from "./ClosingSequence";
 import styles from "./SurvivalGame.module.css";
 
-type Phase = "start" | "context" | "choice" | "result" | "shock" | "progress" | "complete" | "closing";
+type Phase = "start" | "context" | "choice" | "result" | "progress" | "complete" | "closing";
 
 type EraSound = "want" | "industry" | "catastrophe" | "recovery" | "acceleration" | "goals";
 
@@ -26,7 +26,6 @@ export default function SurvivalGame() {
   const [contextVisible, setContextVisible] = useState(false);
   const [eraVisible, setEraVisible] = useState(false);
   const [resultVisible, setResultVisible] = useState(false);
-  const [shockVisible, setShockVisible] = useState(false);
   const [progressVisible, setProgressVisible] = useState(false);
   const [counterValues, setCounterValues] = useState<Record<number, number>>({});
 
@@ -61,7 +60,6 @@ export default function SurvivalGame() {
     setContextVisible(false);
     setEraVisible(false);
     setResultVisible(false);
-    setShockVisible(false);
     setProgressVisible(false);
     setSelectedChoice(null);
     setCounterValues({});
@@ -90,19 +88,10 @@ export default function SurvivalGame() {
     if (phase !== "result" || !resultVisible) return;
     if (!soundEngine.isMuted()) soundEngine.playSurvive();
 
-    const t = window.setTimeout(() => setPhase("shock"), 2500);
+    const t = window.setTimeout(() => setPhase("progress"), 2500);
     addTimer(t);
     return () => clearTimeout(t);
   }, [phase, resultVisible, addTimer]);
-
-  useEffect(() => {
-    if (phase !== "shock") return;
-    setShockVisible(true);
-
-    const t = window.setTimeout(() => setPhase("progress"), 3500);
-    addTimer(t);
-    return () => clearTimeout(t);
-  }, [phase, addTimer]);
 
   useEffect(() => {
     if (phase !== "progress") return;
@@ -158,13 +147,11 @@ export default function SurvivalGame() {
     setContextVisible(false);
     setEraVisible(false);
     setResultVisible(false);
-    setShockVisible(false);
     setProgressVisible(false);
     setCounterValues({});
   }, [clearTimers, clearRafs]);
 
   const firstRound = SURVIVAL_ROUNDS[0];
-  const lastRound = SURVIVAL_ROUNDS[SURVIVAL_ROUNDS.length - 1];
 
   const completeStats = useMemo(() => {
     const allSdgs = new Map<string, { label: string; from: number; to: number; suffix: string }>();
@@ -256,31 +243,6 @@ export default function SurvivalGame() {
           <button className={styles.btnStart} onClick={() => { if (!soundEngine.isMuted()) soundEngine.playClick(); setPhase("context"); }}>
             BEGIN
           </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (phase === "shock") {
-    const shockFact = round.shockFacts[0];
-    return (
-      <div className={styles.container}>
-        <div className={styles.playingScreen}>
-          {progressBar}
-          <div className={styles.roundImageContainer}>
-            <img src={round.image} alt={round.imageAlt} className={styles.roundImage} />
-            <div className={styles.imageOverlay} />
-            <div className={styles.imageYearOverlay}>
-              <p className={styles.imageYear}>{round.year}</p>
-              <p className={styles.imageAge}>Age {round.age}</p>
-            </div>
-          </div>
-          <div className={styles.shockSection}>
-            <div className={`${styles.shockBanner} ${styles.shockPulse}`}>
-              <p className={styles.shockBannerLabel}>REMEMBER THIS</p>
-              <p className={styles.shockBannerText}>{shockFact}</p>
-            </div>
-          </div>
         </div>
       </div>
     );
@@ -378,12 +340,6 @@ export default function SurvivalGame() {
         <p className={styles.rarityNote}>
           In 1800, no one imagined this world. You lived to see it.
         </p>
-        <div className={styles.shockFacts}>
-          <p className={styles.shockLabel}>WHAT YOU WITNESSED</p>
-          {lastRound.shockFacts.map((fact, i) => (
-            <p key={i} className={styles.shockFact}>{fact}</p>
-          ))}
-        </div>
         <div className={styles.completeActions}>
           <button className={styles.btnClosing} onClick={() => setPhase("closing")}>
             SEE YOUR LEGACY &rarr;

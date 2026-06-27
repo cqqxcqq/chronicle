@@ -21,7 +21,6 @@ export interface SurvivalRound {
   imageAlt: string;
   choices: SurvivalChoice[];
   eraContext: string;
-  shockFacts: string[];
   sdgProgress: SdgProgress[];
 }
 
@@ -46,11 +45,6 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
       },
     ],
     eraContext: "Nine in ten people live in extreme poverty. The average life is 29 years. Most humans farm with tools unchanged since the Bronze Age.",
-    shockFacts: [
-      "In 1800, a doctor's tools were not washed between patients. The word 'germ' did not exist.",
-      "The average person in 1800 earned the equivalent of $2 per day. Most humans had never traveled more than 20 miles from their birthplace.",
-      "There were no antibiotics, no vaccines, no anesthesia. Surgery was a death sentence."
-    ],
     sdgProgress: []
   },
   {
@@ -73,11 +67,6 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
       },
     ],
     eraContext: "Life expectancy remains 29 years. 85% live in poverty. The industrial revolution has begun but its benefits have not reached you.",
-    shockFacts: [
-      "Mount Tambora killed more people than any earthquake in recorded history. The resulting famine killed over 100,000 in Europe alone.",
-      "In 1815, there was no social safety net. No welfare. No food stamps. If you could not work, you starved.",
-      "The average worker in 1815 earned less than a medieval peasant."
-    ],
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 89, to: 85, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 29, to: 30, suffix: " yr" },
@@ -103,11 +92,6 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
       },
     ],
     eraContext: "The world is transforming \u2014 railroads, factories, telegraphs \u2014 but progress has not reached the poor.",
-    shockFacts: [
-      "In 1835, the average life expectancy in industrial cities was 25. Workers lived in conditions worse than medieval peasants.",
-      "There were no labor laws. Children as young as 5 worked 16-hour days in factories.",
-      "Cholera killed more people than any war. It was spread by contaminated water \u2014 but no one knew about germs yet."
-    ],
     sdgProgress: [
       { sdg: "SDG 3", label: "child mortality", from: 460, to: 375, suffix: "" },
       { sdg: "SDG 4", label: "literacy", from: 12, to: 17, suffix: "%" },
@@ -133,11 +117,6 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
       },
     ],
     eraContext: "Darwin publishes On the Origin of Species. The telephone is invented. The American Civil War rages.",
-    shockFacts: [
-      "In 1860, there were no antibiotics. A simple cut could kill you.",
-      "The American Civil War killed more Americans than all other wars combined up to that point. 620,000 dead.",
-      "The average person in 1860 had never seen a photograph."
-    ],
     sdgProgress: [
       { sdg: "SDG 3", label: "life expectancy", from: 30, to: 32, suffix: " yr" },
       { sdg: "SDG 3", label: "child mortality", from: 375, to: 360, suffix: "" },
@@ -164,11 +143,6 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
       },
     ],
     eraContext: "X-rays. Radio. The airplane. And soon: world war, pandemic, and the deadliest half-century in history.",
-    shockFacts: [
-      "In 1900, the average life expectancy was 31. You lived over three times that.",
-      "In 1900, there were no antibiotics, no insulin, no blood transfusions.",
-      "The 20th century would kill more people than all previous centuries combined."
-    ],
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 82, to: 60, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 32, to: 45, suffix: " yr" },
@@ -195,11 +169,6 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
       },
     ],
     eraContext: "World War I ends as the flu peaks. 20 million soldiers dead, 50 million civilians. The old order crumbles.",
-    shockFacts: [
-      "The Spanish Flu killed more people in 24 weeks than HIV/AIDS killed in 24 years.",
-      "In 1918, there were no antiviral drugs, no ventilators, no ICUs.",
-      "World War I killed 20 million people. The Spanish Flu killed 50 million."
-    ],
     sdgProgress: [
       { sdg: "SDG 3", label: "child mortality", from: 215, to: 125, suffix: "" },
       { sdg: "SDG 4", label: "literacy", from: 21, to: 50, suffix: "%" },
@@ -225,11 +194,6 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
       },
     ],
     eraContext: "The United Nations is born. The Marshall Plan rebuilds Europe. Penicillin saves millions.",
-    shockFacts: [
-      "Between 1939 and 1945, more people died each year than in the entire Napoleonic Wars.",
-      "The Holocaust killed 6 million Jews and 5 million others.",
-      "Hiroshima destroyed in seconds. 80,000 dead instantly."
-    ],
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 60, to: 38, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 45, to: 60, suffix: " yr" },
@@ -256,11 +220,6 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
       },
     ],
     eraContext: "Extreme poverty has fallen from 89% to 29%. Life expectancy is 68. Smallpox is eradicated.",
-    shockFacts: [
-      "In 2000, 1 billion people had never made a phone call.",
-      "In 2000, there was no Facebook, no iPhone, no YouTube.",
-      "Since 1990, 1 billion people have been lifted out of extreme poverty."
-    ],
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 38, to: 10, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 60, to: 72, suffix: " yr" },
@@ -288,11 +247,6 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
       },
     ],
     eraContext: "The SDGs are humanity's plan to finish what two centuries began.",
-    shockFacts: [
-      "In 1800, 89% of the world lived in extreme poverty. Today it is 8.5%.",
-      "In 1800, 460 of 1000 children died before age 5. Today it is 37.",
-      "In 1800, 12% of the world could read. Today it is 87%."
-    ],
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 10, to: 8.5, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 72, to: 73, suffix: " yr" },
