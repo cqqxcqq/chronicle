@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { animate, useMotionValue, useMotionValueEvent } from "framer-motion";
+import { animate, useMotionValue, useMotionValueEvent, useReducedMotion } from "framer-motion";
 
 interface AnimatedNumberProps {
   value: number;
@@ -14,12 +14,13 @@ export default function AnimatedNumber({
   decimals = 0,
   suffix = "",
 }: AnimatedNumberProps) {
+  const shouldReduceMotion = useReducedMotion();
   const motionValue = useMotionValue(value);
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const controls = animate(motionValue, value, {
-      duration: 0.8,
+      duration: shouldReduceMotion ? 0 : 0.8,
       ease: "easeOut",
     });
     return controls.stop;

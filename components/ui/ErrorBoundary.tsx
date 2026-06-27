@@ -26,33 +26,33 @@ export default class ErrorBoundary extends Component<Props, State> {
         <div style={{
           position: "fixed",
           inset: 0,
-          background: "#080808",
+          background: "var(--color-void)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           gap: "16px",
-          fontFamily: "'EB Garamond', serif",
-          color: "#e8e0d0",
+          fontFamily: "var(--font-body)",
+          color: "var(--color-bone)",
         }}>
-          <p style={{ fontFamily: "'Cinzel', serif", fontSize: "24px", letterSpacing: "0.2em", color: "#d4af37" }}>
+          <p style={{ fontFamily: "var(--font-display)", fontSize: "24px", letterSpacing: "0.2em", color: "var(--color-gold)" }}>
             CHRONICLE
           </p>
-          <p style={{ fontSize: "16px", fontStyle: "italic", color: "rgba(232,224,208,0.5)" }}>
+          <p style={{ fontSize: "16px", fontStyle: "italic", color: "var(--color-bone-dim)" }}>
             Something went wrong.
           </p>
           <button
             onClick={() => window.location.reload()}
             style={{
               background: "transparent",
-              border: "1px solid rgba(212,175,55,0.45)",
-              borderRadius: "2px",
+              border: "var(--border-standard)",
+              borderRadius: "var(--border-radius)",
               padding: "10px 24px",
               cursor: "pointer",
-              fontFamily: "'Cinzel', serif",
+              fontFamily: "var(--font-display)",
               fontSize: "11px",
               letterSpacing: "0.3em",
-              color: "#d4af37",
+              color: "var(--color-gold)",
               marginTop: "8px",
             }}
           >

@@ -1,6 +1,7 @@
-export interface SurvivalChoice {
+﻿export interface SurvivalChoice {
   text: string;
   modifier: number;
+  outcome: string;
 }
 
 export interface SdgProgress {
@@ -19,7 +20,6 @@ export interface SurvivalRound {
   image: string;
   imageAlt: string;
   choices: SurvivalChoice[];
-  surviveNarrative: string;
   eraContext: string;
   shockFacts: string[];
   sdgProgress: SdgProgress[];
@@ -34,10 +34,17 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     image: "/infancy-1800.jpg",
     imageAlt: "Pre-industrial farming village, 1800",
     choices: [
-      { text: "Mother breastfeeds you through famine", modifier: 0.10 },
-      { text: "Born into a family with clean water", modifier: 0.05 },
+      {
+        text: "Mother breastfeeds you through famine",
+        modifier: 0.10,
+        outcome: "Your mother's body was the only medicine. She gave you milk when there was no food. Half of all children had no such mother.",
+      },
+      {
+        text: "Born into a family with clean water",
+        modifier: 0.05,
+        outcome: "Clean water \u2014 a luxury in 1800. Your family boiled it by habit, not by knowledge. Germ theory was a century away.",
+      },
     ],
-    surviveNarrative: "Your first breath became a second. Then a week. Then a year. You survived infancy — luckier than half the world.",
     eraContext: "Nine in ten people live in extreme poverty. The average life is 29 years. Most humans farm with tools unchanged since the Bronze Age.",
     shockFacts: [
       "In 1800, a doctor's tools were not washed between patients. The word 'germ' did not exist.",
@@ -54,10 +61,17 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     image: "/famine-1815.jpg",
     imageAlt: "Barren fields under volcanic ash sky, 1815",
     choices: [
-      { text: "Flee to the countryside to forage", modifier: 0.08 },
-      { text: "Share dwindling food with neighbors", modifier: 0.03 },
+      {
+        text: "Flee to the countryside to forage",
+        modifier: 0.08,
+        outcome: "You ate roots and bark for months. Your stomach never stopped aching. But you ate. Millions did not.",
+      },
+      {
+        text: "Share dwindling food with neighbors",
+        modifier: 0.03,
+        outcome: "You gave away half your food. Your neighbors survived because of you. In 1815, community was the only safety net.",
+      },
     ],
-    surviveNarrative: "You ate dirt this winter. You watched your neighbors starve. But you ate. Famine took millions — you were not among them.",
     eraContext: "Life expectancy remains 29 years. 85% live in poverty. The industrial revolution has begun but its benefits have not reached you.",
     shockFacts: [
       "Mount Tambora killed more people than any earthquake in recorded history. The resulting famine killed over 100,000 in Europe alone.",
@@ -77,15 +91,22 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     image: "/industrial-1835.jpg",
     imageAlt: "Early factory with child laborers, 1835",
     choices: [
-      { text: "Seek out a barber-surgeon for treatment", modifier: 0.05 },
-      { text: "Rest and drink boiled water", modifier: 0.10 },
+      {
+        text: "Seek out a barber-surgeon for treatment",
+        modifier: 0.05,
+        outcome: "The barber-surgeon bled you with a rusty lancet. Infection spread through your arm. You survived \u2014 barely. Most did not.",
+      },
+      {
+        text: "Rest and drink boiled water",
+        modifier: 0.10,
+        outcome: "Boiled water saved your life. You did not know why. No one did. The word 'bacteria' would not be coined for another 50 years.",
+      },
     ],
-    surviveNarrative: "At 35, you are old. Your body aches. But you are alive — a rare thing in a world that grinds people down before 40.",
-    eraContext: "The world is transforming — railroads, factories, telegraphs — but progress has not reached the poor.",
+    eraContext: "The world is transforming \u2014 railroads, factories, telegraphs \u2014 but progress has not reached the poor.",
     shockFacts: [
       "In 1835, the average life expectancy in industrial cities was 25. Workers lived in conditions worse than medieval peasants.",
       "There were no labor laws. Children as young as 5 worked 16-hour days in factories.",
-      "Cholera killed more people than any war. It was spread by contaminated water — but no one knew about germs yet."
+      "Cholera killed more people than any war. It was spread by contaminated water \u2014 but no one knew about germs yet."
     ],
     sdgProgress: [
       { sdg: "SDG 3", label: "child mortality", from: 460, to: 375, suffix: "" },
@@ -100,10 +121,17 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     image: "/civilwar-1860.jpg",
     imageAlt: "Civil War era soldiers and battlefield, 1860",
     choices: [
-      { text: "Move to a quieter rural life", modifier: 0.08 },
-      { text: "Stay in the city near a hospital", modifier: 0.04 },
+      {
+        text: "Move to a quieter rural life",
+        modifier: 0.08,
+        outcome: "You left the city before the cholera returned. The countryside was quiet. The war was loud. You chose silence.",
+      },
+      {
+        text: "Stay in the city near a hospital",
+        modifier: 0.04,
+        outcome: "The hospital had no antibiotics, no anesthesia, no hope. But it had a roof. In 1860, that was enough.",
+      },
     ],
-    surviveNarrative: "Sixty years. You have watched children grow, loved ones die, and the world transform from horse to steam.",
     eraContext: "Darwin publishes On the Origin of Species. The telephone is invented. The American Civil War rages.",
     shockFacts: [
       "In 1860, there were no antibiotics. A simple cut could kill you.",
@@ -120,14 +148,21 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     year: 1900,
     age: 100,
     title: "A New Century",
-    context: "The year 1900. You are 100 years old — an impossibility. But the 20th century is the bloodiest in history.",
+    context: "The year 1900. You are 100 years old \u2014 an impossibility. But the 20th century is the bloodiest in history.",
     image: "/newcentury-1900.jpg",
     imageAlt: "Turn of the century city with early automobiles, 1900",
     choices: [
-      { text: "Retreat from public life entirely", modifier: 0.06 },
-      { text: "Document your story for posterity", modifier: 0.02 },
+      {
+        text: "Retreat from public life entirely",
+        modifier: 0.06,
+        outcome: "You watched the world change from behind glass. Automobiles. Airplanes. Electricity. You had seen it all \u2014 and feared what came next.",
+      },
+      {
+        text: "Document your story for posterity",
+        modifier: 0.02,
+        outcome: "You wrote by candlelight. Your words would outlive you. In a century of war, testimony became the rarest form of survival.",
+      },
     ],
-    surviveNarrative: "You have seen a century. Horse to automobile. Candle to electric light. You are the oldest person alive.",
     eraContext: "X-rays. Radio. The airplane. And soon: world war, pandemic, and the deadliest half-century in history.",
     shockFacts: [
       "In 1900, the average life expectancy was 31. You lived over three times that.",
@@ -148,10 +183,17 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     image: "/pandemic-1918.jpg",
     imageAlt: "Spanish Flu hospital ward with masked nurses, 1918",
     choices: [
-      { text: "Isolate yourself from all contact", modifier: 0.06 },
-      { text: "Trust your ancient immune system", modifier: 0.01 },
+      {
+        text: "Isolate yourself from all contact",
+        modifier: 0.06,
+        outcome: "You locked the door and did not open it for months. The silence outside was worse than the coughing. When you emerged, the world had changed.",
+      },
+      {
+        text: "Trust your ancient immune system",
+        modifier: 0.01,
+        outcome: "Your body fought a war it had no memory of winning. At 118, survival is not courage \u2014 it is defiance.",
+      },
     ],
-    surviveNarrative: "The flu swept the planet in months. It killed the young and the strong. You are neither. You do not question your luck.",
     eraContext: "World War I ends as the flu peaks. 20 million soldiers dead, 50 million civilians. The old order crumbles.",
     shockFacts: [
       "The Spanish Flu killed more people in 24 weeks than HIV/AIDS killed in 24 years.",
@@ -171,10 +213,17 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     image: "/atomic-1945.jpg",
     imageAlt: "WWII ruins and post-war reconstruction, 1945",
     choices: [
-      { text: "Flee to the countryside before the bombs", modifier: 0.04 },
-      { text: "Volunteer to help rebuild", modifier: 0.01 },
+      {
+        text: "Flee to the countryside before the bombs",
+        modifier: 0.04,
+        outcome: "You ran. The city burned behind you. You did not look back. In 1945, running was the only form of hope left.",
+      },
+      {
+        text: "Volunteer to help rebuild",
+        modifier: 0.01,
+        outcome: "You lifted rubble with your bare hands. The buildings were gone. The people were not. That was enough.",
+      },
     ],
-    surviveNarrative: "You witnessed the worst of humanity and survived. The UN is founded. Perhaps the species has learned something.",
     eraContext: "The United Nations is born. The Marshall Plan rebuilds Europe. Penicillin saves millions.",
     shockFacts: [
       "Between 1939 and 1945, more people died each year than in the entire Napoleonic Wars.",
@@ -191,14 +240,21 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     year: 2000,
     age: 200,
     title: "The Digital Age",
-    context: "The year 2000. You are 200 years old — the oldest human who has ever lived. The internet connects the world.",
+    context: "The year 2000. You are 200 years old \u2014 the oldest human who has ever lived. The internet connects the world.",
     image: "/digital-2000.jpg",
     imageAlt: "Early internet cafe with dial-up computers, 2000",
     choices: [
-      { text: "Embrace modern medicine fully", modifier: 0.03 },
-      { text: "Rely on traditional remedies", modifier: 0.00 },
+      {
+        text: "Embrace modern medicine fully",
+        modifier: 0.03,
+        outcome: "Antibiotics. Vaccines. Surgery that did not kill you. You lived to see medicine become a science instead of a gamble.",
+      },
+      {
+        text: "Rely on traditional remedies",
+        modifier: 0.00,
+        outcome: "Herbs and prayers. They sustained you for 200 years. Science sustained the other 6 billion.",
+      },
     ],
-    surviveNarrative: "You have lived through the entire industrial revolution. Horse to spacecraft. Candle to internet.",
     eraContext: "Extreme poverty has fallen from 89% to 29%. Life expectancy is 68. Smallpox is eradicated.",
     shockFacts: [
       "In 2000, 1 billion people had never made a phone call.",
@@ -220,10 +276,17 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     image: "/goals-2026.jpg",
     imageAlt: "Modern solar panels and green energy, 2026",
     choices: [
-      { text: "Write your memoirs for the world", modifier: 0.01 },
-      { text: "Spend your last days in peace", modifier: 0.02 },
+      {
+        text: "Write your memoirs for the world",
+        modifier: 0.01,
+        outcome: "Your words traveled faster than light. In 1800, your story would have died with you. In 2026, it reaches millions.",
+      },
+      {
+        text: "Spend your last days in peace",
+        modifier: 0.02,
+        outcome: "You closed your eyes. The world outside was louder, brighter, kinder than the one you were born into. That is enough.",
+      },
     ],
-    surviveNarrative: "You are the bridge between two worlds. Born into darkness and hunger. Dying in a world of light and plenty.",
     eraContext: "The SDGs are humanity's plan to finish what two centuries began.",
     shockFacts: [
       "In 1800, 89% of the world lived in extreme poverty. Today it is 8.5%.",

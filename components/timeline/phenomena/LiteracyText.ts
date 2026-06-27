@@ -61,11 +61,12 @@ let cachedBlur = -1;
 
 const buildCache = (literacyRate: number, w: number, h: number) => {
   const blurAmount = 4 - literacyRate * 3.5;
+  const dpr = window.devicePixelRatio || 1;
 
   if (
     textCache &&
-    textCache.width === w &&
-    textCache.height === h &&
+    textCache.width === w * dpr &&
+    textCache.height === h * dpr &&
     Math.abs(cachedBlur - blurAmount) < 0.1
   ) {
     return;
@@ -75,9 +76,12 @@ const buildCache = (literacyRate: number, w: number, h: number) => {
   cachedLiteracyRate = literacyRate;
 
   textCache = document.createElement("canvas");
-  textCache.width = w;
-  textCache.height = h;
+  textCache.width = w * dpr;
+  textCache.height = h * dpr;
+  textCache.style.width = `${w}px`;
+  textCache.style.height = `${h}px`;
   const tc = textCache.getContext("2d")!;
+  tc.scale(dpr, dpr);
 
   tc.clearRect(0, 0, w, h);
   tc.filter = `blur(${blurAmount}px)`;

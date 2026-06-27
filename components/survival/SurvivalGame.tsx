@@ -6,7 +6,18 @@ import { soundEngine } from "@/lib/sound-engine";
 import ClosingSequence from "./ClosingSequence";
 import styles from "./SurvivalGame.module.css";
 
-type Phase = "start" | "context" | "choice" | "result" | "progress" | "complete" | "closing";
+type Phase = "start" | "context" | "choice" | "result" | "shock" | "progress" | "complete" | "closing";
+
+type EraSound = "want" | "industry" | "catastrophe" | "recovery" | "acceleration" | "goals";
+
+function getEraForYear(year: number): EraSound {
+  if (year < 1850) return "want";
+  if (year < 1910) return "industry";
+  if (year < 1950) return "catastrophe";
+  if (year < 1990) return "recovery";
+  if (year < 2020) return "acceleration";
+  return "goals";
+}
 
 export default function SurvivalGame() {
   const [phase, setPhase] = useState<Phase>("start");
@@ -15,6 +26,7 @@ export default function SurvivalGame() {
   const [contextVisible, setContextVisible] = useState(false);
   const [eraVisible, setEraVisible] = useState(false);
   const [resultVisible, setResultVisible] = useState(false);
+  const [shockVisible, setShockVisible] = useState(false);
   const [progressVisible, setProgressVisible] = useState(false);
   const [counterValues, setCounterValues] = useState<Record<number, number>>({});
 
@@ -40,6 +52,7 @@ export default function SurvivalGame() {
     return () => {
       clearTimers();
       clearRafs();
+      soundEngine.stopAll();
     };
   }, [clearTimers, clearRafs]);
 
@@ -48,16 +61,21 @@ export default function SurvivalGame() {
     setContextVisible(false);
     setEraVisible(false);
     setResultVisible(false);
+    setShockVisible(false);
     setProgressVisible(false);
     setSelectedChoice(null);
     setCounterValues({});
+
+    if (!soundEngine.isMuted()) {
+      soundEngine.playEra(getEraForYear(round.year));
+    }
 
     const t1 = window.setTimeout(() => setContextVisible(true), 500);
     const t2 = window.setTimeout(() => setEraVisible(true), 1200);
     const t3 = window.setTimeout(() => setPhase("choice"), 2000);
     addTimer(t1); addTimer(t2); addTimer(t3);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  }, [phase, roundIdx, addTimer]);
+  }, [phase, roundIdx, addTimer, round.year]);
 
   const handleChoice = useCallback((choiceIdx: number) => {
     setSelectedChoice(choiceIdx);
@@ -72,10 +90,19 @@ export default function SurvivalGame() {
     if (phase !== "result" || !resultVisible) return;
     if (!soundEngine.isMuted()) soundEngine.playSurvive();
 
-    const t = window.setTimeout(() => setPhase("progress"), 2200);
+    const t = window.setTimeout(() => setPhase("shock"), 2500);
     addTimer(t);
     return () => clearTimeout(t);
   }, [phase, resultVisible, addTimer]);
+
+  useEffect(() => {
+    if (phase !== "shock") return;
+    setShockVisible(true);
+
+    const t = window.setTimeout(() => setPhase("progress"), 3500);
+    addTimer(t);
+    return () => clearTimeout(t);
+  }, [phase, addTimer]);
 
   useEffect(() => {
     if (phase !== "progress") return;
@@ -116,6 +143,7 @@ export default function SurvivalGame() {
       setRoundIdx(i => i + 1);
       setPhase("context");
     } else {
+      soundEngine.stopAll();
       setPhase("complete");
     }
   }, [roundIdx]);
@@ -123,12 +151,14 @@ export default function SurvivalGame() {
   const handleRestart = useCallback(() => {
     clearTimers();
     clearRafs();
+    soundEngine.stopAll();
     setPhase("start");
     setRoundIdx(0);
     setSelectedChoice(null);
     setContextVisible(false);
     setEraVisible(false);
     setResultVisible(false);
+    setShockVisible(false);
     setProgressVisible(false);
     setCounterValues({});
   }, [clearTimers, clearRafs]);
@@ -192,6 +222,17 @@ export default function SurvivalGame() {
 
   if (!round) return null;
 
+  const progressPct = ((roundIdx + 1) / SURVIVAL_ROUNDS.length) * 100;
+
+  const progressBar = (
+    <div className={styles.progressWrap}>
+      <div className={styles.progressTrack}>
+        <div className={styles.progressFill} style={{ width: `${progressPct}%` }} />
+      </div>
+      <p className={styles.progressText}>ROUND {roundIdx + 1} OF {SURVIVAL_ROUNDS.length}</p>
+    </div>
+  );
+
   if (phase === "closing") {
     return (
       <ClosingSequence onEnd={handleRestart} />
@@ -204,17 +245,42 @@ export default function SurvivalGame() {
         <div className={styles.startScreen}>
           <p className={styles.startTitle}>YOU WERE BORN IN 1800</p>
           <p className={styles.startBridge}>
-            You have seen two centuries of progress. Now it is your turn.
+            Track humanity's journey across 4 Sustainable Development Goals.
           </p>
           <p className={styles.startSubtitle}>
-            Two hundred years of human history. One journey.
+            9 moments. 226 years. From 89% poverty to 8.5%.
           </p>
           <p className={styles.startInfo}>
-            Make choices. Witness what changed. See how far we have come.
+            Every choice you make teaches you how the world changed.
           </p>
           <button className={styles.btnStart} onClick={() => { if (!soundEngine.isMuted()) soundEngine.playClick(); setPhase("context"); }}>
             BEGIN
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (phase === "shock") {
+    const shockFact = round.shockFacts[0];
+    return (
+      <div className={styles.container}>
+        <div className={styles.playingScreen}>
+          {progressBar}
+          <div className={styles.roundImageContainer}>
+            <img src={round.image} alt={round.imageAlt} className={styles.roundImage} />
+            <div className={styles.imageOverlay} />
+            <div className={styles.imageYearOverlay}>
+              <p className={styles.imageYear}>{round.year}</p>
+              <p className={styles.imageAge}>Age {round.age}</p>
+            </div>
+          </div>
+          <div className={styles.shockSection}>
+            <div className={`${styles.shockBanner} ${styles.shockPulse}`}>
+              <p className={styles.shockBannerLabel}>REMEMBER THIS</p>
+              <p className={styles.shockBannerText}>{shockFact}</p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -225,6 +291,7 @@ export default function SurvivalGame() {
     return (
       <div className={styles.container}>
         <div className={styles.playingScreen}>
+          {progressBar}
           <div className={styles.roundImageContainer}>
             <img src={round.image} alt={round.imageAlt} className={styles.roundImage} />
             <div className={styles.imageOverlay} />
@@ -263,9 +330,11 @@ export default function SurvivalGame() {
   }
 
   if (phase === "result") {
+    const outcome = selectedChoice !== null ? round.choices[selectedChoice].outcome : "";
     return (
       <div className={styles.container}>
         <div className={styles.playingScreen}>
+          {progressBar}
           <div className={styles.roundImageContainer}>
             <img src={round.image} alt={round.imageAlt} className={styles.roundImage} />
             <div className={styles.imageOverlay} />
@@ -278,7 +347,7 @@ export default function SurvivalGame() {
             <p className={styles.roundTitle}>{round.title}</p>
             {resultVisible && (
               <div className={`${styles.resultContent} ${styles.fadeIn}`}>
-                <p className={styles.resultNarrative}>{round.surviveNarrative}</p>
+                <p className={styles.resultNarrative}>{outcome}</p>
                 {selectedChoice !== null && (
                   <p className={styles.choiceResult}>
                     You chose: {round.choices[selectedChoice].text}
@@ -327,6 +396,7 @@ export default function SurvivalGame() {
   return (
     <div className={styles.container}>
       <div className={styles.playingScreen}>
+        {progressBar}
         <div className={styles.roundImageContainer}>
           <img src={round.image} alt={round.imageAlt} className={styles.roundImage} />
           <div className={styles.imageOverlay} />

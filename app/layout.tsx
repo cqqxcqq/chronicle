@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cinzel, EB_Garamond } from "next/font/google";
 import { SoundProvider } from "@/components/ui/SoundProvider";
 import PageTransition from "@/components/ui/PageTransition";
+import GlobalEscapeHandler from "@/components/ui/GlobalEscapeHandler";
 import "./globals.css";
 
 const cinzel = Cinzel({
@@ -36,6 +37,7 @@ export default function RootLayout({
         <SoundProvider>
           <PageTransition>{children}</PageTransition>
         </SoundProvider>
+        <GlobalEscapeHandler />
       </body>
     </html>
   );

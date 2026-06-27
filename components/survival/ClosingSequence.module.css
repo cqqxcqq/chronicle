@@ -8,27 +8,14 @@
   z-index: 1000;
 }
 
-.lineBlock {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 0 48px;
-}
-
-.line {
-  font-family: var(--font-body);
-  font-size: 28px;
-  font-style: italic;
-  color: var(--color-bone);
-  text-align: center;
-  line-height: 1.7;
-  max-width: 700px;
-}
-
-.char {
-  display: inline;
-}
+.lineBlock { composes: lineBlock from global; }
+.line { composes: line from global; }
+.char { composes: char from global; }
+.titleBlock { composes: titleBlock from global; }
+.title { composes: title from global; }
+.subtitle { composes: subtitle from global; }
+.prompt { composes: prompt from global; }
+.skipBtn { composes: skipBtn from global; }
 
 /* --- YEAR SCREEN --- */
 .yearScreen {
@@ -101,32 +88,6 @@
   letter-spacing: 0.04em;
 }
 
-/* --- TITLE --- */
-.titleBlock {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-.title {
-  font-family: var(--font-display);
-  font-size: 72px;
-  color: var(--color-bone);
-  letter-spacing: 0.3em;
-  text-align: center;
-}
-
-.subtitle {
-  font-family: var(--font-body);
-  font-size: 18px;
-  font-style: italic;
-  color: var(--color-bone-dim);
-  text-align: center;
-  margin-top: 24px;
-}
-
 .closing {
   font-family: var(--font-body);
   font-size: 18px;
@@ -138,16 +99,6 @@
   line-height: 1.7;
 }
 
-.prompt {
-  font-family: var(--font-display);
-  font-size: 10px;
-  letter-spacing: 0.4em;
-  color: var(--color-bone-ghost);
-  text-align: center;
-  margin-top: 48px;
-  cursor: pointer;
-}
-
 .deathNote {
   font-family: var(--font-body);
   font-size: 14px;
@@ -157,35 +108,23 @@
   margin-top: 16px;
 }
 
-.skipBtn {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: 2px;
-  padding: 8px 16px;
-  cursor: pointer;
-  font-family: var(--font-display);
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  color: var(--color-bone-ghost);
-  transition: color 0.2s, border-color 0.2s;
-  z-index: 1001;
-}
-
-.skipBtn:hover {
-  color: var(--color-bone);
-  border-color: var(--color-border-bright);
-}
-
 @media (max-width: 768px) {
-  .line {
+  :global(.line) {
     font-size: 20px;
     padding: 0 16px;
   }
 
-  .lineBlock {
+  :global(.lineBlock) {
+    padding: 0 24px;
+  }
+
+  :global(.title) {
+    font-size: 44px;
+  }
+
+  :global(.subtitle),
+  .closing {
+    font-size: 15px;
     padding: 0 24px;
   }
 
@@ -209,21 +148,21 @@
   .counterLabel {
     font-size: 12px;
   }
-
-  .title {
-    font-size: 44px;
-  }
-
-  .subtitle,
-  .closing {
-    font-size: 15px;
-    padding: 0 24px;
-  }
 }
 
 @media (max-width: 480px) {
-  .line {
+  :global(.line) {
     font-size: 17px;
+  }
+
+  :global(.title) {
+    font-size: 32px;
+    letter-spacing: 0.15em;
+  }
+
+  :global(.subtitle),
+  .closing {
+    font-size: 13px;
   }
 
   .yearValue {
@@ -237,15 +176,5 @@
 
   .counterValue {
     font-size: 28px;
-  }
-
-  .title {
-    font-size: 32px;
-    letter-spacing: 0.15em;
-  }
-
-  .subtitle,
-  .closing {
-    font-size: 13px;
   }
 }

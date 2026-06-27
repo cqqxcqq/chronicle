@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   z-index: 100;
-  background-color: rgba(8, 8, 8, 0.9);
+  background-color: color-mix(in srgb, var(--color-void) 90%, transparent);
   background-image: url('/textures/paper-noise.png');
   background-blend-mode: soft-light;
   backdrop-filter: blur(12px);

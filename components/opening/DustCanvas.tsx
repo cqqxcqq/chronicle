@@ -86,6 +86,8 @@ export default function DustCanvas() {
         inset: 0,
         zIndex: 0,
         pointerEvents: "none",
+        transform: "translateZ(0)",
+        willChange: "transform",
       }}
     />
   );
