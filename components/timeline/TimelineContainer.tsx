@@ -8,7 +8,6 @@ import {
   getEraPalette,
 } from "@/lib/timeline-config";
 import { getFogHeight } from "./phenomena/PovertyFog";
-import { drawPovertyFog } from "./phenomena/PovertyFog";
 import { drawLiteracyText } from "./phenomena/LiteracyText";
 import { drawEraBackground } from "./phenomena/EraBackground";
 import { drawAtmosphericDarkness } from "./phenomena/AtmosphericDarkness";
@@ -50,7 +49,6 @@ export default function TimelineContainer({
   const targetYearRef = useRef(START_YEAR);
   const lastYearRef = useRef(-1);
   const lastEraRef = useRef<string | null>(null);
-  const cursorRef = useRef({ x: -999, y: -999 });
 
   const [uiYear, setUiYear] = useState(START_YEAR);
 
@@ -80,30 +78,6 @@ export default function TimelineContainer({
     resize();
     window.addEventListener("resize", resize);
 
-    const onMouseMove = (e: MouseEvent) => {
-      cursorRef.current = { x: e.clientX, y: e.clientY };
-    };
-
-    const onMouseLeave = () => {
-      cursorRef.current = { x: -999, y: -999 };
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        const touch = e.touches[0];
-        cursorRef.current = { x: touch.clientX, y: touch.clientY };
-      }
-    };
-
-    const onTouchEnd = () => {
-      cursorRef.current = { x: -999, y: -999 };
-    };
-
-    canvas.addEventListener("mousemove", onMouseMove);
-    canvas.addEventListener("mouseleave", onMouseLeave);
-    canvas.addEventListener("touchmove", onTouchMove, { passive: true });
-    canvas.addEventListener("touchend", onTouchEnd);
-
     const animate = (timestamp: number) => {
       if (!isRunning) return;
       const time = timestamp / 1000;
@@ -123,7 +97,6 @@ export default function TimelineContainer({
 
       const w = window.innerWidth;
       const h = window.innerHeight;
-      const { x: cx, y: cy } = cursorRef.current;
 
       ctx.clearRect(0, 0, w, h);
 
@@ -142,10 +115,6 @@ export default function TimelineContainer({
 
       drawEraBackground({ ctx, displayYear: currentYear, width: w, height: h, palette });
       drawAtmosphericDarkness({ ctx, displayYear: currentYear, time, width: w, height: h, palette, strength: 1 });
-      drawPovertyFog({
-        ctx, displayYear: currentYear, time, width: w, height: h,
-        cursorX: cx, cursorY: cy, palette, strength: 1,
-      });
       drawHistoricalRupture({ ctx, displayYear: currentYear, time, width: w, height: h, fogHeight, palette, strength: 1 });
       drawLiteracyText({ ctx, displayYear: currentYear, width: w, height: h, fogHeight, strength: 1 });
 
@@ -159,10 +128,6 @@ export default function TimelineContainer({
       cancelAnimationFrame(animationId);
       soundEngine.stopAll();
       window.removeEventListener("resize", resize);
-      canvas.removeEventListener("mousemove", onMouseMove);
-      canvas.removeEventListener("mouseleave", onMouseLeave);
-      canvas.removeEventListener("touchmove", onTouchMove);
-      canvas.removeEventListener("touchend", onTouchEnd);
     };
   }, []);
 
