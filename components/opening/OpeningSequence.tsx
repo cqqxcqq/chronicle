@@ -6,27 +6,33 @@ import { motion, AnimatePresence } from "framer-motion";
 import { soundEngine } from "@/lib/sound-engine";
 import styles from "./OpeningSequence.module.css";
 
-const line1 = "In 1800, nine of every ten people on earth lived in extreme poverty.";
-const line2 = "Most children did not live to see their fifth birthday.";
-const line3 = "This is what happened next.";
+const lines = [
+  "In 1800, nine of every ten people on earth lived in extreme poverty.",
+  "Most children did not live to see their fifth birthday.",
+  "This is what happened next.",
+];
 
 export default function OpeningSequence() {
   const router = useRouter();
   const [sequence, setSequence] = useState<
     "init" | "lines" | "title" | "exit"
   >("init");
+  const [lineIdx, setLineIdx] = useState(0);
 
   useEffect(() => {
     router.prefetch("/timeline");
-    const t = setTimeout(() => setSequence("lines"), 150);
+    const t = setTimeout(() => setSequence("lines"), 500);
     return () => clearTimeout(t);
   }, [router]);
 
-  const onLinesComplete = useCallback(() => {
-    setTimeout(() => {
-      setSequence("title");
-    }, 600);
-  }, []);
+  const onLineComplete = useCallback(() => {
+    const next = lineIdx + 1;
+    if (next < lines.length) {
+      setTimeout(() => setLineIdx(next), 1200);
+    } else {
+      setTimeout(() => setSequence("title"), 2000);
+    }
+  }, [lineIdx]);
 
   const skipToEnd = useCallback(() => {
     setSequence("title");
@@ -35,7 +41,7 @@ export default function OpeningSequence() {
   const exit = useCallback(() => {
     if (!soundEngine.isMuted()) soundEngine.playClick();
     setSequence("exit");
-    setTimeout(() => router.push("/timeline"), 150);
+    setTimeout(() => router.push("/timeline"), 400);
   }, [router]);
 
   useEffect(() => {
@@ -54,31 +60,25 @@ export default function OpeningSequence() {
 
   const showSkip = sequence === "lines";
 
-  useEffect(() => {
-    if (sequence === "lines") {
-      onLinesComplete();
-    }
-  }, [sequence, onLinesComplete]);
-
   return (
     <div className={styles.container}>
       <AnimatePresence mode="wait">
         {sequence === "lines" && (
           <motion.div
-            key="lines"
+            key={`line-${lineIdx}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.3 } }}
+            exit={{ opacity: 0, transition: { duration: 0.8 } }}
             className={styles.lineBlock}
           >
-            <motion.p className={styles.line} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0 }}>
-              {line1}
-            </motion.p>
-            <motion.p className={styles.line} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}>
-              {line2}
-            </motion.p>
-            <motion.p className={styles.line} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8 }}>
-              {line3}
+            <motion.p
+              className={styles.line}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2 }}
+              onAnimationComplete={onLineComplete}
+            >
+              {lines[lineIdx]}
             </motion.p>
           </motion.div>
         )}
@@ -89,14 +89,14 @@ export default function OpeningSequence() {
             className={styles.titleBlock}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.5 } }}
-            transition={{ duration: 1.0 }}
+            exit={{ opacity: 0, transition: { duration: 0.8 } }}
+            transition={{ duration: 1.5 }}
           >
             <motion.h1
               className={styles.title}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 1.2 }}
             >
               CHRONICLE
             </motion.h1>
@@ -104,7 +104,7 @@ export default function OpeningSequence() {
               className={styles.subtitle}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              transition={{ duration: 1.0, delay: 0.6 }}
             >
               Tracking humanity&apos;s progress toward the Sustainable Development Goals.
             </motion.p>
@@ -116,8 +116,8 @@ export default function OpeningSequence() {
                 y: [0, -6, 0],
               }}
               transition={{
-                duration: 1.5,
-                delay: 0.8,
+                duration: 2.0,
+                delay: 2.0,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
