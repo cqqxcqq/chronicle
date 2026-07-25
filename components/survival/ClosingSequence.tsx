@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import LegacyCard from "./LegacyCard";
+import type { JourneyProfile } from "@/lib/survival-data";
 import styles from "./ClosingSequence.module.css";
 
 const CHAR_DELAY = 0.05;
@@ -99,9 +100,10 @@ function AnimatedCounter({
 
 interface ClosingSequenceProps {
   onEnd: () => void;
+  journeyProfile: JourneyProfile;
 }
 
-export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
+export default function ClosingSequence({ onEnd, journeyProfile }: ClosingSequenceProps) {
   const lines = [
     "You have seen two hundred years of human struggle.",
     "From darkness to light. From ignorance to knowledge.",
@@ -298,7 +300,7 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.0, delay: 1.5 }}
             >
-              <LegacyCard />
+              <LegacyCard journeyProfile={journeyProfile} />
             </motion.div>
             <motion.p
               className={styles.prompt}

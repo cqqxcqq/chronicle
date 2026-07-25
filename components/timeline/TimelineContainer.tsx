@@ -88,8 +88,21 @@ export default function TimelineContainer({
       cursorRef.current = { x: -999, y: -999 };
     };
 
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        cursorRef.current = { x: touch.clientX, y: touch.clientY };
+      }
+    };
+
+    const onTouchEnd = () => {
+      cursorRef.current = { x: -999, y: -999 };
+    };
+
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mouseleave", onMouseLeave);
+    canvas.addEventListener("touchmove", onTouchMove, { passive: true });
+    canvas.addEventListener("touchend", onTouchEnd);
 
     const animate = (timestamp: number) => {
       if (!isRunning) return;
@@ -148,6 +161,8 @@ export default function TimelineContainer({
       window.removeEventListener("resize", resize);
       canvas.removeEventListener("mousemove", onMouseMove);
       canvas.removeEventListener("mouseleave", onMouseLeave);
+      canvas.removeEventListener("touchmove", onTouchMove);
+      canvas.removeEventListener("touchend", onTouchEnd);
     };
   }, []);
 

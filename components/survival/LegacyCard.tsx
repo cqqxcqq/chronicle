@@ -1,15 +1,21 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import type { JourneyProfile } from "@/lib/survival-data";
 import styles from "./LegacyCard.module.css";
 
-export default function LegacyCard() {
+interface LegacyCardProps {
+  journeyProfile?: JourneyProfile;
+}
+
+export default function LegacyCard({ journeyProfile }: LegacyCardProps) {
   const [copied, setCopied] = useState(false);
 
   const handleShare = useCallback(async () => {
+    const tierText = journeyProfile ? ` I was "${journeyProfile.title}."` : "";
     const shareData = {
       title: "CHRONICLE",
-      text: "I lived 226 years and witnessed humanity's greatest transformation. Poverty: 89% → 8.5%. Child mortality: 460 → 37. Literacy: 12% → 87%.",
+      text: `I lived 226 years and witnessed humanity's greatest transformation.${tierText} Poverty: 89% → 8.5%. Child mortality: 460 → 37. Literacy: 12% → 87%.`,
       url: typeof window !== "undefined" ? window.location.origin : "",
     };
 
@@ -30,19 +36,7 @@ export default function LegacyCard() {
     } catch {
       // clipboard not available
     }
-  }, []);
-
-  const handleScreenshot = useCallback(() => {
-    const card = document.getElementById("legacy-card");
-    if (!card) return;
-    const range = document.createRange();
-    range.selectNodeContents(card);
-    const selection = window.getSelection();
-    if (selection) {
-      selection.removeAllRanges();
-      selection.addRange(range);
-    }
-  }, []);
+  }, [journeyProfile]);
 
   return (
     <div className={styles.cardOuter}>
@@ -51,6 +45,12 @@ export default function LegacyCard() {
         <div className={styles.cardDivider} />
         <p className={styles.cardTitle}>I WAS BORN IN 1800</p>
         <p className={styles.cardSubtitle}>I LIVED TO SEE 2026</p>
+        {journeyProfile && (
+          <div className={styles.journeyTier}>
+            <p className={styles.tierLabel}>{journeyProfile.title}</p>
+            <p className={styles.tierDesc}>{journeyProfile.description}</p>
+          </div>
+        )}
         <div className={styles.cardStats}>
           <div className={styles.cardStat}>
             <span className={styles.cardStatValue}>89% &rarr; 8.5%</span>
@@ -79,9 +79,6 @@ export default function LegacyCard() {
       <div className={styles.actions}>
         <button className={styles.shareBtn} onClick={handleShare}>
           {copied ? "COPIED" : "SHARE MY STORY"}
-        </button>
-        <button className={styles.shareBtn} onClick={handleScreenshot}>
-          SELECT TO SCREENSHOT
         </button>
       </div>
     </div>

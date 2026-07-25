@@ -2,7 +2,22 @@
   text: string;
   modifier: number;
   outcome: string;
+  altOutcome?: string;
   pivotal?: boolean;
+}
+
+export interface JourneyProfile {
+  tier: "reckless" | "cautious" | "bold" | "lucky" | "wise";
+  title: string;
+  description: string;
+}
+
+export function getJourneyProfile(totalModifier: number): JourneyProfile {
+  if (totalModifier >= 0.55) return { tier: "wise", title: "The Wise One", description: "You chose knowledge, community, and caution at every turn. History rewarded your wisdom." };
+  if (totalModifier >= 0.40) return { tier: "bold", title: "The Bold Pioneer", description: "You took risks that others avoided. Some paid off. Some nearly killed you." };
+  if (totalModifier >= 0.25) return { tier: "cautious", title: "The Cautious Survivor", description: "You played it safe, and safety kept you alive. Not every safe choice was the right one." };
+  if (totalModifier >= 0.15) return { tier: "lucky", title: "The Lucky One", description: "Luck carried you where skill could not. You survived not by choice, but by chance." };
+  return { tier: "reckless", title: "The Reckless", description: "You chose danger at every crossroad. That you survived at all is a miracle." };
 }
 
 export interface SdgProgress {
@@ -38,11 +53,13 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
         text: "Mother breastfeeds you through famine",
         modifier: 0.10,
         outcome: "Your mother's body was the only medicine. She gave you milk when there was no food. Half of all children had no such mother.",
+        altOutcome: "Clean water was a luxury your family could not afford. You drank from the same river as the livestock. Many children did not survive this.",
       },
       {
         text: "Born into a family with clean water",
         modifier: 0.05,
         outcome: "Clean water \u2014 a luxury in 1800. Your family boiled it by habit, not by knowledge. Germ theory was a century away.",
+        altOutcome: "Your mother's body was the only medicine. She gave you milk when there was no food. Without her, your chances halved.",
       },
     ],
     eraContext: "Nine in ten people live in extreme poverty. The average life is 29 years. Most humans farm with tools unchanged since the Bronze Age.",
@@ -60,11 +77,13 @@ choices: [
         text: "Flee to the countryside to forage",
         modifier: 0.08,
         outcome: "You ate roots and bark for months. Your stomach never stopped aching. But you ate. Millions did not.",
+        altOutcome: "You gave away half your food to neighbors. Some survived because of you. But your own strength faded with each passing week.",
       },
       {
         text: "Share dwindling food with neighbors",
         modifier: 0.03,
         outcome: "You gave away half your food. Your neighbors survived because of you. In 1815, community was the only safety net.",
+        altOutcome: "You fled alone and found wild roots in the hills. Your stomach ached for months, but you kept every calorie for yourself.",
         pivotal: true,
       },
     ],
@@ -81,16 +100,18 @@ choices: [
     context: "Life expectancy is 30 years. You have already outlived the average human. Every day now is borrowed.",
     image: "/industrial-1835.jpg",
     imageAlt: "Early factory with child laborers, 1835",
-    choices: [
+choices: [
       {
         text: "Seek out a barber-surgeon for treatment",
         modifier: 0.05,
         outcome: "The barber-surgeon bled you with a rusty lancet. Infection spread through your arm. You survived \u2014 barely. Most did not.",
+        altOutcome: "You rested and drank boiled water. You did not know why it worked. The word 'bacteria' would not be coined for 50 years.",
       },
       {
         text: "Rest and drink boiled water",
         modifier: 0.10,
         outcome: "Boiled water saved your life. You did not know why. No one did. The word 'bacteria' would not be coined for another 50 years.",
+        altOutcome: "A barber-surgeon bled you with a rusty lancet. Infection spread through your arm. You barely survived the fever.",
       },
     ],
     eraContext: "The world is transforming \u2014 railroads, factories, telegraphs \u2014 but progress has not reached the poor.",
@@ -106,16 +127,18 @@ choices: [
     context: "You are 60 years old. You have outlived 95% of everyone born in your year. You are a statistical impossibility.",
     image: "/civilwar-1860.jpg",
     imageAlt: "Civil War era soldiers and battlefield, 1860",
-    choices: [
+choices: [
       {
         text: "Move to a quieter rural life",
         modifier: 0.08,
         outcome: "You left the city before the cholera returned. The countryside was quiet. The war was loud. You chose silence.",
+        altOutcome: "The hospital had no antibiotics, no anesthesia, no hope. But it had a roof. When cholera came, the roof was not enough.",
       },
       {
         text: "Stay in the city near a hospital",
         modifier: 0.04,
         outcome: "The hospital had no antibiotics, no anesthesia, no hope. But it had a roof. In 1860, that was enough.",
+        altOutcome: "You left the city just before cholera returned. The countryside was quiet. You chose silence over science.",
       },
     ],
     eraContext: "Darwin publishes On the Origin of Species. The telephone is invented. The American Civil War rages.",
@@ -137,11 +160,13 @@ choices: [
         text: "Retreat from public life entirely",
         modifier: 0.06,
         outcome: "You watched the world change from behind glass. Automobiles. Airplanes. Electricity. You had seen it all \u2014 and feared what came next.",
+        altOutcome: "You wrote by candlelight, documenting everything. Your words would outlive you. In a century of war, testimony became the rarest survival.",
       },
       {
         text: "Document your story for posterity",
         modifier: 0.02,
         outcome: "You wrote by candlelight. Your words would outlive you. In a century of war, testimony became the rarest form of survival.",
+        altOutcome: "You retreated behind glass and watched the world change. Automobiles. Airplanes. You saw it all \u2014 and feared what came next.",
         pivotal: true,
       },
     ],
@@ -159,16 +184,18 @@ choices: [
     context: "1918. The Spanish Flu kills 50 million people in 24 weeks. You are 118 years old. Your immune system is a ghost.",
     image: "/pandemic-1918.jpg",
     imageAlt: "Spanish Flu hospital ward with masked nurses, 1918",
-    choices: [
+choices: [
       {
         text: "Isolate yourself from all contact",
         modifier: 0.06,
         outcome: "You locked the door and did not open it for months. The silence outside was worse than the coughing. When you emerged, the world had changed.",
+        altOutcome: "Your body fought a war it had no memory of winning. At 118, survival is not courage \u2014 it is defiance.",
       },
       {
         text: "Trust your ancient immune system",
         modifier: 0.01,
         outcome: "Your body fought a war it had no memory of winning. At 118, survival is not courage \u2014 it is defiance.",
+        altOutcome: "You locked the door and did not open it for months. The silence outside was worse than the coughing.",
       },
     ],
     eraContext: "World War I ends as the flu peaks. 20 million soldiers dead, 50 million civilians. The old order crumbles.",
@@ -184,16 +211,18 @@ choices: [
     context: "1945. Two world wars. 70 million dead. The Holocaust. Hiroshima. You are 145 years old.",
     image: "/atomic-1945.jpg",
     imageAlt: "WWII ruins and post-war reconstruction, 1945",
-    choices: [
+choices: [
       {
         text: "Flee to the countryside before the bombs",
         modifier: 0.04,
         outcome: "You ran. The city burned behind you. You did not look back. In 1945, running was the only form of hope left.",
+        altOutcome: "You lifted rubble with your bare hands. The buildings were gone. The people were not. That was enough.",
       },
       {
         text: "Volunteer to help rebuild",
         modifier: 0.01,
         outcome: "You lifted rubble with your bare hands. The buildings were gone. The people were not. That was enough.",
+        altOutcome: "You ran. The city burned behind you. You did not look back. In 1945, running was the only form of hope.",
       },
     ],
     eraContext: "The United Nations is born. The Marshall Plan rebuilds Europe. Penicillin saves millions.",
@@ -215,12 +244,14 @@ choices: [
         text: "Embrace modern medicine fully",
         modifier: 0.03,
         outcome: "Antibiotics. Vaccines. Surgery that did not kill you. You lived to see medicine become a science instead of a gamble.",
+        altOutcome: "Herbs and prayers sustained you for 200 years. But science sustained the other 6 billion.",
         pivotal: true,
       },
       {
         text: "Rely on traditional remedies",
         modifier: 0.00,
         outcome: "Herbs and prayers. They sustained you for 200 years. Science sustained the other 6 billion.",
+        altOutcome: "Antibiotics, vaccines, surgery that did not kill you. You turned away from the greatest medical revolution in history.",
       },
     ],
     eraContext: "Extreme poverty has fallen from 89% to 29%. Life expectancy is 68. Smallpox is eradicated.",
@@ -238,16 +269,18 @@ choices: [
     context: "2026. Poverty: 89% to 8.5%. Child mortality: 460 to 37. Literacy: 12% to 87%. Life expectancy: 29 to 73. You saw it all.",
     image: "/goals-2026.jpg",
     imageAlt: "Modern solar panels and green energy, 2026",
-    choices: [
+choices: [
       {
         text: "Write your memoirs for the world",
         modifier: 0.01,
         outcome: "Your words traveled faster than light. In 1800, your story would have died with you. In 2026, it reaches millions.",
+        altOutcome: "You closed your eyes in peace. The world outside was louder, brighter, kinder than the one you were born into.",
       },
       {
         text: "Spend your last days in peace",
         modifier: 0.02,
         outcome: "You closed your eyes. The world outside was louder, brighter, kinder than the one you were born into. That is enough.",
+        altOutcome: "You wrote your memoirs. Your words traveled faster than light. In 1800, your story would have died with you.",
       },
     ],
     eraContext: "The SDGs are humanity's plan to finish what two centuries began.",

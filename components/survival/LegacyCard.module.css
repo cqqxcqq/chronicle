@@ -45,6 +45,30 @@
   letter-spacing: 0.1em;
 }
 
+.journeyTier {
+  text-align: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  width: 100%;
+}
+
+.tierLabel {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--color-gold);
+  letter-spacing: 0.15em;
+  margin-bottom: 6px;
+}
+
+.tierDesc {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-bone-dim);
+  font-style: italic;
+  line-height: 1.6;
+}
+
 .cardStats {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -123,6 +147,14 @@
 
   .cardStatValue {
     font-size: 15px;
+  }
+
+  .tierLabel {
+    font-size: 12px;
+  }
+
+  .tierDesc {
+    font-size: 11px;
   }
 
   .actions {

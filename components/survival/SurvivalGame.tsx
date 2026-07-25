@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { SURVIVAL_ROUNDS } from "@/lib/survival-data";
+import { getJourneyProfile } from "@/lib/survival-data";
 import { soundEngine } from "@/lib/sound-engine";
 import ClosingSequence from "./ClosingSequence";
 import styles from "./SurvivalGame.module.css";
@@ -28,6 +29,8 @@ export default function SurvivalGame() {
   const [resultVisible, setResultVisible] = useState(false);
   const [counterValues, setCounterValues] = useState<Record<number, number>>({});
   const [isPivotal, setIsPivotal] = useState(false);
+  const [totalModifier, setTotalModifier] = useState(0);
+  const [showAltOutcome, setShowAltOutcome] = useState(false);
 
   const round = SURVIVAL_ROUNDS[roundIdx];
   const timersRef = useRef<number[]>([]);
@@ -72,22 +75,22 @@ const handleChoice = useCallback((choiceIdx: number) => {
     setSelectedChoice(choiceIdx);
     setResultVisible(false);
     setCounterValues({});
+    setShowAltOutcome(false);
     setIsPivotal(round.choices[choiceIdx].pivotal === true);
+    setTotalModifier(prev => prev + round.choices[choiceIdx].modifier);
     setPhase("result");
     if (!soundEngine.isMuted()) soundEngine.playClick();
 
-    const t = window.setTimeout(() => setResultVisible(true), 400);
-    addTimer(t);
+    const t1 = window.setTimeout(() => setResultVisible(true), 400);
+    const t2 = window.setTimeout(() => setShowAltOutcome(true), 2800);
+    addTimer(t1);
+    addTimer(t2);
   }, [addTimer, round.choices]);
 
   useEffect(() => {
     if (phase !== "result" || !resultVisible) return;
     if (!soundEngine.isMuted()) soundEngine.playSurvive();
-
-    const t = window.setTimeout(() => setPhase("progress"), 2500);
-    addTimer(t);
-    return () => clearTimeout(t);
-  }, [phase, resultVisible, addTimer]);
+  }, [phase, resultVisible]);
 
 useEffect(() => {
     if (phase !== "progress") return;
@@ -146,6 +149,8 @@ const handleRestart = useCallback(() => {
     setContextVisible(false);
     setResultVisible(false);
     setCounterValues({});
+    setTotalModifier(0);
+    setShowAltOutcome(false);
   }, [clearTimers, clearRafs]);
 
   const completeStats = useMemo(() => {
@@ -216,8 +221,9 @@ const handleRestart = useCallback(() => {
   );
 
   if (phase === "closing") {
+    const profile = getJourneyProfile(totalModifier);
     return (
-      <ClosingSequence onEnd={handleRestart} />
+      <ClosingSequence onEnd={handleRestart} journeyProfile={profile} />
     );
   }
 
@@ -233,7 +239,7 @@ const handleRestart = useCallback(() => {
             9 moments. 226 years. From 89% poverty to 8.5%.
           </p>
           <p className={styles.startInfo}>
-            Every choice you make teaches you how the world changed.
+            Every choice has a consequence. Choose wisely.
           </p>
           <button className={styles.btnStart} onClick={() => { if (!soundEngine.isMuted()) soundEngine.playClick(); setPhase("context"); }}>
             BEGIN
@@ -287,7 +293,9 @@ const handleRestart = useCallback(() => {
   }
 
 if (phase === "result") {
-    const outcome = selectedChoice !== null ? round.choices[selectedChoice].outcome : "";
+    const choice = selectedChoice !== null ? round.choices[selectedChoice] : null;
+    const outcome = choice?.outcome ?? "";
+    const altOutcome = choice?.altOutcome;
     return (
       <div className={styles.container}>
         {isPivotal && <div className={styles.pivotalFlash} />}
@@ -313,6 +321,17 @@ if (phase === "result") {
                 )}
               </div>
             )}
+            {showAltOutcome && altOutcome && (
+              <div className={`${styles.altOutcomeBlock} ${styles.fadeIn}`}>
+                <p className={styles.altOutcomeLabel}>THE OTHER PATH</p>
+                <p className={styles.altOutcomeText}>{altOutcome}</p>
+              </div>
+            )}
+            {showAltOutcome && (
+              <button className={styles.btnContinue} onClick={() => setPhase("progress")}>
+                CONTINUE
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -320,12 +339,17 @@ if (phase === "result") {
   }
 
   if (phase === "complete") {
+    const profile = getJourneyProfile(totalModifier);
     return (
       <div className={styles.completeOverlay}>
         <p className={styles.completeTitle}>YOU WITNESSED IT ALL</p>
         <p className={styles.completeSubtitle}>
           224 years. You witnessed the greatest transformation in human history.
         </p>
+        <div className={styles.journeyBadge}>
+          <p className={styles.journeyTitle}>{profile.title}</p>
+          <p className={styles.journeyDesc}>{profile.description}</p>
+        </div>
         <div className={styles.completeStats}>
           {completeStats.map((stat, i) => (
             <p key={i} className={styles.completeStat}>
