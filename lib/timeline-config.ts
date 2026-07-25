@@ -14,8 +14,8 @@ export interface Milestone {
 export const MILESTONES: Milestone[] = [
   { index: 0, year: 1800, label: "The Age of Want", description: "Nearly nine in ten people lived in extreme poverty. Childhood was a sentence of risk. Progress existed as an idea, not yet a reality." },
   { index: 1, year: 1850, label: "The Age of Industry", description: "Steam and steel began to reshape the world. Sanitation crept into cities. Literacy stirred." },
-  { index: 2, year: 1900, label: "The Age of Catastrophe", description: "Science, industry, and public health accelerated. Life expectancy rose. The world grew more connected." },
-  { index: 3, year: 1945, label: "The Age of Catastrophe", description: "Two world wars, a pandemic, and famines scarred continents. Yet from the ruins, global cooperation was born." },
+  { index: 2, year: 1900, label: "The Age of Catastrophe", description: "Two world wars, a pandemic, and famines scarred continents. Over 100 million people perished. Yet from the ruins, global cooperation was born." },
+  { index: 3, year: 1945, label: "The Age of Recovery", description: "Decolonization, vaccines, and the green revolution. Poverty began its long retreat. Life expectancy rose dramatically across the world." },
   { index: 4, year: 1970, label: "The Age of Recovery", description: "Decolonization, vaccines, the green revolution. Poverty began its long retreat. Human rights became law." },
   { index: 5, year: 2015, label: "The Age of Goals", description: "The UN SDGs codified humanity's collective ambition. Poverty, disease, and ignorance are no longer inevitable." },
 ];

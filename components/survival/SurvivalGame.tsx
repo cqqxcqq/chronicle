@@ -337,7 +337,7 @@ if (phase === "result") {
       <div className={styles.completeOverlay}>
         <p className={styles.completeTitle}>YOU WITNESSED IT ALL</p>
         <p className={styles.completeSubtitle}>
-          224 years. You witnessed the greatest transformation in human history.
+          226 years. You witnessed the greatest transformation in human history.
         </p>
         <div className={styles.journeyBadge}>
           <p className={styles.journeyTitle}>{profile.title}</p>

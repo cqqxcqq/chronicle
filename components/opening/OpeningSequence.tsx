@@ -92,10 +92,18 @@ export default function OpeningSequence() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [sequence, exit, skipToEnd]);
 
+  const handleContainerClick = useCallback(() => {
+    if (sequence === "title") {
+      exit();
+    } else if (sequence !== "exit" && sequence !== "init") {
+      skipToEnd();
+    }
+  }, [sequence, exit, skipToEnd]);
+
   const showSkip = sequence === "lines";
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onClick={handleContainerClick}>
       <AnimatePresence mode="wait">
         {sequence === "lines" && (
           <motion.div
