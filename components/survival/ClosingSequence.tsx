@@ -6,41 +6,6 @@ import LegacyCard from "./LegacyCard";
 import type { JourneyProfile } from "@/lib/survival-data";
 import styles from "./ClosingSequence.module.css";
 
-const CHAR_DELAY = 0.05;
-
-function StaggeredLine({
-  text,
-  onComplete,
-}: {
-  text: string;
-  onComplete?: () => void;
-}) {
-  const revealTime = text.length * CHAR_DELAY + 0.5;
-
-  useEffect(() => {
-    const t = setTimeout(() => {
-      onComplete?.();
-    }, revealTime * 1000);
-    return () => clearTimeout(t);
-  }, [revealTime, onComplete]);
-
-  return (
-    <p className={styles.line}>
-      {text.split("").map((char, i) => (
-        <motion.span
-          key={i}
-          className={styles.char}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: i * CHAR_DELAY }}
-        >
-          {char === " " ? "\u00A0" : char}
-        </motion.span>
-      ))}
-    </p>
-  );
-}
-
 interface CounterProps {
   from: number;
   to: number;
@@ -218,8 +183,10 @@ export default function ClosingSequence({ onEnd, journeyProfile }: ClosingSequen
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.5 } }}
+            transition={{ duration: 1.2 }}
+            onAnimationComplete={onLineComplete}
           >
-            <StaggeredLine text={lines[lineIdx]} onComplete={onLineComplete} />
+            <p className={styles.line}>{lines[lineIdx]}</p>
           </motion.div>
         )}
 

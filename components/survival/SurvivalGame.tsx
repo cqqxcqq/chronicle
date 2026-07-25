@@ -30,7 +30,7 @@ export default function SurvivalGame() {
   const [counterValues, setCounterValues] = useState<Record<number, number>>({});
   const [isPivotal, setIsPivotal] = useState(false);
   const [totalModifier, setTotalModifier] = useState(0);
-  const [showAltOutcome, setShowAltOutcome] = useState(false);
+  const [choiceHistory, setChoiceHistory] = useState<{ year: number; title: string; text: string }[]>([]);
 
   const round = SURVIVAL_ROUNDS[roundIdx];
   const timersRef = useRef<number[]>([]);
@@ -75,17 +75,15 @@ const handleChoice = useCallback((choiceIdx: number) => {
     setSelectedChoice(choiceIdx);
     setResultVisible(false);
     setCounterValues({});
-    setShowAltOutcome(false);
     setIsPivotal(round.choices[choiceIdx].pivotal === true);
     setTotalModifier(prev => prev + round.choices[choiceIdx].modifier);
+    setChoiceHistory(prev => [...prev, { year: round.year, title: round.title, text: round.choices[choiceIdx].text }]);
     setPhase("result");
     if (!soundEngine.isMuted()) soundEngine.playClick();
 
-    const t1 = window.setTimeout(() => setResultVisible(true), 400);
-    const t2 = window.setTimeout(() => setShowAltOutcome(true), 2800);
-    addTimer(t1);
-    addTimer(t2);
-  }, [addTimer, round.choices]);
+    const t = window.setTimeout(() => setResultVisible(true), 400);
+    addTimer(t);
+  }, [addTimer, round.choices, round.title, round.year]);
 
   useEffect(() => {
     if (phase !== "result" || !resultVisible) return;
@@ -150,7 +148,7 @@ const handleRestart = useCallback(() => {
     setResultVisible(false);
     setCounterValues({});
     setTotalModifier(0);
-    setShowAltOutcome(false);
+    setChoiceHistory([]);
   }, [clearTimers, clearRafs]);
 
   const completeStats = useMemo(() => {
@@ -295,7 +293,6 @@ const handleRestart = useCallback(() => {
 if (phase === "result") {
     const choice = selectedChoice !== null ? round.choices[selectedChoice] : null;
     const outcome = choice?.outcome ?? "";
-    const altOutcome = choice?.altOutcome;
     return (
       <div className={styles.container}>
         {isPivotal && <div className={styles.pivotalFlash} />}
@@ -314,20 +311,9 @@ if (phase === "result") {
             {resultVisible && (
               <div className={`${styles.resultContent} ${styles.fadeIn}`}>
                 <p className={styles.resultNarrative}>{outcome}</p>
-                {selectedChoice !== null && (
-                  <p className={styles.choiceResult}>
-                    You chose: {round.choices[selectedChoice].text}
-                  </p>
-                )}
               </div>
             )}
-            {showAltOutcome && altOutcome && (
-              <div className={`${styles.altOutcomeBlock} ${styles.fadeIn}`}>
-                <p className={styles.altOutcomeLabel}>THE OTHER PATH</p>
-                <p className={styles.altOutcomeText}>{altOutcome}</p>
-              </div>
-            )}
-            {showAltOutcome && (
+            {resultVisible && (
               <button className={styles.btnContinue} onClick={() => setPhase("progress")}>
                 CONTINUE
               </button>
@@ -349,6 +335,16 @@ if (phase === "result") {
         <div className={styles.journeyBadge}>
           <p className={styles.journeyTitle}>{profile.title}</p>
           <p className={styles.journeyDesc}>{profile.description}</p>
+        </div>
+        <div className={styles.journeyTimeline}>
+          <p className={styles.journeyTimelineLabel}>YOUR JOURNEY</p>
+          {choiceHistory.map((entry, i) => (
+            <div key={i} className={styles.journeyStep}>
+              <span className={styles.journeyYear}>{entry.year}</span>
+              <span className={styles.journeyDot} />
+              <span className={styles.journeyText}>{entry.text}</span>
+            </div>
+          ))}
         </div>
         <div className={styles.completeStats}>
           {completeStats.map((stat, i) => (
@@ -397,7 +393,6 @@ if (phase === "result") {
                   className={`${styles.choiceBtn} ${choice.pivotal ? styles.pivotalBtn : ""}`}
                   onClick={() => { if (!soundEngine.isMuted()) soundEngine.playClick(); handleChoice(i); }}
                 >
-                  <span className={styles.choiceKey}>{i + 1}</span>
                   {choice.text}
                   {choice.pivotal && <span className={styles.pivotalBadge}>PIVOTAL</span>}
                 </button>

@@ -12,6 +12,40 @@ const lines = [
   "This is what happened next.",
 ];
 
+const CHAR_DELAY = 0.04;
+
+function CharReveal({
+  text,
+  onComplete,
+}: {
+  text: string;
+  onComplete?: () => void;
+}) {
+  const revealTime = text.length * CHAR_DELAY + 0.6;
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      onComplete?.();
+    }, revealTime * 1000);
+    return () => clearTimeout(t);
+  }, [revealTime, onComplete]);
+
+  return (
+    <p className={styles.line}>
+      {text.split("").map((char, i) => (
+        <motion.span
+          key={i}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: i * CHAR_DELAY }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </p>
+  );
+}
+
 export default function OpeningSequence() {
   const router = useRouter();
   const [sequence, setSequence] = useState<
@@ -71,15 +105,7 @@ export default function OpeningSequence() {
             exit={{ opacity: 0, transition: { duration: 0.8 } }}
             className={styles.lineBlock}
           >
-            <motion.p
-              className={styles.line}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2 }}
-              onAnimationComplete={onLineComplete}
-            >
-              {lines[lineIdx]}
-            </motion.p>
+            <CharReveal text={lines[lineIdx]} onComplete={onLineComplete} />
           </motion.div>
         )}
 

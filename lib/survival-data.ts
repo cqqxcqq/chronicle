@@ -36,7 +36,6 @@ export interface SurvivalRound {
   image: string;
   imageAlt: string;
   choices: SurvivalChoice[];
-  eraContext: string;
   sdgProgress: SdgProgress[];
 }
 
@@ -62,7 +61,6 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
         altOutcome: "Your mother's body was the only medicine. She gave you milk when there was no food. Without her, your chances halved.",
       },
     ],
-    eraContext: "Nine in ten people live in extreme poverty. The average life is 29 years. Most humans farm with tools unchanged since the Bronze Age.",
     sdgProgress: []
   },
   {
@@ -87,7 +85,6 @@ choices: [
         pivotal: true,
       },
     ],
-    eraContext: "Life expectancy remains 29 years. 85% live in poverty. The industrial revolution has begun but its benefits have not reached you.",
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 89, to: 85, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 29, to: 30, suffix: " yr" },
@@ -114,7 +111,6 @@ choices: [
         altOutcome: "A barber-surgeon bled you with a rusty lancet. Infection spread through your arm. You barely survived the fever.",
       },
     ],
-    eraContext: "The world is transforming \u2014 railroads, factories, telegraphs \u2014 but progress has not reached the poor.",
     sdgProgress: [
       { sdg: "SDG 3", label: "child mortality", from: 460, to: 375, suffix: "" },
       { sdg: "SDG 4", label: "literacy", from: 12, to: 17, suffix: "%" },
@@ -141,7 +137,6 @@ choices: [
         altOutcome: "You left the city just before cholera returned. The countryside was quiet. You chose silence over science.",
       },
     ],
-    eraContext: "Darwin publishes On the Origin of Species. The telephone is invented. The American Civil War rages.",
     sdgProgress: [
       { sdg: "SDG 3", label: "life expectancy", from: 30, to: 32, suffix: " yr" },
       { sdg: "SDG 3", label: "child mortality", from: 375, to: 360, suffix: "" },
@@ -170,7 +165,6 @@ choices: [
         pivotal: true,
       },
     ],
-    eraContext: "X-rays. Radio. The airplane. And soon: world war, pandemic, and the deadliest half-century in history.",
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 82, to: 60, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 32, to: 45, suffix: " yr" },
@@ -198,7 +192,6 @@ choices: [
         altOutcome: "You locked the door and did not open it for months. The silence outside was worse than the coughing.",
       },
     ],
-    eraContext: "World War I ends as the flu peaks. 20 million soldiers dead, 50 million civilians. The old order crumbles.",
     sdgProgress: [
       { sdg: "SDG 3", label: "child mortality", from: 215, to: 125, suffix: "" },
       { sdg: "SDG 4", label: "literacy", from: 21, to: 50, suffix: "%" },
@@ -225,7 +218,6 @@ choices: [
         altOutcome: "You ran. The city burned behind you. You did not look back. In 1945, running was the only form of hope.",
       },
     ],
-    eraContext: "The United Nations is born. The Marshall Plan rebuilds Europe. Penicillin saves millions.",
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 60, to: 38, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 45, to: 60, suffix: " yr" },
@@ -254,7 +246,6 @@ choices: [
         altOutcome: "Antibiotics, vaccines, surgery that did not kill you. You turned away from the greatest medical revolution in history.",
       },
     ],
-    eraContext: "Extreme poverty has fallen from 89% to 29%. Life expectancy is 68. Smallpox is eradicated.",
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 38, to: 10, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 60, to: 72, suffix: " yr" },
@@ -283,7 +274,6 @@ choices: [
         altOutcome: "You wrote your memoirs. Your words traveled faster than light. In 1800, your story would have died with you.",
       },
     ],
-    eraContext: "The SDGs are humanity's plan to finish what two centuries began.",
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 10, to: 8.5, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 72, to: 73, suffix: " yr" },
