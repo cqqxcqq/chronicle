@@ -14,45 +14,20 @@ const data = literacyData as DataPoint[];
 
 const literature = [
   "To be, or not to be, that is the question",
-  "For every action there is an equal and opposite reaction",
   "I am the master of my fate, I am the captain of my soul",
   "All human beings are born free and equal in dignity and rights",
-  "It was the best of times, it was the worst of times",
   "The only thing we have to fear is fear itself",
   "I think, therefore I am",
-  "We hold these truths to be self-evident",
-  "The unexamined life is not worth living",
-  "That which does not kill us makes us stronger",
   "Knowledge is power",
   "Injustice anywhere is a threat to justice everywhere",
   "The arc of the moral universe is long, but it bends toward justice",
-  "Nothing in life is to be feared, it is only to be understood",
-  "We are what we repeatedly do. Excellence, then, is not an act, but a habit",
-  "The beginning is the most important part of the work",
-  "Science is a way of thinking much more than it is a body of knowledge",
   "We shall overcome",
-  "The best way to predict the future is to create it",
-  "Happiness depends upon ourselves",
-  "To improve is to change; to be perfect is to change often",
   "I have a dream",
-  "We the peoples of the United Nations",
   "Be the change that you wish to see in the world",
   "Education is the most powerful weapon which you can use to change the world",
-  "The child is father of the man",
-  "Time is the longest distance between two places",
-  "We do not inherit the earth from our ancestors; we borrow it from our children",
   "Darkness cannot drive out darkness; only light can do that",
-  "Every child is an artist. The problem is how to remain an artist once we grow up",
-  "It is not the strongest of the species that survives, but the most adaptable",
-  "The only impossible journey is the one you never begin",
-  "Speech is power: speech is to persuade, to convert, to compel",
-  "To read is to voyage through time",
-  "The more that you read, the more things you will know",
-  "A room without books is like a body without a soul",
   "Imagination is more important than knowledge",
-  "First they ignore you, then they laugh at you, then they fight you, then you win",
-  "We are what we repeatedly do",
-  "The mind is everything. What you think you become",
+  "To read is to voyage through time",
 ];
 
 let textCache: HTMLCanvasElement | null = null;
@@ -67,7 +42,7 @@ const buildCache = (literacyRate: number, w: number, h: number) => {
     textCache &&
     textCache.width === w * dpr &&
     textCache.height === h * dpr &&
-    Math.abs(cachedBlur - blurAmount) < 0.1
+    Math.abs(cachedBlur - blurAmount) < 0.3
   ) {
     return;
   }

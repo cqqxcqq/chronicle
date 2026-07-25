@@ -89,7 +89,7 @@ export default function TimelineContainer({
       const currentYear = displayYearRef.current;
       const roundYear = Math.round(currentYear);
 
-      if (roundYear !== lastYearRef.current) {
+      if (Math.abs(roundYear - lastYearRef.current) >= 1) {
         lastYearRef.current = roundYear;
         setUiYear(roundYear);
       }
