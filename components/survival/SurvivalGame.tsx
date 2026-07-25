@@ -59,6 +59,13 @@ export default function SurvivalGame() {
   }, [clearTimers, clearRafs]);
 
   useEffect(() => {
+    SURVIVAL_ROUNDS.forEach((r) => {
+      const img = new window.Image();
+      img.src = r.image;
+    });
+  }, []);
+
+  useEffect(() => {
     if (phase !== "context") return;
 
     if (!soundEngine.isMuted()) {
@@ -254,7 +261,7 @@ const handleRestart = useCallback(() => {
         <div className={styles.playingScreen}>
           {progressBar}
           <div className={styles.roundImageContainer}>
-            <Image src={round.image} alt={round.imageAlt} fill sizes="100vw" priority={roundIdx === 0} className={styles.roundImage} />
+            <Image src={round.image} alt={round.imageAlt} fill sizes="100vw" priority className={styles.roundImage} />
             <div className={styles.imageOverlay} />
             <div className={styles.imageYearOverlay}>
               <p className={styles.imageYear}>{round.year}</p>
@@ -299,7 +306,7 @@ if (phase === "result") {
         <div className={styles.playingScreen}>
           {progressBar}
           <div className={styles.roundImageContainer}>
-            <Image src={round.image} alt={round.imageAlt} fill sizes="100vw" priority={roundIdx === 0} className={styles.roundImage} />
+            <Image src={round.image} alt={round.imageAlt} fill sizes="100vw" priority className={styles.roundImage} />
             <div className={styles.imageOverlay} />
             <div className={styles.imageYearOverlay}>
               <p className={styles.imageYear}>{round.year}</p>

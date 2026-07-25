@@ -258,7 +258,7 @@ choices: [
     age: 224,
     title: "The Present",
     context: "2026. Poverty: 89% to 8.5%. Child mortality: 460 to 37. Literacy: 12% to 87%. Life expectancy: 29 to 73. You saw it all.",
-    image: "/goals-2026.jpg",
+    image: "/age-of-goals.jpg",
     imageAlt: "Modern solar panels and green energy, 2026",
 choices: [
       {
