@@ -157,21 +157,20 @@
 
 .imageYear {
   font-family: var(--font-display);
-  font-size: 72px;
-  color: var(--color-gold);
-  letter-spacing: 0.15em;
+  font-size: clamp(96px, 15vw, 180px);
+  color: #d4c5a0;
+  letter-spacing: 0.12em;
   line-height: 1;
-  text-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 0 60px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.5);
   margin: 0;
 }
 
 .imageAge {
   font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--color-bone-ghost);
-  letter-spacing: 0.25em;
-  margin: 8px 0 0;
-  opacity: 0.6;
+  font-size: clamp(14px, 2vw, 18px);
+  color: rgba(180, 170, 145, 0.5);
+  letter-spacing: 0.3em;
+  margin: 12px 0 0;
 }
 
 /* --- CONTEXT SECTION --- */
@@ -497,11 +496,11 @@
   }
 
   .imageYear {
-    font-size: 48px;
+    font-size: clamp(72px, 12vw, 120px);
   }
 
   .imageAge {
-    font-size: 14px;
+    font-size: clamp(12px, 1.8vw, 15px);
   }
 
   .contextSection,
@@ -586,7 +585,7 @@
   }
 
   .imageYear {
-    font-size: 36px;
+    font-size: clamp(56px, 10vw, 80px);
   }
 
   .contextText {
