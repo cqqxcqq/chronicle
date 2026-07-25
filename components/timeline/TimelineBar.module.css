@@ -4,10 +4,10 @@
   left: 0;
   right: 0;
   z-index: 30;
-  height: 48px;
-  background: rgba(5, 5, 5, 0.9);
-  border-top: 1px solid rgba(200, 184, 138, 0.12);
-  backdrop-filter: blur(8px);
+  height: 52px;
+  background: linear-gradient(to top, rgba(5, 5, 3, 0.95), rgba(5, 5, 3, 0.7));
+  border-top: 1px solid rgba(200, 184, 138, 0.08);
+  backdrop-filter: blur(12px);
 }
 
 .track {
@@ -25,76 +25,96 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: 1px solid rgba(200, 184, 138, 0.06);
-  border-right: 1px solid rgba(200, 184, 138, 0.06);
 }
 
 .eraLabel {
   font-family: var(--font-display);
   font-size: 8px;
   letter-spacing: 0.15em;
-  color: rgba(200, 188, 158, 0.35);
+  color: rgba(200, 188, 158, 0.3);
   text-transform: uppercase;
   white-space: nowrap;
   pointer-events: none;
+  user-select: none;
 }
 
 .milestone {
   position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 24px;
-  height: 24px;
+  top: 0;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 100%;
   background: none;
   border: none;
   cursor: pointer;
   z-index: 2;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 0;
 }
 
-.milestoneDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #c9b88a;
-  opacity: 0.5;
-  transition: opacity 0.2s, transform 0.2s;
+.milestoneTick {
+  width: 1px;
+  height: 12px;
+  background: rgba(200, 184, 138, 0.25);
+  transition: background 0.2s, height 0.2s;
 }
 
-.milestone:hover .milestoneDot {
-  opacity: 1;
-  transform: scale(1.4);
+.milestone:hover .milestoneTick {
+  background: rgba(200, 184, 138, 0.6);
+  height: 16px;
+}
+
+.progressTrack {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(200, 184, 138, 0.06);
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(180, 165, 120, 0.3), #c9b88a, #d4c5a0);
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px rgba(200, 184, 138, 0.3);
 }
 
 .handle {
   position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  bottom: 0;
+  transform: translateX(-50%);
   width: 2px;
-  height: 28px;
+  height: 20px;
   background: #d4c5a0;
   z-index: 3;
   cursor: grab;
+  transition: height 0.15s ease;
+}
+
+.handle:hover {
+  height: 28px;
 }
 
 .handle:active {
   cursor: grabbing;
+  height: 28px;
 }
 
 .handleLabel {
   position: absolute;
-  bottom: calc(100% + 6px);
+  bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--font-display);
-  font-size: 10px;
-  letter-spacing: 0.1em;
+  font-size: 11px;
+  letter-spacing: 0.12em;
   color: #d4c5a0;
   white-space: nowrap;
   pointer-events: none;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.9), 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 @media (max-width: 768px) {
@@ -106,18 +126,12 @@
     display: none;
   }
 
-  .milestone {
-    width: 20px;
-    height: 20px;
-  }
-
-  .milestoneDot {
-    width: 6px;
-    height: 6px;
-  }
-
   .handle {
-    height: 20px;
+    height: 16px;
+  }
+
+  .handle:hover {
+    height: 24px;
   }
 
   .handleLabel {
@@ -131,6 +145,6 @@
   }
 
   .bar {
-    height: 40px;
+    height: 44px;
   }
 }

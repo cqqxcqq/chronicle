@@ -73,6 +73,7 @@ export default function TimelineBar({
   };
 
   const roundedYear = Math.round(currentYear);
+  const progressPct = yearToPercent(roundedYear);
 
   return (
     <div className={styles.bar}>
@@ -105,13 +106,20 @@ export default function TimelineBar({
             onClick={() => handleMilestoneClick(i)}
             title={m.label}
           >
-            <span className={styles.milestoneDot} />
+            <span className={styles.milestoneTick} />
           </button>
         ))}
 
+        <div className={styles.progressTrack}>
+          <div
+            className={styles.progressFill}
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+
         <div
           className={styles.handle}
-          style={{ left: `${yearToPercent(roundedYear)}%` }}
+          style={{ left: `${progressPct}%` }}
         >
           <span className={styles.handleLabel}>{roundedYear}</span>
         </div>

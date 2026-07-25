@@ -8,6 +8,9 @@
   max-width: 600px;
   pointer-events: none;
   animation: fadeInOut 4s ease-in-out forwards;
+  padding: 16px 24px;
+  border-radius: 4px;
+  background: radial-gradient(ellipse at center, rgba(5, 5, 3, 0.6) 0%, transparent 70%);
 }
 
 @keyframes fadeInOut {
@@ -22,8 +25,9 @@
   font-family: var(--font-display);
   font-size: 11px;
   letter-spacing: 0.25em;
-  color: var(--color-gold);
+  color: #c9b88a;
   margin-bottom: 4px;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.9);
 }
 
 .title {
@@ -31,8 +35,9 @@
   font-family: var(--font-display);
   font-size: 14px;
   letter-spacing: 0.1em;
-  color: var(--color-bone);
+  color: #ddd0b8;
   margin-bottom: 4px;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
 }
 
 .detail {
@@ -40,8 +45,9 @@
   font-family: var(--font-body);
   font-size: 13px;
   font-style: italic;
-  color: var(--color-bone-dim);
+  color: rgba(210, 200, 175, 0.7);
   line-height: 1.6;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
 }
 
 @media (max-width: 768px) {

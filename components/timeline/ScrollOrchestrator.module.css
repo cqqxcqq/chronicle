@@ -4,7 +4,7 @@
   height: 100vh;
   overflow: hidden;
   background: var(--color-void);
-  cursor: ns-resize;
+  cursor: default;
 }
 
 .viewport {
