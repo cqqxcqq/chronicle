@@ -5,8 +5,8 @@
   right: 0;
   z-index: 30;
   height: 48px;
-  background: color-mix(in srgb, var(--color-void-deep) 90%, transparent);
-  border-top: 1px solid var(--color-border);
+  background: rgba(5, 5, 5, 0.9);
+  border-top: 1px solid rgba(200, 184, 138, 0.12);
   backdrop-filter: blur(8px);
 }
 
@@ -25,16 +25,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: 1px solid rgba(212, 175, 55, 0.06);
-  border-right: 1px solid rgba(212, 175, 55, 0.06);
+  border-left: 1px solid rgba(200, 184, 138, 0.06);
+  border-right: 1px solid rgba(200, 184, 138, 0.06);
 }
 
 .eraLabel {
   font-family: var(--font-display);
   font-size: 8px;
   letter-spacing: 0.15em;
-  color: var(--color-bone-ghost);
-  opacity: 0.4;
+  color: rgba(200, 188, 158, 0.35);
   text-transform: uppercase;
   white-space: nowrap;
   pointer-events: none;
@@ -60,7 +59,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--color-gold);
+  background: #c9b88a;
   opacity: 0.5;
   transition: opacity 0.2s, transform 0.2s;
 }
@@ -76,7 +75,7 @@
   transform: translate(-50%, -50%);
   width: 2px;
   height: 28px;
-  background: var(--color-gold);
+  background: #d4c5a0;
   z-index: 3;
   cursor: grab;
 }
@@ -93,7 +92,7 @@
   font-family: var(--font-display);
   font-size: 10px;
   letter-spacing: 0.1em;
-  color: var(--color-gold);
+  color: #d4c5a0;
   white-space: nowrap;
   pointer-events: none;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo } from "react";
 import { MILESTONES, MILESTONE_STATS, ERAS } from "@/lib/timeline-config";
 import figuresData from "@/lib/data/figures.json";
 import styles from "./EraNarrative.module.css";
@@ -23,24 +24,16 @@ function getFigureForMilestone(milestoneYear: number): Figure | null {
 interface EraNarrativeProps {
   displayYear: number;
   milestoneIndex: number;
-  canAdvance: boolean;
-  canRetreat: boolean;
-  onAdvance: () => void;
-  onRetreat: () => void;
 }
 
 export default function EraNarrative({
   displayYear,
   milestoneIndex,
-  canAdvance,
-  canRetreat,
-  onAdvance,
-  onRetreat,
 }: EraNarrativeProps) {
   const milestone = MILESTONES[milestoneIndex];
   const stat = MILESTONE_STATS[milestoneIndex];
   const isLast = milestoneIndex === MILESTONES.length - 1;
-  const figure = getFigureForMilestone(milestone.year);
+  const figure = useMemo(() => getFigureForMilestone(milestone.year), [milestone.year]);
 
   return (
     <div className={styles.wrapper}>
@@ -48,7 +41,7 @@ export default function EraNarrative({
         <span className={styles.year}>{displayYear}</span>
       </div>
 
-      <div className={styles.panel}>
+      <div className={styles.panel} key={milestoneIndex}>
         <p className={styles.eraTitle}>{milestone.label}</p>
 
         <hr className={styles.divider} />
@@ -86,27 +79,18 @@ export default function EraNarrative({
           </div>
         )}
 
-        <div className={styles.actions}>
-          {canRetreat && (
-            <button className={styles.retreatBtn} onClick={onRetreat}>
-              ← BACK
-            </button>
-          )}
-
-          {canAdvance && (
-            <button className={styles.advanceBtn} onClick={onAdvance}>
-              CONTINUE
-              <span className={styles.arrow}> →</span>
-            </button>
-          )}
-
-          {isLast && !canAdvance && (
-            <Link href="/survival" className={styles.survivalBtn}>
-              YOUR STORY →
-            </Link>
-          )}
-        </div>
+        {isLast && (
+          <Link href="/survival" className={styles.survivalBtn}>
+            YOUR STORY &rarr;
+          </Link>
+        )}
       </div>
+
+      {!isLast && (
+        <p className={styles.scrollHint}>
+          scroll to travel through time
+        </p>
+      )}
     </div>
   );
 }

@@ -29,19 +29,11 @@ const ERA_SOUND_MAP: Record<string, "want" | "industry" | "catastrophe" | "recov
 interface TimelineContainerProps {
   displayYear: number;
   milestoneIndex: number;
-  onAdvance: () => void;
-  onRetreat: () => void;
-  canAdvance: boolean;
-  canRetreat: boolean;
 }
 
 export default function TimelineContainer({
   displayYear: targetYear,
   milestoneIndex,
-  onAdvance,
-  onRetreat,
-  canAdvance,
-  canRetreat,
 }: TimelineContainerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const displayYearRef = useRef(START_YEAR);
@@ -82,7 +74,7 @@ export default function TimelineContainer({
       const time = timestamp / 1000;
 
       const gap = Math.abs(targetYearRef.current - displayYearRef.current);
-      const rate = gap > 5 ? 0.06 : 0.10;
+      const rate = gap > 5 ? 0.12 : 0.2;
       displayYearRef.current +=
         (targetYearRef.current - displayYearRef.current) * rate;
 
@@ -137,10 +129,6 @@ export default function TimelineContainer({
       <EraNarrative
         displayYear={uiYear}
         milestoneIndex={milestoneIndex}
-        canAdvance={canAdvance}
-        canRetreat={canRetreat}
-        onAdvance={onAdvance}
-        onRetreat={onRetreat}
       />
 
       <EventCallout displayYear={uiYear} events={eventsData} />
