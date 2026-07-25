@@ -136,18 +136,19 @@
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(8, 8, 8, 0.3) 0%,
-    rgba(8, 8, 8, 0.1) 30%,
-    rgba(8, 8, 8, 0.6) 70%,
+    rgba(8, 8, 8, 0.5) 0%,
+    rgba(8, 8, 8, 0.15) 25%,
+    rgba(8, 8, 8, 0.15) 55%,
+    rgba(8, 8, 8, 0.7) 75%,
     rgba(8, 8, 8, 0.95) 100%
   );
 }
 
 .imageYearOverlay {
   position: absolute;
-  top: 50%;
+  top: 15%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   text-align: center;
   z-index: 1;
 }
@@ -163,11 +164,12 @@
 }
 
 .imageAge {
-  font-family: var(--font-display);
-  font-size: 18px;
+  font-family: var(--font-body);
+  font-size: 14px;
   color: var(--color-bone-ghost);
-  letter-spacing: 0.2em;
-  margin: 4px 0 0;
+  letter-spacing: 0.25em;
+  margin: 8px 0 0;
+  opacity: 0.6;
 }
 
 /* --- CONTEXT SECTION --- */
@@ -177,17 +179,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 48vh 32px 48px;
+  padding: 56vh 32px 48px;
   max-width: 700px;
   width: 100%;
 }
 
 .roundTitle {
   font-family: var(--font-display);
-  font-size: 15px;
-  color: var(--color-amber);
-  letter-spacing: 0.3em;
-  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--color-gold);
+  letter-spacing: 0.4em;
+  margin-bottom: 20px;
+  text-transform: uppercase;
 }
 
 .contextText {
@@ -264,7 +267,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 48vh 32px 48px;
+  padding: 56vh 32px 48px;
   max-width: 700px;
   width: 100%;
 }
@@ -291,7 +294,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 48vh 32px 48px;
+  padding: 56vh 32px 48px;
   max-width: 700px;
   width: 100%;
   gap: 24px;

@@ -125,14 +125,14 @@ export const ERAS: Era[] = [
     id: "age-of-catastrophe",
     label: "The Age of Catastrophe",
     start: 1900,
-    end: 1949,
+    end: 1944,
     description:
       "Two world wars, a pandemic that killed more than any war, and famines that scarred continents. Yet even in humanity's darkest half-century, the seeds of global cooperation were sown.",
   },
   {
     id: "age-of-recovery",
     label: "The Age of Recovery",
-    start: 1950,
+    start: 1945,
     end: 1979,
     description:
       "Decolonization, the green revolution, vaccines, and the birth of the modern human rights framework. Poverty began its long retreat. Life expectancy rose dramatically across the world.",
