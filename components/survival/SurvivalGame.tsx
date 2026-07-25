@@ -24,9 +24,7 @@ export default function SurvivalGame() {
   const [roundIdx, setRoundIdx] = useState(0);
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [contextVisible, setContextVisible] = useState(false);
-  const [eraVisible, setEraVisible] = useState(false);
   const [resultVisible, setResultVisible] = useState(false);
-  const [progressVisible, setProgressVisible] = useState(false);
   const [counterValues, setCounterValues] = useState<Record<number, number>>({});
 
   const round = SURVIVAL_ROUNDS[roundIdx];
@@ -57,26 +55,21 @@ export default function SurvivalGame() {
 
   useEffect(() => {
     if (phase !== "context") return;
-    setContextVisible(false);
-    setEraVisible(false);
-    setResultVisible(false);
-    setProgressVisible(false);
-    setSelectedChoice(null);
-    setCounterValues({});
 
     if (!soundEngine.isMuted()) {
       soundEngine.playEra(getEraForYear(round.year));
     }
 
-    const t1 = window.setTimeout(() => setContextVisible(true), 500);
-    const t2 = window.setTimeout(() => setEraVisible(true), 1200);
-    const t3 = window.setTimeout(() => setPhase("choice"), 2000);
-    addTimer(t1); addTimer(t2); addTimer(t3);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    const t1 = window.setTimeout(() => setContextVisible(true), 300);
+    const t2 = window.setTimeout(() => setPhase("choice"), 1200);
+    addTimer(t1); addTimer(t2);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [phase, roundIdx, addTimer, round.year]);
 
-  const handleChoice = useCallback((choiceIdx: number) => {
+const handleChoice = useCallback((choiceIdx: number) => {
     setSelectedChoice(choiceIdx);
+    setResultVisible(false);
+    setCounterValues({});
     setPhase("result");
     if (!soundEngine.isMuted()) soundEngine.playClick();
 
@@ -93,9 +86,8 @@ export default function SurvivalGame() {
     return () => clearTimeout(t);
   }, [phase, resultVisible, addTimer]);
 
-  useEffect(() => {
+useEffect(() => {
     if (phase !== "progress") return;
-    setProgressVisible(true);
 
     clearRafs();
     round.sdgProgress.forEach((prog, i) => {
@@ -127,9 +119,13 @@ export default function SurvivalGame() {
     return () => clearRafs();
   }, [phase, round.sdgProgress, clearRafs]);
 
-  const handleContinue = useCallback(() => {
+const handleContinue = useCallback(() => {
     if (roundIdx < SURVIVAL_ROUNDS.length - 1) {
       setRoundIdx(i => i + 1);
+      setSelectedChoice(null);
+      setContextVisible(false);
+      setResultVisible(false);
+      setCounterValues({});
       setPhase("context");
     } else {
       soundEngine.stopAll();
@@ -137,7 +133,7 @@ export default function SurvivalGame() {
     }
   }, [roundIdx]);
 
-  const handleRestart = useCallback(() => {
+const handleRestart = useCallback(() => {
     clearTimers();
     clearRafs();
     soundEngine.stopAll();
@@ -145,13 +141,9 @@ export default function SurvivalGame() {
     setRoundIdx(0);
     setSelectedChoice(null);
     setContextVisible(false);
-    setEraVisible(false);
     setResultVisible(false);
-    setProgressVisible(false);
     setCounterValues({});
   }, [clearTimers, clearRafs]);
-
-  const firstRound = SURVIVAL_ROUNDS[0];
 
   const completeStats = useMemo(() => {
     const allSdgs = new Map<string, { label: string; from: number; to: number; suffix: string }>();
@@ -231,8 +223,8 @@ export default function SurvivalGame() {
       <div className={styles.container}>
         <div className={styles.startScreen}>
           <p className={styles.startTitle}>YOU WERE BORN IN 1800</p>
-          <p className={styles.startBridge}>
-            Track humanity's journey across 4 Sustainable Development Goals.
+<p className={styles.startBridge}>
+            Track humanity&apos;s journey across 4 Sustainable Development Goals.
           </p>
           <p className={styles.startSubtitle}>
             9 moments. 226 years. From 89% poverty to 8.5%.
@@ -361,16 +353,11 @@ export default function SurvivalGame() {
             <p className={styles.imageAge}>Age {round.age}</p>
           </div>
         </div>
-        <div className={styles.contextSection}>
+<div className={styles.contextSection}>
           <p className={styles.roundTitle}>{round.title}</p>
           {contextVisible && (
             <p className={`${styles.contextText} ${styles.fadeIn}`}>
               {round.context}
-            </p>
-          )}
-          {eraVisible && (
-            <p className={`${styles.eraContext} ${styles.fadeIn}`}>
-              {round.eraContext}
             </p>
           )}
           {phase === "choice" && (
