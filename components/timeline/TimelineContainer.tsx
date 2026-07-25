@@ -112,7 +112,7 @@ export default function TimelineContainer({
         }
       }
 
-      drawEraBackground({ ctx, displayYear: currentYear, width: w, height: h, palette });
+      drawEraBackground({ ctx, displayYear: roundYear, width: w, height: h, palette });
       drawAtmosphericDarkness({ ctx, displayYear: currentYear, time, width: w, height: h, palette, strength: 1 });
       drawHistoricalRupture({ ctx, displayYear: currentYear, time, width: w, height: h, fogHeight, palette, strength: 1 });
       drawLiteracyText({ ctx, displayYear: currentYear, width: w, height: h, fogHeight, strength: 1 });
