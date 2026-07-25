@@ -107,6 +107,7 @@
 
 /* --- PLAYING SCREEN --- */
 .playingScreen {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -118,19 +119,16 @@
 
 /* --- IMAGE STYLES --- */
 .roundImageContainer {
-  position: relative;
-  width: 100%;
-  height: 42vh;
-  min-height: 280px;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
 .roundImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(0.7) brightness(0.85);
+  filter: saturate(0.7) brightness(0.7);
 }
 
 .imageOverlay {
@@ -138,19 +136,20 @@
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(8, 8, 8, 0.15) 0%,
-    rgba(8, 8, 8, 0.05) 40%,
-    rgba(8, 8, 8, 0.5) 80%,
-    rgba(8, 8, 8, 0.9) 100%
+    rgba(8, 8, 8, 0.3) 0%,
+    rgba(8, 8, 8, 0.1) 30%,
+    rgba(8, 8, 8, 0.6) 70%,
+    rgba(8, 8, 8, 0.95) 100%
   );
 }
 
 .imageYearOverlay {
   position: absolute;
-  bottom: 24px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   text-align: center;
+  z-index: 1;
 }
 
 .imageYear {
@@ -173,10 +172,12 @@
 
 /* --- CONTEXT SECTION --- */
 .contextSection {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 32px 32px 48px;
+  padding: 48vh 32px 48px;
   max-width: 700px;
   width: 100%;
 }
@@ -258,10 +259,12 @@
 
 /* --- RESULT SECTION --- */
 .resultSection {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 32px 32px 48px;
+  padding: 48vh 32px 48px;
   max-width: 700px;
   width: 100%;
 }
@@ -283,10 +286,12 @@
 
 /* --- PROGRESS SECTION --- */
 .progressSection {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 32px 32px 48px;
+  padding: 48vh 32px 48px;
   max-width: 700px;
   width: 100%;
   gap: 24px;
@@ -469,11 +474,6 @@
     font-size: 12px;
   }
 
-  .roundImageContainer {
-    height: 35vh;
-    min-height: 220px;
-  }
-
   .imageYear {
     font-size: 48px;
   }
@@ -485,7 +485,7 @@
   .contextSection,
   .resultSection,
   .progressSection {
-    padding: 24px 16px 40px;
+    padding: 42vh 16px 40px;
   }
 
   .contextText {
@@ -561,11 +561,6 @@
   .startTitle {
     font-size: 26px;
     letter-spacing: 0.12em;
-  }
-
-  .roundImageContainer {
-    height: 30vh;
-    min-height: 180px;
   }
 
   .imageYear {
@@ -695,14 +690,21 @@
 
 .pivotalBadge {
   font-family: var(--font-display);
-  font-size: 9px;
-  letter-spacing: 0.2em;
+  font-size: 10px;
+  letter-spacing: 0.25em;
   color: var(--color-gold);
-  margin-left: 8px;
-  padding: 2px 6px;
-  border: 1px solid var(--color-gold-muted);
+  margin-left: 10px;
+  padding: 3px 8px;
+  border: 1px solid var(--color-gold);
   border-radius: 2px;
   vertical-align: middle;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+  animation: pivotalBadgePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pivotalBadgePulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(212, 175, 55, 0.3); }
+  50% { box-shadow: 0 0 12px rgba(212, 175, 55, 0.7); }
 }
 
 .pivotalFlash {
@@ -712,10 +714,14 @@
   opacity: 0;
   z-index: 999;
   pointer-events: none;
-  animation: flashIn 0.8s ease-out forwards;
+  animation: flashIn 1.2s ease-out forwards;
 }
 
 @keyframes flashIn {
-  0% { opacity: 0.15; }
+  0% { opacity: 0.4; }
+  15% { opacity: 0.1; }
+  30% { opacity: 0.3; }
+  50% { opacity: 0.05; }
+  70% { opacity: 0.15; }
   100% { opacity: 0; }
 }
