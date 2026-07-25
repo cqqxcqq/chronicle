@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { MILESTONES } from "@/lib/timeline-config";
-import TimelineBar from "./TimelineBar";
 import styles from "./ScrollOrchestrator.module.css";
 
 export interface ScrollContext {
@@ -87,11 +86,6 @@ export default function ScrollOrchestrator({
   return (
     <div className={styles.container}>
       <div className={styles.viewport}>{children(ctx)}</div>
-      <TimelineBar
-        currentYear={freeYear}
-        onYearChange={onYearChange}
-        onSnapToMilestone={onSnapToMilestone}
-      />
     </div>
   );
 }

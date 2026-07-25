@@ -86,13 +86,6 @@ export default function EraNarrative({
           </div>
         )}
 
-        {stat.whatIf && (
-          <div className={styles.whatIf}>
-            <p className={styles.whatIfLabel}>WHAT IF</p>
-            <p className={styles.whatIfText}>{stat.whatIf}</p>
-          </div>
-        )}
-
         <div className={styles.actions}>
           {canRetreat && (
             <button className={styles.retreatBtn} onClick={onRetreat}>
