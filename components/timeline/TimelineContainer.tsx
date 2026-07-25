@@ -3,7 +3,6 @@
 import { useRef, useEffect, useState } from "react";
 import {
   START_YEAR,
-  LERP_RATE,
   getEraForYear,
   getEraPalette,
 } from "@/lib/timeline-config";
@@ -83,7 +82,7 @@ export default function TimelineContainer({
       const time = timestamp / 1000;
 
       const gap = Math.abs(targetYearRef.current - displayYearRef.current);
-      const rate = gap > 5 ? 0.025 : LERP_RATE;
+      const rate = gap > 5 ? 0.06 : 0.10;
       displayYearRef.current +=
         (targetYearRef.current - displayYearRef.current) * rate;
 
