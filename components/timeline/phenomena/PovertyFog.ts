@@ -26,6 +26,49 @@ export const getFogHeight = (
   return minFogHeight + (maxFogHeight - minFogHeight) * povertyRate;
 };
 
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+interface Particle {
+  x: number;
+  y: number;
+  baseX: number;
+  baseY: number;
+  radius: number;
+  baseAlpha: number;
+  driftSpeed: number;
+  driftPhase: number;
+  layer: number;
+}
+
+const PARTICLE_COUNT = 280;
+const particles: Particle[] = [];
+
+function initParticles(width: number, height: number) {
+  particles.length = 0;
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const seed = i * 7.31;
+    const x = seededRandom(seed) * width;
+    const layer = Math.floor(seededRandom(seed + 1) * 4);
+    const yBias = seededRandom(seed + 2);
+    const baseY = height * 0.45 + yBias * height * 0.55;
+
+    particles.push({
+      x,
+      y: baseY,
+      baseX: x,
+      baseY,
+      radius: 1 + seededRandom(seed + 3) * 4,
+      baseAlpha: 0.08 + seededRandom(seed + 4) * 0.18,
+      driftSpeed: 0.15 + seededRandom(seed + 5) * 0.35,
+      driftPhase: seededRandom(seed + 6) * Math.PI * 2,
+      layer,
+    });
+  }
+}
+
 export const drawPovertyFog = ({
   ctx,
   displayYear,
@@ -37,105 +80,58 @@ export const drawPovertyFog = ({
   palette,
   strength,
 }: DrawFogParams) => {
-  const fogHeight = getFogHeight(displayYear, height);
-  const boundaryY = height - fogHeight;
   const povertyRate = linearInterpolate(data, displayYear) / 100;
+  const fogHeight = getFogHeight(displayYear, height);
+  const fogTop = height - fogHeight;
 
-  const layers = 5;
-  for (let l = 0; l < layers; l++) {
-    const layerOffset = l * (fogHeight * 0.05);
-    const waveAmp = fogHeight * (0.04 + l * 0.015);
-
-    ctx.beginPath();
-    ctx.moveTo(0, height);
-
-    for (let x = 0; x <= width; x += 2) {
-      const wave1 = Math.sin(x * 0.006 + time * 0.25 + l * 1.7) * waveAmp;
-      const wave2 = Math.sin(x * 0.013 + time * 0.45 + l * 2.3) * (waveAmp * 0.7);
-      const wave3 = Math.sin(x * 0.003 - time * 0.18 + l * 0.9) * (waveAmp * 0.5);
-      const wave4 = Math.sin(x * 0.022 + time * 0.35 + l * 3.1) * (waveAmp * 0.3);
-
-      const y = boundaryY - layerOffset + wave1 + wave2 + wave3 + wave4;
-      ctx.lineTo(x, y);
-    }
-
-    ctx.lineTo(width, height);
-    ctx.closePath();
-
-    const alpha = (0.25 + l * 0.25) * strength;
-    const gradient = ctx.createLinearGradient(0, boundaryY - layerOffset, 0, height);
-    gradient.addColorStop(0, `${palette.fogTop} 0)`);
-    gradient.addColorStop(0.1, `${palette.fogMid} ${0.15 * alpha})`);
-    gradient.addColorStop(0.3, `${palette.fogMid} ${0.5 * alpha})`);
-    gradient.addColorStop(0.6, `${palette.fogBottom} ${0.8 * alpha})`);
-    gradient.addColorStop(1, `${palette.fogBottom} ${alpha})`);
-    ctx.fillStyle = gradient;
-    ctx.fill();
+  if (particles.length === 0 || particles[0]?.baseX === undefined) {
+    initParticles(width, height);
   }
 
-  const isCursorInFog =
-    cursorY > boundaryY - 20 && cursorY < height && cursorX >= 0 && cursorX <= width;
+  const cursorRadius = 100 + (1 - povertyRate) * 80;
 
-  if (isCursorInFog) {
-    const cursorRadius = 80 + (1 - povertyRate) * 120 / Math.max(0.1, povertyRate + 0.1);
-    const edgeSoftness = cursorRadius * 0.6;
+  for (let l = 0; l < 4; l++) {
+    const layerParticles = particles.filter((p) => p.layer === l);
+    const layerAlpha = (0.4 + l * 0.2) * strength;
 
-    ctx.save();
-    ctx.globalCompositeOperation = "destination-out";
+    for (const p of layerParticles) {
+      const drift = Math.sin(time * p.driftSpeed + p.driftPhase);
+      const px = p.baseX + drift * 20 + Math.sin(time * 0.3 + p.driftPhase * 2) * 8;
+      const py = p.baseY + Math.sin(time * p.driftSpeed * 0.6 + p.driftPhase + 1) * 6;
 
-    const radialGrad = ctx.createRadialGradient(
-      cursorX, cursorY, 0,
-      cursorX, cursorY, cursorRadius
-    );
-    radialGrad.addColorStop(0, "rgba(255, 255, 255, 1)");
-    radialGrad.addColorStop(
-      edgeSoftness / cursorRadius,
-      "rgba(255, 255, 255, 0.5)"
-    );
-    radialGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+      if (py < fogTop - 30) continue;
 
-    ctx.fillStyle = radialGrad;
-    ctx.beginPath();
-    ctx.arc(cursorX, cursorY, cursorRadius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  }
+      const distFromTop = (py - fogTop) / fogHeight;
+      const verticalFade = Math.min(1, distFromTop * 2.5);
+      const edgeFade = Math.max(0, 1 - Math.abs(px / width - 0.5) * 1.2);
 
-  ctx.beginPath();
-  for (let x = 0; x <= width; x += 2) {
-    const wave1 = Math.sin(x * 0.006 + time * 0.25) * (fogHeight * 0.04);
-    const wave2 = Math.sin(x * 0.013 + time * 0.45) * (fogHeight * 0.028);
-    const wave3 = Math.sin(x * 0.003 - time * 0.18) * (fogHeight * 0.02);
-    const wave4 = Math.sin(x * 0.022 + time * 0.35) * (fogHeight * 0.012);
-    const y = boundaryY + wave1 + wave2 + wave3 + wave4;
-    if (x === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  }
+      const dx = px - cursorX;
+      const dy = py - cursorY;
+      const distFromCursor = Math.sqrt(dx * dx + dy * dy);
+      const cursorClear = Math.min(1, distFromCursor / cursorRadius);
 
-  const edgeAlpha = (povertyRate < 0.7
-    ? 0.15 + (1 - povertyRate / 0.7) * 0.25
-    : 0.08 + (1 - (povertyRate - 0.7) / 0.3) * 0.07) * strength;
+      const alpha = p.baseAlpha * layerAlpha * verticalFade * edgeFade * cursorClear * povertyRate;
+      if (alpha < 0.005) continue;
 
-  ctx.strokeStyle = `${palette.fogEdge} ${edgeAlpha})`;
-  ctx.lineWidth = 2;
-  ctx.shadowColor = `${palette.fogEdge} ${edgeAlpha * 0.5})`;
-  ctx.shadowBlur = 8;
-  ctx.stroke();
-  ctx.shadowBlur = 0;
+      const r = parseInt(palette.fogMid.slice(1, 3), 16);
+      const g = parseInt(palette.fogMid.slice(3, 5), 16);
+      const b = parseInt(palette.fogMid.slice(5, 7), 16);
 
-  if (povertyRate > 0.3) {
-    for (let i = 0; i < 60; i++) {
-      const seed = i * 7.3 + time * 0.1;
-      const px = ((Math.sin(seed * 1.1 + 0.3) * 0.5 + 0.5) * width) % width;
-      const pyOffset = Math.sin(seed * 0.7 + 0.5) * 0.5 + 0.5;
-      const py = boundaryY + (fogHeight - fogHeight * 0.2) * pyOffset;
-      const pSize = 0.5 + Math.sin(seed * 2.3) * 0.5 + 0.5;
-      const pAlpha = (0.02 + Math.sin(seed * 1.7 + time) * 0.01 + 0.01) * strength;
-
-      ctx.fillStyle = `${palette.fogMid} ${pAlpha})`;
       ctx.beginPath();
-      ctx.arc(px, py, pSize, 0, Math.PI * 2);
+      ctx.arc(px, py, p.radius + Math.sin(time * 0.8 + p.driftPhase) * 0.8, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
       ctx.fill();
     }
   }
+
+  const br = parseInt(palette.fogBottom.slice(1, 3), 16);
+  const bg = parseInt(palette.fogBottom.slice(3, 5), 16);
+  const bb = parseInt(palette.fogBottom.slice(5, 7), 16);
+
+  const bottomGrad = ctx.createLinearGradient(0, height * 0.75, 0, height);
+  bottomGrad.addColorStop(0, `rgba(${br}, ${bg}, ${bb}, 0)`);
+  bottomGrad.addColorStop(0.5, `rgba(${br}, ${bg}, ${bb}, ${0.15 * povertyRate * strength})`);
+  bottomGrad.addColorStop(1, `rgba(${br}, ${bg}, ${bb}, ${0.45 * povertyRate * strength})`);
+  ctx.fillStyle = bottomGrad;
+  ctx.fillRect(0, height * 0.75, width, height * 0.25);
 };
