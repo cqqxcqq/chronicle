@@ -2,6 +2,7 @@
   text: string;
   modifier: number;
   outcome: string;
+  pivotal?: boolean;
 }
 
 export interface SdgProgress {
@@ -54,7 +55,7 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     context: "Mount Tambora erupts, blotting out the sun. Crops fail across three continents. Famine creeps through Europe and Asia.",
     image: "/famine-1815.jpg",
     imageAlt: "Barren fields under volcanic ash sky, 1815",
-    choices: [
+choices: [
       {
         text: "Flee to the countryside to forage",
         modifier: 0.08,
@@ -64,6 +65,7 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
         text: "Share dwindling food with neighbors",
         modifier: 0.03,
         outcome: "You gave away half your food. Your neighbors survived because of you. In 1815, community was the only safety net.",
+        pivotal: true,
       },
     ],
     eraContext: "Life expectancy remains 29 years. 85% live in poverty. The industrial revolution has begun but its benefits have not reached you.",
@@ -130,7 +132,7 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     context: "The year 1900. You are 100 years old \u2014 an impossibility. But the 20th century is the bloodiest in history.",
     image: "/newcentury-1900.jpg",
     imageAlt: "Turn of the century city with early automobiles, 1900",
-    choices: [
+choices: [
       {
         text: "Retreat from public life entirely",
         modifier: 0.06,
@@ -140,6 +142,7 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
         text: "Document your story for posterity",
         modifier: 0.02,
         outcome: "You wrote by candlelight. Your words would outlive you. In a century of war, testimony became the rarest form of survival.",
+        pivotal: true,
       },
     ],
     eraContext: "X-rays. Radio. The airplane. And soon: world war, pandemic, and the deadliest half-century in history.",
@@ -207,11 +210,12 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     context: "The year 2000. You are 200 years old \u2014 the oldest human who has ever lived. The internet connects the world.",
     image: "/digital-2000.jpg",
     imageAlt: "Early internet cafe with dial-up computers, 2000",
-    choices: [
+choices: [
       {
         text: "Embrace modern medicine fully",
         modifier: 0.03,
         outcome: "Antibiotics. Vaccines. Surgery that did not kill you. You lived to see medicine become a science instead of a gamble.",
+        pivotal: true,
       },
       {
         text: "Rely on traditional remedies",

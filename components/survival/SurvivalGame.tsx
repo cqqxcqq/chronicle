@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import Image from "next/image";
 import { SURVIVAL_ROUNDS } from "@/lib/survival-data";
 import { soundEngine } from "@/lib/sound-engine";
 import ClosingSequence from "./ClosingSequence";
@@ -26,6 +27,7 @@ export default function SurvivalGame() {
   const [contextVisible, setContextVisible] = useState(false);
   const [resultVisible, setResultVisible] = useState(false);
   const [counterValues, setCounterValues] = useState<Record<number, number>>({});
+  const [isPivotal, setIsPivotal] = useState(false);
 
   const round = SURVIVAL_ROUNDS[roundIdx];
   const timersRef = useRef<number[]>([]);
@@ -70,12 +72,13 @@ const handleChoice = useCallback((choiceIdx: number) => {
     setSelectedChoice(choiceIdx);
     setResultVisible(false);
     setCounterValues({});
+    setIsPivotal(round.choices[choiceIdx].pivotal === true);
     setPhase("result");
     if (!soundEngine.isMuted()) soundEngine.playClick();
 
     const t = window.setTimeout(() => setResultVisible(true), 400);
     addTimer(t);
-  }, [addTimer]);
+  }, [addTimer, round.choices]);
 
   useEffect(() => {
     if (phase !== "result" || !resultVisible) return;
@@ -247,7 +250,7 @@ const handleRestart = useCallback(() => {
         <div className={styles.playingScreen}>
           {progressBar}
           <div className={styles.roundImageContainer}>
-            <img src={round.image} alt={round.imageAlt} className={styles.roundImage} />
+            <Image src={round.image} alt={round.imageAlt} fill sizes="100vw" priority={roundIdx === 0} className={styles.roundImage} />
             <div className={styles.imageOverlay} />
             <div className={styles.imageYearOverlay}>
               <p className={styles.imageYear}>{round.year}</p>
@@ -283,14 +286,15 @@ const handleRestart = useCallback(() => {
     );
   }
 
-  if (phase === "result") {
+if (phase === "result") {
     const outcome = selectedChoice !== null ? round.choices[selectedChoice].outcome : "";
     return (
       <div className={styles.container}>
+        {isPivotal && <div className={styles.pivotalFlash} />}
         <div className={styles.playingScreen}>
           {progressBar}
           <div className={styles.roundImageContainer}>
-            <img src={round.image} alt={round.imageAlt} className={styles.roundImage} />
+            <Image src={round.image} alt={round.imageAlt} fill sizes="100vw" priority={roundIdx === 0} className={styles.roundImage} />
             <div className={styles.imageOverlay} />
             <div className={styles.imageYearOverlay}>
               <p className={styles.imageYear}>{round.year}</p>
@@ -346,7 +350,7 @@ const handleRestart = useCallback(() => {
       <div className={styles.playingScreen}>
         {progressBar}
         <div className={styles.roundImageContainer}>
-          <img src={round.image} alt={round.imageAlt} className={styles.roundImage} />
+          <Image src={round.image} alt={round.imageAlt} fill sizes="100vw" className={styles.roundImage} />
           <div className={styles.imageOverlay} />
           <div className={styles.imageYearOverlay}>
             <p className={styles.imageYear}>{round.year}</p>
@@ -366,11 +370,12 @@ const handleRestart = useCallback(() => {
               {round.choices.map((choice, i) => (
                 <button
                   key={i}
-                  className={styles.choiceBtn}
+                  className={`${styles.choiceBtn} ${choice.pivotal ? styles.pivotalBtn : ""}`}
                   onClick={() => { if (!soundEngine.isMuted()) soundEngine.playClick(); handleChoice(i); }}
                 >
                   <span className={styles.choiceKey}>{i + 1}</span>
                   {choice.text}
+                  {choice.pivotal && <span className={styles.pivotalBadge}>PIVOTAL</span>}
                 </button>
               ))}
             </div>

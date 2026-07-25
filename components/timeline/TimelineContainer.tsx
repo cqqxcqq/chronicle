@@ -54,7 +54,9 @@ export default function TimelineContainer({
 
   const [uiYear, setUiYear] = useState(START_YEAR);
 
-  targetYearRef.current = targetYear;
+  useEffect(() => {
+    targetYearRef.current = targetYear;
+  }, [targetYear]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

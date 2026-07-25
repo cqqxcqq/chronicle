@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { soundEngine } from "@/lib/sound-engine";
 
 interface SoundContextValue {
@@ -19,8 +19,16 @@ export function useSound() {
   return useContext(SoundContext);
 }
 
+function getInitialMuted(): boolean {
+  if (typeof window === "undefined") return true;
+  const saved = localStorage.getItem("chronicle-muted");
+  if (saved !== null) return JSON.parse(saved);
+  return true;
+}
+
 export function SoundProvider({ children }: { children: React.ReactNode }) {
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(getInitialMuted);
+  const initializedRef = useRef(false);
 
   const init = useCallback(() => {
     soundEngine.init();
@@ -31,6 +39,14 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     const next = !muted;
     setMuted(next);
     soundEngine.setMuted(next);
+    localStorage.setItem("chronicle-muted", JSON.stringify(next));
+  }, [muted]);
+
+  useEffect(() => {
+    if (!initializedRef.current) {
+      soundEngine.setMuted(muted);
+      initializedRef.current = true;
+    }
   }, [muted]);
 
   useEffect(() => {

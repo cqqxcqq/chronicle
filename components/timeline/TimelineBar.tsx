@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useRef } from "react";
 import { MILESTONES, START_YEAR, END_YEAR, ERAS } from "@/lib/timeline-config";
 import styles from "./TimelineBar.module.css";
 

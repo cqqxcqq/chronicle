@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import LegacyCard from "./LegacyCard";
 import styles from "./ClosingSequence.module.css";
 
 const CHAR_DELAY = 0.05;
@@ -292,14 +293,13 @@ export default function ClosingSequence({ onEnd }: ClosingSequenceProps) {
             >
               A history of human progress.
             </motion.p>
-            <motion.p
-              className={styles.closing}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1.0, delay: 2.0 }}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.0, delay: 1.5 }}
             >
-              The future is not written. What happens next is up to you.
-            </motion.p>
+              <LegacyCard />
+            </motion.div>
             <motion.p
               className={styles.prompt}
               initial={{ opacity: 0, y: 0 }}

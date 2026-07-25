@@ -46,7 +46,7 @@ export const drawEraBackground = ({
   displayYear,
   width,
   height,
-  palette,
+  palette: _palette,
 }: DrawBackgroundParams) => {
   const era = ERAS.find((e) => displayYear >= e.start && displayYear <= e.end);
   if (!era) return;

@@ -17,14 +17,15 @@ export default function OpeningSequence() {
   >("init");
 
   useEffect(() => {
-    const t = setTimeout(() => setSequence("lines"), 400);
+    router.prefetch("/timeline");
+    const t = setTimeout(() => setSequence("lines"), 150);
     return () => clearTimeout(t);
-  }, []);
+  }, [router]);
 
   const onLinesComplete = useCallback(() => {
     setTimeout(() => {
       setSequence("title");
-    }, 1500);
+    }, 600);
   }, []);
 
   const skipToEnd = useCallback(() => {
@@ -34,7 +35,7 @@ export default function OpeningSequence() {
   const exit = useCallback(() => {
     if (!soundEngine.isMuted()) soundEngine.playClick();
     setSequence("exit");
-    setTimeout(() => router.push("/timeline"), 400);
+    setTimeout(() => router.push("/timeline"), 150);
   }, [router]);
 
   useEffect(() => {

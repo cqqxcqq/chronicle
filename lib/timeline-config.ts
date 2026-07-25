@@ -33,6 +33,7 @@ export interface MilestoneStat {
   lifeExpectancy: number;
   childMortality: number;
   literacy: number;
+  whatIf?: string;
 }
 
 export const MILESTONE_STATS: MilestoneStat[] = [
@@ -53,6 +54,7 @@ export const MILESTONE_STATS: MilestoneStat[] = [
     lifeExpectancy: 30,
     childMortality: 375,
     literacy: 17,
+    whatIf: "What if antibiotics had arrived 50 years earlier? Millions of child deaths from infection could have been prevented.",
   },
   {
     hook: "Science conquered disease. Industry connected continents. But war followed close behind.",
@@ -62,6 +64,7 @@ export const MILESTONE_STATS: MilestoneStat[] = [
     lifeExpectancy: 32,
     childMortality: 360,
     literacy: 21,
+    whatIf: "What if the League of Nations had prevented World War II? 70 million lives and two decades of progress could have been preserved.",
   },
   {
     hook: "Two world wars. A pandemic. Famines that scarred continents. From the ruins, cooperation.",
@@ -71,6 +74,7 @@ export const MILESTONE_STATS: MilestoneStat[] = [
     lifeExpectancy: 45,
     childMortality: 215,
     literacy: 50,
+    whatIf: "What if vaccines had reached every child by 1950? Smallpox and polio could have been eradicated a generation earlier.",
   },
   {
     hook: "Vaccines, green fields, and human rights. For the first time, poverty retreated on every front.",

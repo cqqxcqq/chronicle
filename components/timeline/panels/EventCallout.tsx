@@ -27,10 +27,19 @@ export default function EventCallout({ displayYear, events }: EventCalloutProps)
     if (match) {
       if (timerRef.current) clearTimeout(timerRef.current);
       lastEventYearRef.current = roundYear;
-      setVisible(match);
-      timerRef.current = setTimeout(() => setVisible(null), 4000);
+      const rafId = requestAnimationFrame(() => {
+        setVisible(match);
+        timerRef.current = setTimeout(() => setVisible(null), 4000);
+      });
+      return () => cancelAnimationFrame(rafId);
     }
   }, [displayYear, events]);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   if (!visible) return null;
 

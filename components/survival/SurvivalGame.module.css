@@ -231,6 +231,7 @@
   border: 1px solid var(--color-border);
   border-radius: 2px;
   padding: 14px 36px;
+  min-height: 48px;
   cursor: pointer;
   font-family: var(--font-body);
   font-size: 17px;
@@ -603,4 +604,53 @@
     font-size: 26px;
     letter-spacing: 0.12em;
   }
+}
+
+/* --- PIVOTAL CHOICE --- */
+.pivotalBtn {
+  position: relative;
+  border-color: var(--color-gold-muted);
+}
+
+.pivotalBtn::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--color-gold-muted), transparent, var(--color-gold-muted));
+  opacity: 0.3;
+  z-index: -1;
+  animation: pivotalPulse 2s ease-in-out infinite;
+}
+
+@keyframes pivotalPulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.5; }
+}
+
+.pivotalBadge {
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--color-gold);
+  margin-left: 8px;
+  padding: 2px 6px;
+  border: 1px solid var(--color-gold-muted);
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+.pivotalFlash {
+  position: fixed;
+  inset: 0;
+  background: var(--color-gold);
+  opacity: 0;
+  z-index: 999;
+  pointer-events: none;
+  animation: flashIn 0.8s ease-out forwards;
+}
+
+@keyframes flashIn {
+  0% { opacity: 0.15; }
+  100% { opacity: 0; }
 }
