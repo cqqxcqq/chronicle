@@ -79,16 +79,16 @@ export default function EraNarrative({
             <span className={styles.statValue}>{interpolated.lifeExpectancy} yr</span>
             <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 3</span> · life expectancy <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for life expectancy data">↗</Link></span>
           </div>
+          <div className={styles.statDivider} />
+          <div className={styles.stat}>
+            <span className={styles.statValue}>{interpolated.literacy}%</span>
+            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 4</span> · literacy <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for literacy data">↗</Link></span>
+          </div>
           {detailsOpen && <>
             <div className={styles.statDivider} />
             <div className={styles.stat}>
               <span className={styles.statValue}>{interpolated.childMortality}</span>
               <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 3</span> · under-five / 1,000 <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for under-five mortality data">↗</Link></span>
-            </div>
-            <div className={styles.statDivider} />
-            <div className={styles.stat}>
-              <span className={styles.statValue}>{interpolated.literacy}%</span>
-              <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 4</span> · literacy <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for literacy data">↗</Link></span>
             </div>
           </>}
         </div>

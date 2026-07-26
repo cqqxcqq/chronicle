@@ -238,6 +238,8 @@ export default function ClosingSequence({ onEnd, journeyProfile, choiceHistory }
               <AnimatedCounter from={89} to={8.5} suffix="%" label="SDG 1 · poverty" delay={500} duration={3000} decimals={1} />
               <div className={styles.counterDivider} />
               <AnimatedCounter from={460} to={37} label="SDG 3 · under-five deaths / 1,000" delay={1000} duration={3000} />
+              <div className={styles.counterDivider} />
+              <AnimatedCounter from={12} to={87} suffix="%" label="SDG 4 · literacy" delay={1400} duration={3000} />
             </div>
           </motion.div>
         )}
@@ -276,7 +278,7 @@ export default function ClosingSequence({ onEnd, journeyProfile, choiceHistory }
             </motion.div>
             <motion.div className={styles.nextActions} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
               <Link href="/timeline">RETURN TO THE TIMELINE</Link>
-              <Link href="/about#sources">FOLLOW THE EVIDENCE</Link>
+              <Link href="/about#sources" target="_blank" rel="noreferrer">OPEN THE EVIDENCE ↗</Link>
               <button type="button" onClick={handleClick}>BEGIN AGAIN</button>
             </motion.div>
           </motion.div>

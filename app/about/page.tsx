@@ -1,5 +1,5 @@
 import Nav from "@/components/ui/Nav";
-import Link from "next/link";
+import BackToExperience from "@/components/ui/BackToExperience";
 import { METHOD_NOTES, SOURCES } from "@/lib/evidence";
 import styles from "./page.module.css";
 
@@ -15,7 +15,7 @@ export default function AboutPage() {
         <section id="methodology"><h2>Methodology and uncertainty</h2><ul>{METHOD_NOTES.map((note) => <li key={note}>{note}</li>)}</ul></section>
         <section id="sources"><h2>Sources</h2><div className={styles.sources}>{SOURCES.map((source) => <a key={source.id} href={source.url} target="_blank" rel="noreferrer"><span>{source.organization}</span><strong>{source.title}</strong><p>{source.usedFor}</p></a>)}</div></section>
         <section id="credits"><h2>Image note</h2><p>The historical scenes are interpretive illustrations, not documentary records of a particular person or location. They establish atmosphere; the cited datasets and publications carry the historical claims.</p></section>
-        <Link className={styles.returnLink} href="/timeline">RETURN TO THE TIMELINE →</Link>
+        <BackToExperience className={styles.returnLink} />
       </main>
     </>
   );
