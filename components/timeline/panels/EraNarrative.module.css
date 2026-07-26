@@ -80,9 +80,10 @@
   opacity: 0.95;
   text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.7);
 }
-.caveat,.unfinished{max-width:560px;text-align:center;color:rgba(232,224,208,.55);font:italic 12px/1.5 var(--font-body)}
+.caveat,.unfinished{max-width:560px;text-align:center;color:rgba(232,224,208,.72);font:italic 13px/1.5 var(--font-body)}
+.dataKind{color:rgba(201,184,138,.72);font:8px var(--font-display);letter-spacing:.22em}
 .unfinished{color:#d6ccb0;font-size:14px}
-.evidenceLink{pointer-events:auto;color:rgba(201,184,138,.65);font:9px var(--font-display);letter-spacing:.18em;text-decoration:underline;text-underline-offset:4px}
+.evidenceLink{pointer-events:auto;color:rgba(225,210,170,.82);font:10px var(--font-display);letter-spacing:.18em;text-decoration:underline;text-underline-offset:4px}
 
 .stats {
   display: flex;
@@ -121,6 +122,7 @@
   color: #c9b88a;
   opacity: 0.8;
 }
+.sourceMark{pointer-events:auto;color:#d4c5a0;font-style:normal;text-decoration:none}
 
 .statDivider {
   width: 1px;
@@ -270,4 +272,9 @@
   .stats {
     gap: 12px;
   }
+  .stat:nth-child(n + 4),
+  .statDivider { display: none; }
+  .figure, .scrollHint { display: none; }
+  .caveat { max-width: 88vw; font-size: 11px; }
+  .evidenceLink { font-size: 8px; }
 }

@@ -2,24 +2,8 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-import { MILESTONES, MILESTONE_STATS, ERAS } from "@/lib/timeline-config";
-import figuresData from "@/lib/data/figures.json";
+import { MILESTONES, MILESTONE_STATS } from "@/lib/timeline-config";
 import styles from "./EraNarrative.module.css";
-
-interface Figure {
-  year: number;
-  name: string;
-  role: string;
-  quote: string;
-}
-
-const figures = figuresData as Figure[];
-
-function getFigureForMilestone(milestoneYear: number): Figure | null {
-  const era = ERAS.find((e) => milestoneYear >= e.start && milestoneYear <= e.end);
-  if (!era) return null;
-  return figures.find((f) => f.year >= era.start && f.year <= era.end) ?? null;
-}
 
 function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * Math.max(0, Math.min(1, t));
@@ -36,11 +20,24 @@ export default function EraNarrative({
 }: EraNarrativeProps) {
   const milestone = MILESTONES[milestoneIndex];
   const isLast = milestoneIndex === MILESTONES.length - 1;
-  const figure = useMemo(() => getFigureForMilestone(milestone.year), [milestone.year]);
+  const dataKind = displayYear >= 2026
+    ? "LATEST AVAILABLE ESTIMATES"
+    : displayYear === milestone.year
+      ? (displayYear < 1990 ? "RECONSTRUCTED MILESTONE" : "ESTIMATED MILESTONE")
+      : "VISUAL INTERPOLATION";
 
   const interpolated = useMemo(() => {
     const currentStat = MILESTONE_STATS[milestoneIndex];
-    if (isLast) return currentStat;
+    if (isLast) {
+      const t = (displayYear - 2015) / (2026 - 2015);
+      return {
+        ...currentStat,
+        poverty: Math.round(lerp(10, 8.5, t) * 10) / 10,
+        lifeExpectancy: Math.round(lerp(72, 73, t)),
+        childMortality: Math.round(lerp(43, 37, t)),
+        literacy: Math.round(lerp(86, 87, t)),
+      };
+    }
 
     const nextStat = MILESTONE_STATS[milestoneIndex + 1];
     const currentYear = MILESTONES[milestoneIndex].year;
@@ -61,7 +58,7 @@ export default function EraNarrative({
   return (
     <div className={styles.wrapper}>
       <div className={styles.yearRow}>
-        <span className={styles.year}>{displayYear}</span>
+        <h1 className={styles.year}>{displayYear}</h1>
       </div>
 
       <div className={styles.panel} key={milestoneIndex}>
@@ -72,44 +69,36 @@ export default function EraNarrative({
         <p className={styles.hook}>{interpolated.hook}</p>
         <p className={styles.caveat}>
           {isLast
-            ? "The gains are real, but unequal and fragile: conflict, climate shocks, and exclusion are slowing progress."
-            : "Rounded global reconstruction — lived experience differed sharply by place, class, gender, and empire."}
+            ? "War displaces families, heat erases harvests, and debt closes classrooms; the global average hides each reversal."
+            : "Rounded reconstruction. Records thin out as the timeline moves backward; local lives rarely resembled the global average."}
         </p>
+        <p className={styles.dataKind}>{dataKind}</p>
 
         <div className={styles.stats}>
           <div className={styles.stat}>
             <span className={styles.statValue}>{interpolated.poverty}%</span>
-            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 1</span> · poverty</span>
+            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 1</span> · poverty <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for poverty data">↗</Link></span>
           </div>
           <div className={styles.statDivider} />
           <div className={styles.stat}>
             <span className={styles.statValue}>{interpolated.lifeExpectancy} yr</span>
-            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 3</span> · life expectancy</span>
+            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 3</span> · life expectancy <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for life expectancy data">↗</Link></span>
           </div>
           <div className={styles.statDivider} />
           <div className={styles.stat}>
             <span className={styles.statValue}>{interpolated.childMortality}</span>
-            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 3</span> · infant deaths</span>
+            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 3</span> · under-five deaths / 1,000 <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for under-five mortality data">↗</Link></span>
           </div>
           <div className={styles.statDivider} />
           <div className={styles.stat}>
             <span className={styles.statValue}>{interpolated.literacy}%</span>
-            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 4</span> · literacy</span>
+            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 4</span> · literacy <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for literacy data">↗</Link></span>
           </div>
         </div>
 
-        {figure && (
-          <div className={styles.figure}>
-            <hr className={styles.divider} />
-            <p className={styles.figureQuote}>&ldquo;{figure.quote}&rdquo;</p>
-            <p className={styles.figureName}>{figure.name}</p>
-            <p className={styles.figureRole}>{figure.role}</p>
-          </div>
-        )}
-
         {isLast && (
           <>
-            <p className={styles.unfinished}>Only 35% of assessable SDG targets were on track or making moderate progress in the UN&apos;s 2025 assessment.</p>
+            <p className={styles.unfinished}>In the UN&apos;s 2025 assessment, only 35% of measurable targets were on track or making moderate progress.</p>
             <Link href="/survival" className={styles.survivalBtn}>YOUR STORY →</Link>
           </>
         )}

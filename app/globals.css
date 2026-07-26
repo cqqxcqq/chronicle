@@ -181,6 +181,9 @@ a {
   text-align: center;
   margin-top: 48px;
   cursor: pointer;
+  border: 0;
+  background: transparent;
+  padding: 10px;
 }
 
 .skipBtn {

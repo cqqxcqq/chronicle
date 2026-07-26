@@ -115,8 +115,8 @@
   overflow: hidden;
   text-align: center;
 }
-.traitBar{position:absolute;top:70px;z-index:5;display:flex;gap:14px;padding:7px 12px;background:rgba(8,8,8,.72);border:1px solid rgba(200,184,138,.14);color:rgba(232,224,208,.55);font:10px var(--font-body);text-transform:capitalize}.traitBar b{color:#c9b88a;font-weight:400}
-.effects{color:#c9b88a;font:italic 13px/1.5 var(--font-body)}
+.inheritance{max-width:480px;color:#d6ccb0;font:italic 15px/1.5 var(--font-body)}
+.inheritance span{display:block;margin-bottom:6px;color:#c9b88a;font:9px var(--font-display);font-style:normal;letter-spacing:.22em}
 .riskLabel{color:#b8c9a8;font:10px var(--font-display);letter-spacing:.2em;text-transform:uppercase}
 .roadNotTaken{max-width:520px;color:rgba(232,224,208,.5);font:italic 13px/1.5 var(--font-body);cursor:pointer}.roadNotTaken summary{color:rgba(201,184,138,.7);font:9px var(--font-display);letter-spacing:.18em}.roadNotTaken p{margin-top:9px}
 
@@ -582,7 +582,6 @@
 }
 
 @media (max-width: 480px) {
-  .traitBar{top:58px;gap:7px;font-size:8px;max-width:94vw;flex-wrap:wrap;justify-content:center}
   .startTitle {
     font-size: 26px;
     letter-spacing: 0.12em;

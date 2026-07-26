@@ -12,12 +12,8 @@ export interface JourneyProfile {
   description: string;
 }
 
-export function getJourneyProfile(totalModifier: number): JourneyProfile {
-  if (totalModifier >= 0.55) return { tier: "wise", title: "The Wise One", description: "You chose knowledge, community, and caution at every turn. History rewarded your wisdom." };
-  if (totalModifier >= 0.40) return { tier: "bold", title: "The Bold Pioneer", description: "You took risks that others avoided. Some paid off. Some nearly killed you." };
-  if (totalModifier >= 0.25) return { tier: "cautious", title: "The Cautious Survivor", description: "You played it safe, and safety kept you alive. Not every safe choice was the right one." };
-  if (totalModifier >= 0.15) return { tier: "lucky", title: "The Lucky One", description: "Luck carried you where skill could not. You survived not by choice, but by chance." };
-  return { tier: "reckless", title: "The Reckless", description: "You chose danger at every crossroad. That you survived at all is a miracle." };
+export function getJourneyProfile(): JourneyProfile {
+  return { tier: "wise", title: "Keeper of the Archive", description: "Nothing arrived intact. Each generation chose what to preserve, revise, or leave unfinished." };
 }
 
 export interface SdgProgress {
@@ -35,6 +31,7 @@ export interface SurvivalRound {
   context: string;
   image: string;
   imageAlt: string;
+  prompt?: string;
   choices: SurvivalChoice[];
   sdgProgress: SdgProgress[];
 }
@@ -43,22 +40,23 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
   {
     year: 1800,
     age: 0,
-    title: "Infancy",
-    context: "Child mortality: 460 of 1000 children die before age 5. Nearly half of all newborns never see their fifth birthday.",
+    title: "The First Page",
+    context: "Around 1800, an estimated 460 of every 1,000 children died before age five. Survival began with circumstances no infant could choose.",
+    prompt: "WHICH BEGINNING ENTERS THE ARCHIVE?",
     image: "/infancy-1800.jpg",
     imageAlt: "Pre-industrial farming village, 1800",
     choices: [
       {
-        text: "Mother breastfeeds you through famine",
+        text: "A mother nurses her child through famine",
         modifier: 0.10,
-        outcome: "Your mother's body was the only medicine. She gave you milk when there was no food. Half of all children had no such mother.",
-        altOutcome: "Clean water was a luxury your family could not afford. You drank from the same river as the livestock. Many children did not survive this.",
+        outcome: "Through a failed harvest, the child receives food and some protection from infection. The detail survives because someone later writes it down.",
+        altOutcome: "Another household remembers the water pot: covered, raised from the floor, boiled when fuel could be spared.",
       },
       {
-        text: "Born into a family with clean water",
+        text: "A household keeps its water clean",
         modifier: 0.05,
-        outcome: "Clean water \u2014 a luxury in 1800. Your family boiled it by habit, not by knowledge. Germ theory was a century away.",
-        altOutcome: "Your mother's body was the only medicine. She gave you milk when there was no food. Without her, your chances halved.",
+        outcome: "The water pot stays covered and away from animals. No one knows the word microbe; the useful habit arrives before its explanation.",
+        altOutcome: "Through a failed harvest, one child receives food and some protection from infection. The archive keeps the detail.",
       },
     ],
     sdgProgress: []
@@ -67,7 +65,7 @@ export const SURVIVAL_ROUNDS: SurvivalRound[] = [
     year: 1815,
     age: 15,
     title: "The Year Without a Summer",
-    context: "Mount Tambora erupts, blotting out the sun. Crops fail across three continents. Famine creeps through Europe and Asia.",
+    context: "A child from the first household is now fifteen. Tambora's ash has dimmed the sun; harvests fail across Europe, Asia, and North America.",
     image: "/famine-1815.jpg",
     imageAlt: "Barren fields under volcanic ash sky, 1815",
 choices: [
@@ -94,7 +92,7 @@ choices: [
     year: 1835,
     age: 35,
     title: "Against the Odds",
-    context: "Life expectancy is 30 years. You have already outlived the average human. Every day now is borrowed.",
+    context: "The archive passes to a factory worker in 1835. Fever follows a cut on the hand; neither antisepsis nor antibiotics exist.",
     image: "/industrial-1835.jpg",
     imageAlt: "Early factory with child laborers, 1835",
 choices: [
@@ -112,7 +110,7 @@ choices: [
       },
     ],
     sdgProgress: [
-      { sdg: "SDG 3", label: "child mortality", from: 460, to: 375, suffix: "" },
+      { sdg: "SDG 3", label: "under-five deaths / 1,000", from: 460, to: 375, suffix: "" },
       { sdg: "SDG 4", label: "literacy", from: 12, to: 17, suffix: "%" },
     ]
   },
@@ -120,7 +118,7 @@ choices: [
     year: 1860,
     age: 60,
     title: "The Ancients",
-    context: "You are 60 years old. You have outlived 95% of everyone born in your year. You are a statistical impossibility.",
+    context: "By 1860, another generation inherits the kitchen rule and the old pages. Cholera still follows crowded streets and contaminated pumps.",
     image: "/civilwar-1860.jpg",
     imageAlt: "Civil War era soldiers and battlefield, 1860",
 choices: [
@@ -139,7 +137,7 @@ choices: [
     ],
     sdgProgress: [
       { sdg: "SDG 3", label: "life expectancy", from: 30, to: 32, suffix: " yr" },
-      { sdg: "SDG 3", label: "child mortality", from: 375, to: 360, suffix: "" },
+      { sdg: "SDG 3", label: "under-five deaths / 1,000", from: 375, to: 360, suffix: "" },
       { sdg: "SDG 4", label: "literacy", from: 17, to: 21, suffix: "%" },
     ]
   },
@@ -147,7 +145,7 @@ choices: [
     year: 1900,
     age: 100,
     title: "A New Century",
-    context: "The year 1900. You are 100 years old \u2014 an impossibility. But the 20th century is the bloodiest in history.",
+    context: "In 1900, electric light reaches some streets while empire and industrial war gather beyond them. The archive has crossed a century.",
     image: "/newcentury-1900.jpg",
     imageAlt: "Turn of the century city with early automobiles, 1900",
 choices: [
@@ -168,14 +166,14 @@ choices: [
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 82, to: 60, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 32, to: 45, suffix: " yr" },
-      { sdg: "SDG 3", label: "child mortality", from: 360, to: 215, suffix: "" },
+      { sdg: "SDG 3", label: "under-five deaths / 1,000", from: 360, to: 215, suffix: "" },
     ]
   },
   {
     year: 1918,
     age: 118,
     title: "The Spanish Flu",
-    context: "1918. The Spanish Flu kills 50 million people in 24 weeks. You are 118 years old. Your immune system is a ghost.",
+    context: "In 1918, influenza moves with troops, trains, and ships. A new keeper of the archive hears coughing through the walls.",
     image: "/pandemic-1918.jpg",
     imageAlt: "Spanish Flu hospital ward with masked nurses, 1918",
 choices: [
@@ -193,7 +191,7 @@ choices: [
       },
     ],
     sdgProgress: [
-      { sdg: "SDG 3", label: "child mortality", from: 215, to: 125, suffix: "" },
+      { sdg: "SDG 3", label: "under-five deaths / 1,000", from: 215, to: 125, suffix: "" },
       { sdg: "SDG 4", label: "literacy", from: 21, to: 50, suffix: "%" },
     ]
   },
@@ -201,7 +199,7 @@ choices: [
     year: 1945,
     age: 145,
     title: "The Atomic Age",
-    context: "1945. Two world wars. 70 million dead. The Holocaust. Hiroshima. You are 145 years old.",
+    context: "In 1945, the archive is recovered from a damaged house. Europe and Asia count the dead; displaced families begin again among ruins.",
     image: "/atomic-1945.jpg",
     imageAlt: "WWII ruins and post-war reconstruction, 1945",
 choices: [
@@ -228,7 +226,7 @@ choices: [
     year: 2000,
     age: 200,
     title: "The Digital Age",
-    context: "The year 2000. You are 200 years old \u2014 the oldest human who has ever lived. The internet connects the world.",
+    context: "In 2000, the paper archive is scanned in an internet café. Medical knowledge can cross an ocean faster than any ancestor travelled.",
     image: "/digital-2000.jpg",
     imageAlt: "Early internet cafe with dial-up computers, 2000",
 choices: [
@@ -249,7 +247,7 @@ choices: [
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 38, to: 10, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 60, to: 72, suffix: " yr" },
-      { sdg: "SDG 3", label: "child mortality", from: 125, to: 43, suffix: "" },
+      { sdg: "SDG 3", label: "under-five deaths / 1,000", from: 125, to: 43, suffix: "" },
       { sdg: "SDG 4", label: "literacy", from: 65, to: 86, suffix: "%" },
     ]
   },
@@ -257,7 +255,7 @@ choices: [
     year: 2026,
     age: 226,
     title: "The Present",
-    context: "2026. Poverty: 89% to 8.5%. Child mortality: 460 to 37. Literacy: 12% to 87%. Life expectancy: 29 to 73. You saw it all.",
+    context: "In 2026, the ninth keeper compares old reconstructions with the latest available estimates. The world is healthier and more literate, but its gains remain sharply unequal.",
     image: "/age-of-goals.jpg",
     imageAlt: "Modern solar panels and green energy, 2026",
 choices: [
@@ -277,7 +275,7 @@ choices: [
     sdgProgress: [
       { sdg: "SDG 1", label: "poverty", from: 10, to: 8.5, suffix: "%" },
       { sdg: "SDG 3", label: "life expectancy", from: 72, to: 73, suffix: " yr" },
-      { sdg: "SDG 3", label: "child mortality", from: 43, to: 37, suffix: "" },
+      { sdg: "SDG 3", label: "under-five deaths / 1,000", from: 43, to: 37, suffix: "" },
       { sdg: "SDG 4", label: "literacy", from: 86, to: 87, suffix: "%" },
     ]
   }

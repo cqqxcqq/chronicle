@@ -52,7 +52,6 @@
 
 @media (max-width: 768px) {
   .callout {
-    bottom: 80px;
-    max-width: 90vw;
+    display: none;
   }
 }

@@ -56,6 +56,7 @@ export default function TimelineContainer({
 
     let animationId: number;
     let isRunning = true;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const resize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -71,12 +72,13 @@ export default function TimelineContainer({
 
     const animate = (timestamp: number) => {
       if (!isRunning) return;
-      const time = timestamp / 1000;
+      const time = reduceMotion ? 0 : timestamp / 1000;
 
       const gap = Math.abs(targetYearRef.current - displayYearRef.current);
       const rate = gap > 5 ? 0.12 : 0.2;
-      displayYearRef.current +=
-        (targetYearRef.current - displayYearRef.current) * rate;
+      displayYearRef.current = reduceMotion
+        ? targetYearRef.current
+        : displayYearRef.current + (targetYearRef.current - displayYearRef.current) * rate;
 
       const currentYear = displayYearRef.current;
       const roundYear = Math.round(currentYear);

@@ -10,17 +10,16 @@ import UnfinishedChapter from "./UnfinishedChapter";
 import styles from "./SurvivalGame.module.css";
 
 type Phase = "start" | "context" | "choice" | "result" | "progress" | "complete" | "unfinished" | "closing";
-type Traits = { health: number; knowledge: number; solidarity: number; resilience: number };
-const INITIAL_TRAITS: Traits = { health: 25, knowledge: 20, solidarity: 25, resilience: 25 };
-function choiceEffects(text: string, modifier: number): Traits {
-  const value = Math.max(2, Math.round(modifier * 100));
+function inheritedFrom(text: string): string {
   const lower = text.toLowerCase();
-  return {
-    health: /water|medicine|isolate|rest|rural|breast/.test(lower) ? value : 1,
-    knowledge: /document|memoir|medicine|hospital/.test(lower) ? value : 1,
-    solidarity: /share|volunteer|memoir/.test(lower) ? value : 1,
-    resilience: /flee|forage|isolate|rest|rebuild/.test(lower) ? value : 2,
-  };
+  if (/breast|nurse|water|boiled/.test(lower)) return "a rule kept in every kitchen: protect the water";
+  if (/share|volunteer|rebuild/.test(lower)) return "an empty place kept at the table for a neighbour";
+  if (/document|memoir/.test(lower)) return "a bundle of pages passed from hand to hand";
+  if (/medicine|hospital/.test(lower)) return "trust in the clinic, tempered by memory";
+  if (/isolate/.test(lower)) return "the knowledge that distance can also be care";
+  if (/flee|rural|forage/.test(lower)) return "a map of the roads that once led to safety";
+  if (/traditional|remedies/.test(lower)) return "a cabinet of remedies, some useful and some dangerous";
+  return "a story the next generation refuses to lose";
 }
 
 type EraSound = "want" | "industry" | "catastrophe" | "recovery" | "acceleration" | "goals";
@@ -42,10 +41,8 @@ export default function SurvivalGame() {
   const [resultVisible, setResultVisible] = useState(false);
   const [counterValues, setCounterValues] = useState<Record<number, number>>({});
   const [isPivotal, setIsPivotal] = useState(false);
-  const [totalModifier, setTotalModifier] = useState(0);
-  const [choiceHistory, setChoiceHistory] = useState<{ year: number; title: string; text: string; pivotal?: boolean }[]>([]);
-  const [traits, setTraits] = useState<Traits>(INITIAL_TRAITS);
-  const [lastEffects, setLastEffects] = useState<Traits>(INITIAL_TRAITS);
+  const [choiceHistory, setChoiceHistory] = useState<{ year: number; title: string; text: string; inheritance: string }[]>([]);
+  const [lastInheritance, setLastInheritance] = useState("");
 
   const round = SURVIVAL_ROUNDS[roundIdx];
   const timersRef = useRef<number[]>([]);
@@ -94,20 +91,13 @@ export default function SurvivalGame() {
   }, [phase, roundIdx, addTimer, round.year]);
 
 const handleChoice = useCallback((choiceIdx: number) => {
-    const effects = choiceEffects(round.choices[choiceIdx].text, round.choices[choiceIdx].modifier);
+    const inheritance = inheritedFrom(round.choices[choiceIdx].text);
     setSelectedChoice(choiceIdx);
     setResultVisible(false);
     setCounterValues({});
     setIsPivotal(round.choices[choiceIdx].pivotal === true);
-    setTotalModifier(prev => prev + round.choices[choiceIdx].modifier);
-    setChoiceHistory(prev => [...prev, { year: round.year, title: round.title, text: round.choices[choiceIdx].text, pivotal: round.choices[choiceIdx].pivotal }]);
-    setLastEffects(effects);
-    setTraits(prev => ({
-      health: Math.min(100, prev.health + effects.health),
-      knowledge: Math.min(100, prev.knowledge + effects.knowledge),
-      solidarity: Math.min(100, prev.solidarity + effects.solidarity),
-      resilience: Math.min(100, prev.resilience + effects.resilience),
-    }));
+    setChoiceHistory(prev => [...prev, { year: round.year, title: round.title, text: round.choices[choiceIdx].text, inheritance }]);
+    setLastInheritance(inheritance);
     setPhase("result");
     if (!soundEngine.isMuted()) soundEngine.playClick();
 
@@ -177,9 +167,8 @@ const handleRestart = useCallback(() => {
     setContextVisible(false);
     setResultVisible(false);
     setCounterValues({});
-    setTotalModifier(0);
     setChoiceHistory([]);
-    setTraits(INITIAL_TRAITS);
+    setLastInheritance("");
   }, [clearTimers, clearRafs]);
 
   const completeStats = useMemo(() => {
@@ -250,26 +239,26 @@ const handleRestart = useCallback(() => {
   );
 
   if (phase === "closing") {
-    const profile = getJourneyProfile(totalModifier);
+    const profile = getJourneyProfile();
     return (
       <ClosingSequence onEnd={handleRestart} journeyProfile={profile} choiceHistory={choiceHistory} />
     );
   }
-  if (phase === "unfinished") return <div className={styles.completeOverlay}><UnfinishedChapter onContinue={() => setPhase("closing")} /></div>;
+  if (phase === "unfinished") return <div className={styles.completeOverlay}><UnfinishedChapter inheritances={choiceHistory.map((entry) => entry.inheritance)} onContinue={() => setPhase("closing")} /></div>;
 
   if (phase === "start") {
     return (
       <div className={styles.container}>
         <div className={styles.startScreen}>
-          <p className={styles.startTitle}>YOU WERE BORN IN 1800</p>
+          <h1 className={styles.startTitle}>THE ARCHIVE BEGINS IN 1800</h1>
           <p className={styles.startBridge}>
-            You are a lineage, not one immortal person. Carry one family&apos;s memory across nine generations and four Sustainable Development Goals.
+            Carry one family archive across nine generations. Each life receives something unfinished from the one before it.
           </p>
           <p className={styles.startSubtitle}>
-            9 moments. 226 years. From 89% poverty to 8.5%.
+            Nine generations, from 1800 to the latest available global estimates.
           </p>
           <p className={styles.startInfo}>
-            Every choice has a consequence. Choose wisely.
+            You cannot change the record. You can decide what survives it.
           </p>
           <button className={styles.btnStart} onClick={() => { if (!soundEngine.isMuted()) soundEngine.playClick(); setPhase("context"); }}>
             BEGIN
@@ -284,14 +273,13 @@ const handleRestart = useCallback(() => {
     return (
       <div className={styles.container}>
         <div className={styles.playingScreen}>
-          <div className={styles.traitBar} aria-label="Inherited lineage traits">{Object.entries(traits).map(([name, value]) => <span key={name}><b>{name}</b> {value}</span>)}</div>
           {progressBar}
           <div className={styles.roundImageContainer}>
             <Image src={round.image} alt={round.imageAlt} fill sizes="100vw" priority className={styles.roundImage} />
             <div className={styles.imageOverlay} />
             <div className={styles.imageYearOverlay}>
-              <p className={styles.imageYear}>{round.year}</p>
-              <p className={styles.imageAge}>Age {round.age}</p>
+              <h1 className={styles.imageYear}>{round.year}</h1>
+              <p className={styles.imageAge}>Generation {roundIdx + 1} of {SURVIVAL_ROUNDS.length}</p>
             </div>
           </div>
           <div className={styles.progressSection}>
@@ -326,7 +314,6 @@ const handleRestart = useCallback(() => {
   if (phase === "result") {
     const choice = selectedChoice !== null ? round.choices[selectedChoice] : null;
     const outcome = choice?.outcome ?? "";
-    const risk = choice ? (choice.modifier >= 0.07 ? "Protected the lineage" : choice.modifier >= 0.03 ? "The lineage endured" : "The lineage was left exposed") : "";
     return (
       <div className={styles.container}>
         {isPivotal && <div className={styles.pivotalFlash} />}
@@ -336,8 +323,8 @@ const handleRestart = useCallback(() => {
             <Image src={round.image} alt={round.imageAlt} fill sizes="100vw" priority className={styles.roundImage} />
             <div className={styles.imageOverlay} />
             <div className={styles.imageYearOverlay}>
-              <p className={styles.imageYear}>{round.year}</p>
-              <p className={styles.imageAge}>Age {round.age}</p>
+              <h1 className={styles.imageYear}>{round.year}</h1>
+              <p className={styles.imageAge}>Generation {roundIdx + 1} of {SURVIVAL_ROUNDS.length}</p>
             </div>
           </div>
           <div className={styles.resultSection}>
@@ -345,8 +332,7 @@ const handleRestart = useCallback(() => {
             {resultVisible && (
               <div className={`${styles.resultContent} ${styles.fadeIn}`}>
                 <p className={styles.resultNarrative}>{outcome}</p>
-                <p className={styles.riskLabel}>{risk}</p>
-                <p className={styles.effects} aria-live="polite">Inherited: +{lastEffects.health} health · +{lastEffects.knowledge} knowledge · +{lastEffects.solidarity} solidarity · +{lastEffects.resilience} resilience</p>
+                <p className={styles.inheritance} aria-live="polite"><span>CARRIED FORWARD</span>{lastInheritance}</p>
                 {choice?.altOutcome && <details className={styles.roadNotTaken}><summary>THE ROAD NOT TAKEN</summary><p>{choice.altOutcome}</p></details>}
               </div>
             )}
@@ -362,12 +348,12 @@ const handleRestart = useCallback(() => {
   }
 
   if (phase === "complete") {
-    const profile = getJourneyProfile(totalModifier);
+    const profile = getJourneyProfile();
     return (
       <div className={styles.completeOverlay}>
-        <p className={styles.completeTitle}>YOU WITNESSED IT ALL</p>
+        <h1 className={styles.completeTitle}>THE ARCHIVE REACHED THE PRESENT</h1>
         <p className={styles.completeSubtitle}>
-          226 years. You witnessed the greatest transformation in human history.
+          Nine generations carried the archive from 1800 to the present.
         </p>
         <div className={styles.journeyBadge}>
           <p className={styles.journeyTitle}>{profile.title}</p>
@@ -379,7 +365,7 @@ const handleRestart = useCallback(() => {
             <div key={i} className={styles.journeyStep}>
               <span className={styles.journeyYear}>{entry.year}</span>
               <span className={styles.journeyDot} />
-              <span className={styles.journeyText}>{entry.text}</span>
+              <span className={styles.journeyText}>{entry.inheritance}</span>
             </div>
           ))}
         </div>
@@ -410,8 +396,8 @@ const handleRestart = useCallback(() => {
           <Image src={round.image} alt={round.imageAlt} fill sizes="100vw" className={styles.roundImage} />
           <div className={styles.imageOverlay} />
           <div className={styles.imageYearOverlay}>
-            <p className={styles.imageYear}>{round.year}</p>
-            <p className={styles.imageAge}>Age {round.age}</p>
+            <h1 className={styles.imageYear}>{round.year}</h1>
+            <p className={styles.imageAge}>Generation {roundIdx + 1} of {SURVIVAL_ROUNDS.length}</p>
           </div>
         </div>
 <div className={styles.contextSection}>
@@ -423,7 +409,7 @@ const handleRestart = useCallback(() => {
           )}
           {phase === "choice" && (
             <div className={`${styles.choiceArea} ${styles.fadeIn}`}>
-              <p className={styles.choiceLabel}>WHAT DO YOU DO?</p>
+              <p className={styles.choiceLabel}>{round.prompt ?? "WHAT DOES THIS GENERATION DO?"}</p>
               {round.choices.map((choice, i) => (
                 <button
                   key={i}
@@ -431,7 +417,6 @@ const handleRestart = useCallback(() => {
                   onClick={() => { if (!soundEngine.isMuted()) soundEngine.playClick(); handleChoice(i); }}
                 >
                   {choice.text}
-                  {choice.pivotal && <span className={styles.pivotalBadge}>PIVOTAL</span>}
                 </button>
               ))}
             </div>

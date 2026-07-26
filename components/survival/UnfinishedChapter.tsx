@@ -5,13 +5,14 @@ import Link from "next/link";
 import { UNFINISHED_GOALS } from "@/lib/evidence";
 import styles from "./UnfinishedChapter.module.css";
 
-export default function UnfinishedChapter({ onContinue }: { onContinue: () => void }) {
+export default function UnfinishedChapter({ onContinue, inheritances }: { onContinue: () => void; inheritances: string[] }) {
   const [selected, setSelected] = useState(UNFINISHED_GOALS[0]);
   return (
     <section className={styles.wrap} aria-labelledby="unfinished-title">
       <p className={styles.kicker}>THE UNFINISHED CHAPTER</p>
       <h2 id="unfinished-title">What should the next generation inherit?</h2>
       <p className={styles.intro}>Progress was built by choices, institutions, struggle, and cooperation. Choose one promise to carry forward.</p>
+      {inheritances.length > 0 && <p className={styles.archiveLine}>The archive already carries {inheritances.slice(-3).join("; ")}.</p>}
       <div className={styles.goals}>
         {UNFINISHED_GOALS.map((goal) => (
           <button key={goal.id} aria-pressed={selected.id === goal.id} className={selected.id === goal.id ? styles.active : ""} onClick={() => setSelected(goal)}>
@@ -25,7 +26,7 @@ export default function UnfinishedChapter({ onContinue }: { onContinue: () => vo
         <p>{selected.fact}</p>
         <strong>{selected.action}</strong>
       </div>
-      <p className={styles.question}>When Chronicle is opened again in 2030, what do you want it to record?</p>
+      <p className={styles.question}>Every generation mistook its present for the ending. What will yours leave in the margin?</p>
       <div className={styles.actions}>
         <button onClick={onContinue}>CARRY THIS FORWARD →</button>
         <Link href="/about#sources">CHECK THE EVIDENCE</Link>

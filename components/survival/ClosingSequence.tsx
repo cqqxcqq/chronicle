@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import LegacyCard from "./LegacyCard";
 import type { JourneyProfile } from "@/lib/survival-data";
 import styles from "./ClosingSequence.module.css";
@@ -66,20 +66,21 @@ function AnimatedCounter({
 interface ClosingSequenceProps {
   onEnd: () => void;
   journeyProfile: JourneyProfile;
-  choiceHistory?: { year: number; title: string; text: string; pivotal?: boolean }[];
+  choiceHistory?: { year: number; title: string; text: string; inheritance: string }[];
 }
 
 export default function ClosingSequence({ onEnd, journeyProfile, choiceHistory }: ClosingSequenceProps) {
+  const reduceMotion = useReducedMotion();
   const lines = [
-    "Your lineage has carried two hundred years of human struggle.",
-    "From darkness to light. From ignorance to knowledge.",
-    "The story is not over.",
+    "Nine hands have held the same archive.",
+    "A kitchen rule. A road map. A name written in the margin.",
+    "The last page is still blank.",
   ];
 
   const [lineIdx, setLineIdx] = useState(-1);
   const [showYear, setShowYear] = useState(false);
   const [showCounters, setShowCounters] = useState(false);
-  const [showTitle, setShowTitle] = useState(false);
+  const [showTitle, setShowTitle] = useState(Boolean(reduceMotion));
   const [showSkip, setShowSkip] = useState(false);
 
   const [year, setYear] = useState(1800);
@@ -100,10 +101,13 @@ export default function ClosingSequence({ onEnd, journeyProfile, choiceHistory }
   }, [clearTimers]);
 
   useEffect(() => {
+    if (reduceMotion) {
+      return;
+    }
     const t = window.setTimeout(() => setLineIdx(0), 1000);
     addTimer(t);
     return () => clearTimeout(t);
-  }, [addTimer]);
+  }, [addTimer, reduceMotion]);
 
   useEffect(() => {
     const t = window.setTimeout(() => setShowSkip(true), 2000);
@@ -214,7 +218,7 @@ export default function ClosingSequence({ onEnd, journeyProfile, choiceHistory }
               animate={{ opacity: 1 }}
               transition={{ duration: 1.0, delay: 0.5 }}
             >
-              1800 — 2026
+              1800 — PRESENT
             </motion.p>
           </motion.div>
         )}
@@ -232,7 +236,7 @@ export default function ClosingSequence({ onEnd, journeyProfile, choiceHistory }
             <div className={styles.countersRow}>
               <AnimatedCounter from={89} to={8.5} suffix="%" label="SDG 1 · poverty" delay={500} duration={3000} decimals={1} />
               <div className={styles.counterDivider} />
-              <AnimatedCounter from={460} to={37} label="SDG 3 · child deaths" delay={1000} duration={3000} />
+              <AnimatedCounter from={460} to={37} label="SDG 3 · under-five deaths / 1,000" delay={1000} duration={3000} />
               <div className={styles.counterDivider} />
               <AnimatedCounter from={12} to={87} suffix="%" label="SDG 4 · literacy" delay={1500} duration={3000} />
               <div className={styles.counterDivider} />

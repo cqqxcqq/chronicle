@@ -42,7 +42,7 @@
   position: absolute;
   top: 0;
   transform: translateX(-50%);
-  width: 1px;
+  width: 32px;
   height: 100%;
   background: none;
   border: none;
@@ -147,4 +147,5 @@
   .bar {
     height: 44px;
   }
+  .milestone { width: 40px; }
 }

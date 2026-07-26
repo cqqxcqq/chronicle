@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { soundEngine } from "@/lib/sound-engine";
 import styles from "./OpeningSequence.module.css";
 
@@ -49,16 +49,20 @@ function CharReveal({
 
 export default function OpeningSequence() {
   const router = useRouter();
+  const reduceMotion = useReducedMotion();
   const [sequence, setSequence] = useState<
     "init" | "lines" | "title" | "exit"
-  >("init");
+  >(reduceMotion ? "title" : "init");
   const [lineIdx, setLineIdx] = useState(0);
 
   useEffect(() => {
     router.prefetch("/timeline");
+    if (reduceMotion) {
+      return;
+    }
     const t = setTimeout(() => setSequence("lines"), 500);
     return () => clearTimeout(t);
-  }, [router]);
+  }, [router, reduceMotion]);
 
   const onLineComplete = useCallback(() => {
     const next = lineIdx + 1;
@@ -143,7 +147,8 @@ export default function OpeningSequence() {
             >
               Tracking humanity&apos;s progress toward the Sustainable Development Goals.
             </motion.p>
-            <motion.p
+            <motion.button
+              type="button"
               className={styles.prompt}
               initial={{ opacity: 0, y: 0 }}
               animate={{
@@ -159,7 +164,7 @@ export default function OpeningSequence() {
               onClick={exit}
             >
               CLICK TO BEGIN
-            </motion.p>
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>

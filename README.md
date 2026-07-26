@@ -6,7 +6,7 @@ Chronicle is an interactive historical essay about humanity's real, uneven, and 
 
 1. **Opening** — establishes the historical question.
 2. **Timeline** — explores reconstructed global trends from 1800–2026.
-3. **Your Life** — follows a fictional lineage across nine generations. Choices affect inherited health, knowledge, solidarity, and resilience; they do not alter global history.
+3. **Your Life** — follows a family archive across nine generations. Choices determine which practices, objects, and memories reach the next keeper; they do not alter global history.
 4. **Unfinished Chapter** — asks the visitor to choose one SDG promise to carry forward.
 5. **Evidence** — documents sources, definitions, uncertainty, methodology, and credits.
 

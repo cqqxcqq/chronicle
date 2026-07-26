@@ -6,7 +6,7 @@ import styles from "./LegacyCard.module.css";
 
 interface LegacyCardProps {
   journeyProfile?: JourneyProfile;
-  choiceHistory?: { year: number; title: string; text: string; pivotal?: boolean }[];
+  choiceHistory?: { year: number; title: string; text: string; inheritance: string }[];
 }
 
 export default function LegacyCard({ journeyProfile, choiceHistory }: LegacyCardProps) {
@@ -16,7 +16,7 @@ export default function LegacyCard({ journeyProfile, choiceHistory }: LegacyCard
     const tierText = journeyProfile ? ` I was "${journeyProfile.title}."` : "";
     const shareData = {
       title: "CHRONICLE",
-      text: `I lived 226 years and witnessed humanity's greatest transformation.${tierText} Poverty: 89% → 8.5%. Child mortality: 460 → 37. Literacy: 12% → 87%.`,
+      text: `Nine generations carried our family archive from 1800 to the present.${tierText} Poverty: about 89% → 8.5%. Under-five mortality: about 460 → 37 per 1,000.`,
       url: typeof window !== "undefined" ? window.location.origin : "",
     };
 
@@ -45,7 +45,7 @@ export default function LegacyCard({ journeyProfile, choiceHistory }: LegacyCard
         <p className={styles.cardLabel}>MY JOURNEY</p>
         <div className={styles.cardDivider} />
         <p className={styles.cardTitle}>OUR STORY BEGAN IN 1800</p>
-        <p className={styles.cardSubtitle}>OUR MEMORY REACHED 2026</p>
+        <p className={styles.cardSubtitle}>OUR MEMORY REACHED THE PRESENT</p>
         {journeyProfile && (
           <div className={styles.journeyTier}>
             <p className={styles.tierLabel}>{journeyProfile.title}</p>
@@ -63,7 +63,7 @@ export default function LegacyCard({ journeyProfile, choiceHistory }: LegacyCard
             <span className={styles.cardStatFrom}>460</span>
             <span className={styles.cardStatArrow}>&rarr;</span>
             <span className={styles.cardStatTo}>37</span>
-            <span className={styles.cardStatLabel}>CHILD DEATHS</span>
+            <span className={styles.cardStatLabel}>UNDER-FIVE / 1,000</span>
           </div>
           <div className={styles.cardStat}>
             <span className={styles.cardStatFrom}>12%</span>
@@ -85,10 +85,10 @@ export default function LegacyCard({ journeyProfile, choiceHistory }: LegacyCard
               <p className={styles.cardJourneyLabel}>YOUR CHOICES</p>
               <div className={styles.cardJourneyTimeline}>
                 {choiceHistory.map((entry, i) => (
-                  <div key={i} className={`${styles.cardJourneyStep} ${entry.pivotal ? styles.cardJourneyPivotal : ""}`}>
+                  <div key={i} className={styles.cardJourneyStep}>
                     <span className={styles.cardJourneyYear}>{entry.year}</span>
                     <span className={styles.cardJourneyDot} />
-                    <span className={styles.cardJourneyText}>{entry.text}</span>
+                    <span className={styles.cardJourneyText}>{entry.inheritance}</span>
                   </div>
                 ))}
               </div>
@@ -97,7 +97,7 @@ export default function LegacyCard({ journeyProfile, choiceHistory }: LegacyCard
         )}
         <div className={styles.cardDivider} />
         <p className={styles.cardFooter}>
-          One lineage witnessed humanity&apos;s greatest transformation.
+          The archive reached another pair of hands.
         </p>
         <p className={styles.cardBrand}>CHRONICLE</p>
       </div>
