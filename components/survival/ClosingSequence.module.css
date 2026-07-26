@@ -11,13 +11,13 @@
 .lineBlock { composes: lineBlock from global; }
 .line { composes: line from global; }
 .char { composes: char from global; }
-.titleBlock { composes: titleBlock from global; max-height:100vh; overflow-y:auto; padding:48px 20px; }
-.title { composes: title from global; }
-.subtitle { composes: subtitle from global; }
+.titleBlock { composes: titleBlock from global; width:100%; min-height:100vh; max-height:100vh; overflow-y:auto; justify-content:center; padding:56px 24px 40px; }
+.title { composes: title from global; max-width:100%; font-size:clamp(46px,7vw,82px); letter-spacing:.18em; line-height:1; text-indent:.18em; }
+.subtitle { composes: subtitle from global; margin-top:18px; }
 .prompt { composes: prompt from global; }
 .skipBtn { composes: skipBtn from global; }
-.nextActions{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:24px;flex-wrap:wrap}
-.nextActions a,.nextActions button{background:transparent;border:1px solid rgba(200,184,138,.22);padding:10px 14px;color:rgba(232,224,208,.58);font:9px var(--font-display);letter-spacing:.16em;cursor:pointer}
+.nextActions{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:22px;width:100%;max-width:720px;flex-wrap:wrap}
+.nextActions a,.nextActions button{min-width:180px;background:transparent;border:1px solid rgba(200,184,138,.22);padding:11px 14px;color:rgba(232,224,208,.58);font:9px var(--font-display);letter-spacing:.14em;cursor:pointer}
 .nextActions a:hover,.nextActions button:hover{border-color:#c9b88a;color:#d4c5a0}
 
 /* --- YEAR SCREEN --- */
@@ -177,6 +177,10 @@
 }
 
 @media (max-width: 480px) {
+  .titleBlock{justify-content:flex-start;padding-top:72px}
+  .title{font-size:38px;letter-spacing:.13em;text-indent:.13em}
+  .nextActions{flex-direction:column}
+  .nextActions a,.nextActions button{width:100%;max-width:300px}
   :global(.line) {
     font-size: 17px;
   }

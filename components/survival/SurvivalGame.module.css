@@ -319,6 +319,8 @@
   letter-spacing: 0.4em;
   color: #c9b88a;
 }
+.autoAdvance{margin-top:8px;color:rgba(201,184,138,.65);font:9px var(--font-display);letter-spacing:.24em;animation:autoPulse 1.8s ease-in-out infinite}
+@keyframes autoPulse{0%,100%{opacity:.4}50%{opacity:1}}
 
 .progressGrid {
   display: grid;

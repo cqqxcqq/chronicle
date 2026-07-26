@@ -40,6 +40,7 @@ export default function SurvivalGame() {
   const [contextVisible, setContextVisible] = useState(false);
   const [resultVisible, setResultVisible] = useState(false);
   const [counterValues, setCounterValues] = useState<Record<number, number>>({});
+  const [transitionYear, setTransitionYear] = useState(SURVIVAL_ROUNDS[0].year);
   const [isPivotal, setIsPivotal] = useState(false);
   const [choiceHistory, setChoiceHistory] = useState<{ year: number; title: string; text: string; inheritance: string }[]>([]);
   const [lastInheritance, setLastInheritance] = useState("");
@@ -156,6 +157,35 @@ const handleContinue = useCallback(() => {
       setPhase("complete");
     }
   }, [roundIdx]);
+
+  useEffect(() => {
+    if (phase !== "progress") return;
+    const isLastRound = roundIdx === SURVIVAL_ROUNDS.length - 1;
+    const nextYear = isLastRound ? round.year : SURVIVAL_ROUNDS[roundIdx + 1].year;
+    const holdDuration = round.sdgProgress.length > 0 ? 2600 : 900;
+    const transitionDuration = isLastRound ? 900 : 1800;
+    let transitionRaf = 0;
+
+    const startTimer = window.setTimeout(() => {
+      const startedAt = performance.now();
+      const animateYear = (now: number) => {
+        const progress = Math.min((now - startedAt) / transitionDuration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setTransitionYear(Math.round(round.year + (nextYear - round.year) * eased));
+        if (progress < 1) {
+          transitionRaf = requestAnimationFrame(animateYear);
+        } else {
+          handleContinue();
+        }
+      };
+      transitionRaf = requestAnimationFrame(animateYear);
+    }, holdDuration);
+
+    return () => {
+      clearTimeout(startTimer);
+      cancelAnimationFrame(transitionRaf);
+    };
+  }, [phase, roundIdx, round.year, round.sdgProgress.length, handleContinue]);
 
 const handleRestart = useCallback(() => {
     clearTimers();
@@ -278,7 +308,7 @@ const handleRestart = useCallback(() => {
             <Image src={round.image} alt={round.imageAlt} fill sizes="100vw" priority className={styles.roundImage} />
             <div className={styles.imageOverlay} />
             <div className={styles.imageYearOverlay}>
-              <h1 className={styles.imageYear}>{round.year}</h1>
+              <h1 className={styles.imageYear} aria-live="polite">{transitionYear}</h1>
               <p className={styles.imageAge}>Generation {roundIdx + 1} of {SURVIVAL_ROUNDS.length}</p>
             </div>
           </div>
@@ -302,9 +332,9 @@ const handleRestart = useCallback(() => {
             ) : (
               <p className={styles.progressLabel}>THE BEGINNING</p>
             )}
-            <button className={styles.btnContinue} onClick={handleContinue}>
-              {roundIdx < SURVIVAL_ROUNDS.length - 1 ? "CONTINUE" : "SEE THE FINAL"}
-            </button>
+            <p className={styles.autoAdvance}>
+              {roundIdx < SURVIVAL_ROUNDS.length - 1 ? "THE NEXT GENERATION IS APPROACHING" : "PREPARING THE ARCHIVE"}
+            </p>
           </div>
         </div>
       </div>
@@ -337,7 +367,7 @@ const handleRestart = useCallback(() => {
               </div>
             )}
             {resultVisible && (
-              <button className={styles.btnContinue} onClick={() => setPhase("progress")}>
+              <button className={styles.btnContinue} onClick={() => { setTransitionYear(round.year); setPhase("progress"); }}>
                 CONTINUE
               </button>
             )}
