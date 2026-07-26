@@ -60,7 +60,7 @@ export const MILESTONE_STATS: MilestoneStat[] = [
     hook: "Science conquered disease. Industry connected continents. But war followed close behind.",
     context: "Germ theory, vaccines, and modern surgery began to save lives on an industrial scale. The telegraph, telephone, and radio collapsed distance. But the same industrial capacity that built hospitals also built battleships.",
     keyFact: "In 1918, the Spanish Flu killed 50 million people in 24 weeks — more than World War I had killed in four years.",
-    poverty: 82,
+    poverty: 72,
     lifeExpectancy: 32,
     childMortality: 360,
     literacy: 21,
@@ -89,7 +89,7 @@ export const MILESTONE_STATS: MilestoneStat[] = [
   {
     hook: "The world agreed on a plan to end poverty, heal the planet, and leave no one behind.",
     context: "The Sustainable Development Goals represent humanity's most ambitious compact: 17 goals, 169 targets, one deadline. Progress is real but uneven. The question is no longer whether poverty can be ended, but whether we will choose to end it.",
-    keyFact: "Since 1990, extreme poverty has fallen from 36% to 8.5%. Child mortality has dropped from 93 to 37 per 1,000. Literacy has risen from 75% to 87%.",
+    keyFact: "Since 1990, extreme poverty has fallen from 36% to 10%. Child mortality has dropped from 93 to 43 per 1,000. Literacy has risen from 75% to 86%.",
     poverty: 10,
     lifeExpectancy: 72,
     childMortality: 43,
