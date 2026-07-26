@@ -24,7 +24,7 @@ export default function AnimatedNumber({
       ease: "easeOut",
     });
     return controls.stop;
-  }, [value, motionValue]);
+  }, [value, motionValue, shouldReduceMotion]);
 
   useMotionValueEvent(motionValue, "change", (latest) => {
     if (ref.current) {

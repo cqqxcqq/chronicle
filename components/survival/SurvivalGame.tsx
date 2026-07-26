@@ -6,9 +6,22 @@ import { SURVIVAL_ROUNDS } from "@/lib/survival-data";
 import { getJourneyProfile } from "@/lib/survival-data";
 import { soundEngine } from "@/lib/sound-engine";
 import ClosingSequence from "./ClosingSequence";
+import UnfinishedChapter from "./UnfinishedChapter";
 import styles from "./SurvivalGame.module.css";
 
-type Phase = "start" | "context" | "choice" | "result" | "progress" | "complete" | "closing";
+type Phase = "start" | "context" | "choice" | "result" | "progress" | "complete" | "unfinished" | "closing";
+type Traits = { health: number; knowledge: number; solidarity: number; resilience: number };
+const INITIAL_TRAITS: Traits = { health: 25, knowledge: 20, solidarity: 25, resilience: 25 };
+function choiceEffects(text: string, modifier: number): Traits {
+  const value = Math.max(2, Math.round(modifier * 100));
+  const lower = text.toLowerCase();
+  return {
+    health: /water|medicine|isolate|rest|rural|breast/.test(lower) ? value : 1,
+    knowledge: /document|memoir|medicine|hospital/.test(lower) ? value : 1,
+    solidarity: /share|volunteer|memoir/.test(lower) ? value : 1,
+    resilience: /flee|forage|isolate|rest|rebuild/.test(lower) ? value : 2,
+  };
+}
 
 type EraSound = "want" | "industry" | "catastrophe" | "recovery" | "acceleration" | "goals";
 
@@ -31,6 +44,8 @@ export default function SurvivalGame() {
   const [isPivotal, setIsPivotal] = useState(false);
   const [totalModifier, setTotalModifier] = useState(0);
   const [choiceHistory, setChoiceHistory] = useState<{ year: number; title: string; text: string; pivotal?: boolean }[]>([]);
+  const [traits, setTraits] = useState<Traits>(INITIAL_TRAITS);
+  const [lastEffects, setLastEffects] = useState<Traits>(INITIAL_TRAITS);
 
   const round = SURVIVAL_ROUNDS[roundIdx];
   const timersRef = useRef<number[]>([]);
@@ -79,12 +94,20 @@ export default function SurvivalGame() {
   }, [phase, roundIdx, addTimer, round.year]);
 
 const handleChoice = useCallback((choiceIdx: number) => {
+    const effects = choiceEffects(round.choices[choiceIdx].text, round.choices[choiceIdx].modifier);
     setSelectedChoice(choiceIdx);
     setResultVisible(false);
     setCounterValues({});
     setIsPivotal(round.choices[choiceIdx].pivotal === true);
     setTotalModifier(prev => prev + round.choices[choiceIdx].modifier);
     setChoiceHistory(prev => [...prev, { year: round.year, title: round.title, text: round.choices[choiceIdx].text, pivotal: round.choices[choiceIdx].pivotal }]);
+    setLastEffects(effects);
+    setTraits(prev => ({
+      health: Math.min(100, prev.health + effects.health),
+      knowledge: Math.min(100, prev.knowledge + effects.knowledge),
+      solidarity: Math.min(100, prev.solidarity + effects.solidarity),
+      resilience: Math.min(100, prev.resilience + effects.resilience),
+    }));
     setPhase("result");
     if (!soundEngine.isMuted()) soundEngine.playClick();
 
@@ -156,6 +179,7 @@ const handleRestart = useCallback(() => {
     setCounterValues({});
     setTotalModifier(0);
     setChoiceHistory([]);
+    setTraits(INITIAL_TRAITS);
   }, [clearTimers, clearRafs]);
 
   const completeStats = useMemo(() => {
@@ -231,14 +255,15 @@ const handleRestart = useCallback(() => {
       <ClosingSequence onEnd={handleRestart} journeyProfile={profile} choiceHistory={choiceHistory} />
     );
   }
+  if (phase === "unfinished") return <div className={styles.completeOverlay}><UnfinishedChapter onContinue={() => setPhase("closing")} /></div>;
 
   if (phase === "start") {
     return (
       <div className={styles.container}>
         <div className={styles.startScreen}>
           <p className={styles.startTitle}>YOU WERE BORN IN 1800</p>
-<p className={styles.startBridge}>
-            Track humanity&apos;s journey across 4 Sustainable Development Goals.
+          <p className={styles.startBridge}>
+            You are a lineage, not one immortal person. Carry one family&apos;s memory across nine generations and four Sustainable Development Goals.
           </p>
           <p className={styles.startSubtitle}>
             9 moments. 226 years. From 89% poverty to 8.5%.
@@ -259,6 +284,7 @@ const handleRestart = useCallback(() => {
     return (
       <div className={styles.container}>
         <div className={styles.playingScreen}>
+          <div className={styles.traitBar} aria-label="Inherited lineage traits">{Object.entries(traits).map(([name, value]) => <span key={name}><b>{name}</b> {value}</span>)}</div>
           {progressBar}
           <div className={styles.roundImageContainer}>
             <Image src={round.image} alt={round.imageAlt} fill sizes="100vw" priority className={styles.roundImage} />
@@ -297,9 +323,10 @@ const handleRestart = useCallback(() => {
     );
   }
 
-if (phase === "result") {
+  if (phase === "result") {
     const choice = selectedChoice !== null ? round.choices[selectedChoice] : null;
     const outcome = choice?.outcome ?? "";
+    const risk = choice ? (choice.modifier >= 0.07 ? "Protected the lineage" : choice.modifier >= 0.03 ? "The lineage endured" : "The lineage was left exposed") : "";
     return (
       <div className={styles.container}>
         {isPivotal && <div className={styles.pivotalFlash} />}
@@ -318,6 +345,9 @@ if (phase === "result") {
             {resultVisible && (
               <div className={`${styles.resultContent} ${styles.fadeIn}`}>
                 <p className={styles.resultNarrative}>{outcome}</p>
+                <p className={styles.riskLabel}>{risk}</p>
+                <p className={styles.effects} aria-live="polite">Inherited: +{lastEffects.health} health · +{lastEffects.knowledge} knowledge · +{lastEffects.solidarity} solidarity · +{lastEffects.resilience} resilience</p>
+                {choice?.altOutcome && <details className={styles.roadNotTaken}><summary>THE ROAD NOT TAKEN</summary><p>{choice.altOutcome}</p></details>}
               </div>
             )}
             {resultVisible && (
@@ -364,8 +394,8 @@ if (phase === "result") {
           In 1800, no one imagined this world. You lived to see it.
         </p>
         <div className={styles.completeActions}>
-          <button className={styles.btnClosing} onClick={() => setPhase("closing")}>
-            SEE YOUR LEGACY &rarr;
+          <button className={styles.btnClosing} onClick={() => setPhase("unfinished")}>
+            FACE WHAT REMAINS →
           </button>
         </div>
       </div>

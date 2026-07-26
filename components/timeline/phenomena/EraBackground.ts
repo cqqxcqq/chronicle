@@ -46,7 +46,7 @@ export const drawEraBackground = ({
   displayYear,
   width,
   height,
-  palette: _palette,
+  palette,
 }: DrawBackgroundParams) => {
   const era = ERAS.find((e) => displayYear >= e.start && displayYear <= e.end);
   if (!era) return;
@@ -75,7 +75,7 @@ export const drawEraBackground = ({
     ctx.globalAlpha = 0.65;
     ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
-    ctx.globalAlpha = 0.45;
+    ctx.globalAlpha = 0.45 + palette.flickerIntensity * 0.05;
     ctx.fillStyle = TINT_COLORS[era.id] ?? "rgba(8, 6, 4, 0.45)";
     ctx.fillRect(0, 0, width, height);
 

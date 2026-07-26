@@ -79,6 +79,12 @@ export default function TimelineBar({
     <div className={styles.bar}>
       <div
         className={styles.track}
+        role="slider"
+        aria-label="Historical year"
+        aria-valuemin={START_YEAR}
+        aria-valuemax={END_YEAR}
+        aria-valuenow={roundedYear}
+        tabIndex={0}
         ref={barRef}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}

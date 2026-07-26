@@ -44,8 +44,8 @@ export default function LegacyCard({ journeyProfile, choiceHistory }: LegacyCard
       <div id="legacy-card" className={styles.card}>
         <p className={styles.cardLabel}>MY JOURNEY</p>
         <div className={styles.cardDivider} />
-        <p className={styles.cardTitle}>I WAS BORN IN 1800</p>
-        <p className={styles.cardSubtitle}>I LIVED TO SEE 2026</p>
+        <p className={styles.cardTitle}>OUR STORY BEGAN IN 1800</p>
+        <p className={styles.cardSubtitle}>OUR MEMORY REACHED 2026</p>
         {journeyProfile && (
           <div className={styles.journeyTier}>
             <p className={styles.tierLabel}>{journeyProfile.title}</p>
@@ -97,7 +97,7 @@ export default function LegacyCard({ journeyProfile, choiceHistory }: LegacyCard
         )}
         <div className={styles.cardDivider} />
         <p className={styles.cardFooter}>
-          I witnessed humanity&apos;s greatest transformation.
+          One lineage witnessed humanity&apos;s greatest transformation.
         </p>
         <p className={styles.cardBrand}>CHRONICLE</p>
       </div>

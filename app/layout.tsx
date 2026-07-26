@@ -1,42 +1,20 @@
 import type { Metadata } from "next";
-import { Cinzel, EB_Garamond } from "next/font/google";
 import { SoundProvider } from "@/components/ui/SoundProvider";
 import PageTransition from "@/components/ui/PageTransition";
 import GlobalEscapeHandler from "@/components/ui/GlobalEscapeHandler";
 import "./globals.css";
 
-const cinzel = Cinzel({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-const ebGaramond = EB_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
-  variable: "--font-body",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   title: "Chronicle — A History of Human Progress",
-  description:
-    "Two centuries of human progress against poverty, disease, ignorance, and environmental destruction.",
+  description: "An evidence-led interactive history of humanity's uneven progress toward the Sustainable Development Goals.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${cinzel.variable} ${ebGaramond.variable}`}>
+    <html lang="en">
       <body>
-        <SoundProvider>
-          <PageTransition>{children}</PageTransition>
-        </SoundProvider>
+        <a className="skipLink" href="#main-content">Skip to content</a>
+        <SoundProvider><PageTransition>{children}</PageTransition></SoundProvider>
         <GlobalEscapeHandler />
       </body>
     </html>

@@ -13,7 +13,7 @@ export default function TimelinePage() {
       <Nav />
       <ScrollOrchestrator>
         {(ctx: ScrollContext) => (
-          <>
+          <main id="main-content">
             <TimelineContainer
               displayYear={ctx.displayYear}
               milestoneIndex={ctx.milestoneIndex}
@@ -23,7 +23,7 @@ export default function TimelinePage() {
               onYearChange={ctx.onYearChange}
               onSnapToMilestone={ctx.onSnapToMilestone}
             />
-          </>
+          </main>
         )}
       </ScrollOrchestrator>
     </ErrorBoundary>

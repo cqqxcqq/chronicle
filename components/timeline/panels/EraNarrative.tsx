@@ -70,6 +70,11 @@ export default function EraNarrative({
         <hr className={styles.divider} />
 
         <p className={styles.hook}>{interpolated.hook}</p>
+        <p className={styles.caveat}>
+          {isLast
+            ? "The gains are real, but unequal and fragile: conflict, climate shocks, and exclusion are slowing progress."
+            : "Rounded global reconstruction — lived experience differed sharply by place, class, gender, and empire."}
+        </p>
 
         <div className={styles.stats}>
           <div className={styles.stat}>
@@ -103,15 +108,17 @@ export default function EraNarrative({
         )}
 
         {isLast && (
-          <Link href="/survival" className={styles.survivalBtn}>
-            YOUR STORY &rarr;
-          </Link>
+          <>
+            <p className={styles.unfinished}>Only 35% of assessable SDG targets were on track or making moderate progress in the UN&apos;s 2025 assessment.</p>
+            <Link href="/survival" className={styles.survivalBtn}>YOUR STORY →</Link>
+          </>
         )}
+        <Link href="/about#methodology" className={styles.evidenceLink}>SOURCES · METHOD · UNCERTAINTY</Link>
       </div>
 
       {!isLast && (
         <p className={styles.scrollHint}>
-          scroll to travel through time
+          scroll or swipe · arrow keys jump eras · drag the timeline
         </p>
       )}
     </div>

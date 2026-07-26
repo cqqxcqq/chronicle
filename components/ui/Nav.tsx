@@ -9,6 +9,7 @@ const links = [
   { href: "/", label: "Opening" },
   { href: "/timeline", label: "Timeline" },
   { href: "/survival", label: "Your Life" },
+  { href: "/about", label: "Evidence" },
 ];
 
 export default function Nav() {
@@ -16,7 +17,7 @@ export default function Nav() {
   const { muted, toggle } = useSound();
 
   return (
-    <nav className={styles.nav}>
+    <nav className={styles.nav} aria-label="Primary navigation">
       <div className={styles.inner}>
         <div className={styles.left}>
           <Link href="/" className={styles.logo}>
@@ -36,6 +37,7 @@ export default function Nav() {
                 key={link.href}
                 href={link.href}
                 className={`${styles.link} ${isActive ? styles.active : ""}`}
+                aria-current={isActive ? "page" : undefined}
               >
                 {link.label}
               </Link>

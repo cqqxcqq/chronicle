@@ -31,7 +31,6 @@ const literature = [
 ];
 
 let textCache: HTMLCanvasElement | null = null;
-let _cachedLiteracyRate = -1;
 let cachedBlur = -1;
 
 const buildCache = (literacyRate: number, w: number, h: number) => {
@@ -48,8 +47,6 @@ const buildCache = (literacyRate: number, w: number, h: number) => {
   }
 
   cachedBlur = blurAmount;
-  _cachedLiteracyRate = literacyRate;
-
   textCache = document.createElement("canvas");
   textCache.width = w * dpr;
   textCache.height = h * dpr;

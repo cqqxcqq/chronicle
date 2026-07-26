@@ -71,7 +71,7 @@ interface ClosingSequenceProps {
 
 export default function ClosingSequence({ onEnd, journeyProfile, choiceHistory }: ClosingSequenceProps) {
   const lines = [
-    "You have seen two hundred years of human struggle.",
+    "Your lineage has carried two hundred years of human struggle.",
     "From darkness to light. From ignorance to knowledge.",
     "The story is not over.",
   ];

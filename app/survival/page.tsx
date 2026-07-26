@@ -8,10 +8,10 @@ import styles from "./page.module.css";
 export default function SurvivalPage() {
   return (
     <ErrorBoundary>
-      <div className={styles.page}>
+      <main id="main-content" className={styles.page}>
         <Nav />
         <SurvivalGame />
-      </div>
+      </main>
     </ErrorBoundary>
   );
 }

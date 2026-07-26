@@ -80,6 +80,9 @@
   opacity: 0.95;
   text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.7);
 }
+.caveat,.unfinished{max-width:560px;text-align:center;color:rgba(232,224,208,.55);font:italic 12px/1.5 var(--font-body)}
+.unfinished{color:#d6ccb0;font-size:14px}
+.evidenceLink{pointer-events:auto;color:rgba(201,184,138,.65);font:9px var(--font-display);letter-spacing:.18em;text-decoration:underline;text-underline-offset:4px}
 
 .stats {
   display: flex;
