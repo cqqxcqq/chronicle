@@ -11,6 +11,7 @@ interface LegacyCardProps {
 
 export default function LegacyCard({ journeyProfile, choiceHistory }: LegacyCardProps) {
   const [copied, setCopied] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const handleShare = useCallback(async () => {
     const tierText = journeyProfile ? ` I was "${journeyProfile.title}."` : "";
@@ -41,6 +42,11 @@ export default function LegacyCard({ journeyProfile, choiceHistory }: LegacyCard
 
   return (
     <div className={styles.cardOuter}>
+      {!expanded ? (
+        <button className={styles.shareBtn} onClick={() => setExpanded(true)} aria-expanded="false">
+          SHARE MY STORY
+        </button>
+      ) : <>
       <div id="legacy-card" className={styles.card}>
         <p className={styles.cardLabel}>MY JOURNEY</p>
         <div className={styles.cardDivider} />
@@ -104,9 +110,11 @@ export default function LegacyCard({ journeyProfile, choiceHistory }: LegacyCard
 
       <div className={styles.actions}>
         <button className={styles.shareBtn} onClick={handleShare}>
-          {copied ? "COPIED" : "SHARE MY STORY"}
+          {copied ? "COPIED" : "SHARE THIS CARD"}
         </button>
+        <button className={styles.closeBtn} onClick={() => setExpanded(false)}>CLOSE</button>
       </div>
+      </>}
     </div>
   );
 }

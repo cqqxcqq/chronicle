@@ -123,6 +123,8 @@
   opacity: 0.8;
 }
 .sourceMark{pointer-events:auto;color:#d4c5a0;font-style:normal;text-decoration:none}
+.detailsBtn{border:0;border-bottom:1px solid rgba(201,184,138,.45);padding:5px 2px;background:transparent;color:rgba(225,210,170,.78);font:9px var(--font-display);letter-spacing:.2em;cursor:pointer}
+.details{display:flex;flex-direction:column;align-items:center;gap:10px;max-width:620px;animation:panelFadeIn .25s ease-out}
 
 .statDivider {
   width: 1px;
@@ -272,7 +274,6 @@
   .stats {
     gap: 12px;
   }
-  .stat:nth-child(n + 4),
   .statDivider { display: none; }
   .figure, .scrollHint { display: none; }
   .caveat { max-width: 88vw; font-size: 11px; }

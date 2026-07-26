@@ -7,10 +7,9 @@ import { soundEngine } from "@/lib/sound-engine";
 import styles from "./OpeningSequence.module.css";
 
 const lines = [
-  "In 1800, nine of every ten people on earth lived in extreme poverty.",
-  "Most children did not live to see their fifth birthday.",
-  "Follow one family's memory, carried from generation to generation.",
-  "This is what happened next.",
+  "In 1800, poverty shaped almost every life.",
+  "A family archive begins.",
+  "Turn the first page.",
 ];
 
 const CHAR_DELAY = 0.04;

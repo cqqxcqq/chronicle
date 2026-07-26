@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import Link from "next/link";
 import LegacyCard from "./LegacyCard";
 import type { JourneyProfile } from "@/lib/survival-data";
 import styles from "./ClosingSequence.module.css";
@@ -151,7 +152,7 @@ export default function ClosingSequence({ onEnd, journeyProfile, choiceHistory }
 
   useEffect(() => {
     if (!showCounters) return;
-    const t = window.setTimeout(() => setShowTitle(true), 7000);
+    const t = window.setTimeout(() => setShowTitle(true), 4500);
     addTimer(t);
     return () => clearTimeout(t);
   }, [showCounters, addTimer]);
@@ -237,10 +238,6 @@ export default function ClosingSequence({ onEnd, journeyProfile, choiceHistory }
               <AnimatedCounter from={89} to={8.5} suffix="%" label="SDG 1 · poverty" delay={500} duration={3000} decimals={1} />
               <div className={styles.counterDivider} />
               <AnimatedCounter from={460} to={37} label="SDG 3 · under-five deaths / 1,000" delay={1000} duration={3000} />
-              <div className={styles.counterDivider} />
-              <AnimatedCounter from={12} to={87} suffix="%" label="SDG 4 · literacy" delay={1500} duration={3000} />
-              <div className={styles.counterDivider} />
-              <AnimatedCounter from={29} to={73} suffix=" yr" label="SDG 3 · life expectancy" delay={2000} duration={3000} />
             </div>
           </motion.div>
         )}
@@ -277,23 +274,11 @@ export default function ClosingSequence({ onEnd, journeyProfile, choiceHistory }
             >
               <LegacyCard journeyProfile={journeyProfile} choiceHistory={choiceHistory} />
             </motion.div>
-            <motion.p
-              className={styles.prompt}
-              initial={{ opacity: 0, y: 0 }}
-              animate={{
-                opacity: [0.2, 0.6, 0.2],
-                y: [0, -6, 0],
-              }}
-              transition={{
-                duration: 2.0,
-                delay: 3.0,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              onClick={handleClick}
-            >
-              CLICK TO BEGIN AGAIN
-            </motion.p>
+            <motion.div className={styles.nextActions} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
+              <Link href="/timeline">RETURN TO THE TIMELINE</Link>
+              <Link href="/about#sources">FOLLOW THE EVIDENCE</Link>
+              <button type="button" onClick={handleClick}>BEGIN AGAIN</button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

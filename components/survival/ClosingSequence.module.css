@@ -11,11 +11,14 @@
 .lineBlock { composes: lineBlock from global; }
 .line { composes: line from global; }
 .char { composes: char from global; }
-.titleBlock { composes: titleBlock from global; }
+.titleBlock { composes: titleBlock from global; max-height:100vh; overflow-y:auto; padding:48px 20px; }
 .title { composes: title from global; }
 .subtitle { composes: subtitle from global; }
 .prompt { composes: prompt from global; }
 .skipBtn { composes: skipBtn from global; }
+.nextActions{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:24px;flex-wrap:wrap}
+.nextActions a,.nextActions button{background:transparent;border:1px solid rgba(200,184,138,.22);padding:10px 14px;color:rgba(232,224,208,.58);font:9px var(--font-display);letter-spacing:.16em;cursor:pointer}
+.nextActions a:hover,.nextActions button:hover{border-color:#c9b88a;color:#d4c5a0}
 
 /* --- YEAR SCREEN --- */
 .yearScreen {

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { MILESTONES, MILESTONE_STATS } from "@/lib/timeline-config";
 import styles from "./EraNarrative.module.css";
 
@@ -19,6 +19,8 @@ export default function EraNarrative({
   milestoneIndex,
 }: EraNarrativeProps) {
   const milestone = MILESTONES[milestoneIndex];
+  const [expandedEra, setExpandedEra] = useState<number | null>(null);
+  const detailsOpen = expandedEra === milestoneIndex;
   const isLast = milestoneIndex === MILESTONES.length - 1;
   const dataKind = displayYear >= 2026
     ? "LATEST AVAILABLE ESTIMATES"
@@ -67,13 +69,6 @@ export default function EraNarrative({
         <hr className={styles.divider} />
 
         <p className={styles.hook}>{interpolated.hook}</p>
-        <p className={styles.caveat}>
-          {isLast
-            ? "War displaces families, heat erases harvests, and debt closes classrooms; the global average hides each reversal."
-            : "Rounded reconstruction. Records thin out as the timeline moves backward; local lives rarely resembled the global average."}
-        </p>
-        <p className={styles.dataKind}>{dataKind}</p>
-
         <div className={styles.stats}>
           <div className={styles.stat}>
             <span className={styles.statValue}>{interpolated.poverty}%</span>
@@ -84,25 +79,36 @@ export default function EraNarrative({
             <span className={styles.statValue}>{interpolated.lifeExpectancy} yr</span>
             <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 3</span> · life expectancy <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for life expectancy data">↗</Link></span>
           </div>
-          <div className={styles.statDivider} />
-          <div className={styles.stat}>
-            <span className={styles.statValue}>{interpolated.childMortality}</span>
-            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 3</span> · under-five deaths / 1,000 <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for under-five mortality data">↗</Link></span>
-          </div>
-          <div className={styles.statDivider} />
-          <div className={styles.stat}>
-            <span className={styles.statValue}>{interpolated.literacy}%</span>
-            <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 4</span> · literacy <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for literacy data">↗</Link></span>
-          </div>
+          {detailsOpen && <>
+            <div className={styles.statDivider} />
+            <div className={styles.stat}>
+              <span className={styles.statValue}>{interpolated.childMortality}</span>
+              <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 3</span> · under-five / 1,000 <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for under-five mortality data">↗</Link></span>
+            </div>
+            <div className={styles.statDivider} />
+            <div className={styles.stat}>
+              <span className={styles.statValue}>{interpolated.literacy}%</span>
+              <span className={styles.statLabel}><span className={styles.sdgNum}>SDG 4</span> · literacy <Link className={styles.sourceMark} href="/about#sources" aria-label="Source for literacy data">↗</Link></span>
+            </div>
+          </>}
         </div>
 
+        <button className={styles.detailsBtn} type="button" aria-expanded={detailsOpen} onClick={() => setExpandedEra(detailsOpen ? null : milestoneIndex)}>
+          {detailsOpen ? "LESS" : "CONTEXT + EVIDENCE"}
+        </button>
+        {detailsOpen && <div className={styles.details}>
+          <p className={styles.caveat}>
+            {isLast
+              ? "War displaces families, heat erases harvests, and debt closes classrooms; the global average hides each reversal."
+              : "Rounded reconstruction. Records thin out as the timeline moves backward; local lives rarely resembled the global average."}
+          </p>
+          <p className={styles.dataKind}>{dataKind}</p>
+          {isLast && <p className={styles.unfinished}>In the UN&apos;s 2025 assessment, only 35% of measurable targets were on track or making moderate progress.</p>}
+          <Link href="/about#methodology" className={styles.evidenceLink}>SOURCES · METHOD · UNCERTAINTY</Link>
+        </div>}
         {isLast && (
-          <>
-            <p className={styles.unfinished}>In the UN&apos;s 2025 assessment, only 35% of measurable targets were on track or making moderate progress.</p>
-            <Link href="/survival" className={styles.survivalBtn}>YOUR STORY →</Link>
-          </>
+          <Link href="/survival" className={styles.survivalBtn}>YOUR STORY →</Link>
         )}
-        <Link href="/about#methodology" className={styles.evidenceLink}>SOURCES · METHOD · UNCERTAINTY</Link>
       </div>
 
       {!isLast && (
