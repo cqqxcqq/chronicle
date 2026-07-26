@@ -1,6 +1,6 @@
 .callout {
   position: absolute;
-  top: 80px;
+  bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 30;
@@ -52,7 +52,7 @@
 
 @media (max-width: 768px) {
   .callout {
-    top: 60px;
+    bottom: 80px;
     max-width: 90vw;
   }
 }
