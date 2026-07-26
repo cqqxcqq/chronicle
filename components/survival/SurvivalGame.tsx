@@ -30,7 +30,7 @@ export default function SurvivalGame() {
   const [counterValues, setCounterValues] = useState<Record<number, number>>({});
   const [isPivotal, setIsPivotal] = useState(false);
   const [totalModifier, setTotalModifier] = useState(0);
-  const [choiceHistory, setChoiceHistory] = useState<{ year: number; title: string; text: string }[]>([]);
+  const [choiceHistory, setChoiceHistory] = useState<{ year: number; title: string; text: string; pivotal?: boolean }[]>([]);
 
   const round = SURVIVAL_ROUNDS[roundIdx];
   const timersRef = useRef<number[]>([]);
@@ -84,7 +84,7 @@ const handleChoice = useCallback((choiceIdx: number) => {
     setCounterValues({});
     setIsPivotal(round.choices[choiceIdx].pivotal === true);
     setTotalModifier(prev => prev + round.choices[choiceIdx].modifier);
-    setChoiceHistory(prev => [...prev, { year: round.year, title: round.title, text: round.choices[choiceIdx].text }]);
+    setChoiceHistory(prev => [...prev, { year: round.year, title: round.title, text: round.choices[choiceIdx].text, pivotal: round.choices[choiceIdx].pivotal }]);
     setPhase("result");
     if (!soundEngine.isMuted()) soundEngine.playClick();
 
@@ -228,7 +228,7 @@ const handleRestart = useCallback(() => {
   if (phase === "closing") {
     const profile = getJourneyProfile(totalModifier);
     return (
-      <ClosingSequence onEnd={handleRestart} journeyProfile={profile} />
+      <ClosingSequence onEnd={handleRestart} journeyProfile={profile} choiceHistory={choiceHistory} />
     );
   }
 

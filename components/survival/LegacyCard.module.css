@@ -7,9 +7,9 @@
 
 .card {
   width: 100%;
-  max-width: 400px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  max-width: 420px;
+  background: rgba(20, 18, 14, 0.9);
+  border: 1px solid rgba(200, 184, 138, 0.15);
   border-radius: 4px;
   padding: 32px;
   display: flex;
@@ -22,41 +22,42 @@
   font-family: var(--font-display);
   font-size: 10px;
   letter-spacing: 0.4em;
-  color: var(--color-gold);
+  color: #c9b88a;
 }
 
 .cardDivider {
   width: 100%;
   height: 1px;
-  background: var(--color-border);
+  background: rgba(200, 184, 138, 0.15);
 }
 
 .cardTitle {
   font-family: var(--font-display);
-  font-size: 20px;
-  color: var(--color-bone);
-  letter-spacing: 0.1em;
+  font-size: 18px;
+  color: #e8dcc0;
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 16px rgba(0, 0, 0, 0.8);
 }
 
 .cardSubtitle {
   font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--color-bone-ghost);
+  font-size: 13px;
+  color: rgba(200, 188, 158, 0.5);
   letter-spacing: 0.1em;
 }
 
 .journeyTier {
   text-align: center;
   padding: 12px 0;
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
+  border-top: 1px solid rgba(200, 184, 138, 0.12);
+  border-bottom: 1px solid rgba(200, 184, 138, 0.12);
   width: 100%;
 }
 
 .tierLabel {
   font-family: var(--font-display);
   font-size: 14px;
-  color: var(--color-gold);
+  color: #d4c5a0;
   letter-spacing: 0.15em;
   margin-bottom: 6px;
 }
@@ -64,7 +65,7 @@
 .tierDesc {
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--color-bone-dim);
+  color: rgba(200, 188, 158, 0.5);
   font-style: italic;
   line-height: 1.6;
 }
@@ -80,36 +81,114 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
 }
 
-.cardStatValue {
+.cardStatFrom {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: rgba(200, 188, 158, 0.45);
+}
+
+.cardStatArrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(200, 184, 138, 0.3);
+  line-height: 1;
+}
+
+.cardStatTo {
   font-family: var(--font-display);
   font-size: 18px;
-  color: var(--color-gold);
+  color: #d4c5a0;
+  letter-spacing: 0.04em;
 }
 
 .cardStatLabel {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 0.15em;
-  color: var(--color-bone-ghost);
+  color: rgba(200, 188, 158, 0.4);
+  margin-top: 2px;
+}
+
+.cardJourney {
+  width: 100%;
+  padding: 4px 0;
+}
+
+.cardJourneyLabel {
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: rgba(200, 184, 138, 0.45);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.cardJourneyTimeline {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cardJourneyStep {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.cardJourneyPivotal .cardJourneyText {
+  color: #d4c5a0;
+}
+
+.cardJourneyPivotal .cardJourneyDot {
+  background: #d4c5a0;
+  box-shadow: 0 0 6px rgba(212, 197, 160, 0.5);
+}
+
+.cardJourneyYear {
+  font-family: var(--font-display);
+  font-size: 11px;
+  color: #c9b88a;
+  letter-spacing: 0.08em;
+  min-width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.cardJourneyDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(200, 184, 138, 0.4);
+  flex-shrink: 0;
+}
+
+.cardJourneyText {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(200, 188, 158, 0.5);
+  font-style: italic;
+  text-align: left;
+  line-height: 1.4;
 }
 
 .cardFooter {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 12px;
   font-style: italic;
-  color: var(--color-bone-dim);
+  color: rgba(200, 188, 158, 0.45);
   text-align: center;
   line-height: 1.6;
 }
 
 .cardBrand {
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 0.5em;
-  color: var(--color-gold-muted);
+  color: rgba(200, 184, 138, 0.3);
 }
 
 .actions {
@@ -121,9 +200,9 @@
   font-family: var(--font-display);
   font-size: 11px;
   letter-spacing: 0.15em;
-  color: var(--color-bone);
+  color: rgba(200, 188, 158, 0.6);
   background: transparent;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(200, 184, 138, 0.2);
   padding: 10px 20px;
   cursor: pointer;
   transition: border-color var(--duration-fast) var(--ease-smooth),
@@ -131,8 +210,8 @@
 }
 
 .shareBtn:hover {
-  border-color: var(--color-border-bright);
-  color: var(--color-gold);
+  border-color: rgba(200, 184, 138, 0.4);
+  color: #d4c5a0;
 }
 
 @media (max-width: 480px) {
@@ -142,10 +221,10 @@
   }
 
   .cardTitle {
-    font-size: 16px;
+    font-size: 15px;
   }
 
-  .cardStatValue {
+  .cardStatTo {
     font-size: 15px;
   }
 
@@ -154,6 +233,10 @@
   }
 
   .tierDesc {
+    font-size: 11px;
+  }
+
+  .cardJourneyText {
     font-size: 11px;
   }
 

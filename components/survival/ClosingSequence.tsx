@@ -66,9 +66,10 @@ function AnimatedCounter({
 interface ClosingSequenceProps {
   onEnd: () => void;
   journeyProfile: JourneyProfile;
+  choiceHistory?: { year: number; title: string; text: string; pivotal?: boolean }[];
 }
 
-export default function ClosingSequence({ onEnd, journeyProfile }: ClosingSequenceProps) {
+export default function ClosingSequence({ onEnd, journeyProfile, choiceHistory }: ClosingSequenceProps) {
   const lines = [
     "You have seen two hundred years of human struggle.",
     "From darkness to light. From ignorance to knowledge.",
@@ -228,10 +229,13 @@ export default function ClosingSequence({ onEnd, journeyProfile }: ClosingSequen
             transition={{ duration: 1.0 }}
           >
             <p className={styles.countersLabel}>WHAT CHANGED</p>
-            <div className={styles.countersGrid}>
+            <div className={styles.countersRow}>
               <AnimatedCounter from={89} to={8.5} suffix="%" label="SDG 1 · poverty" delay={500} duration={3000} decimals={1} />
+              <div className={styles.counterDivider} />
               <AnimatedCounter from={460} to={37} label="SDG 3 · child deaths" delay={1000} duration={3000} />
+              <div className={styles.counterDivider} />
               <AnimatedCounter from={12} to={87} suffix="%" label="SDG 4 · literacy" delay={1500} duration={3000} />
+              <div className={styles.counterDivider} />
               <AnimatedCounter from={29} to={73} suffix=" yr" label="SDG 3 · life expectancy" delay={2000} duration={3000} />
             </div>
           </motion.div>
@@ -267,7 +271,7 @@ export default function ClosingSequence({ onEnd, journeyProfile }: ClosingSequen
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.0, delay: 1.5 }}
             >
-              <LegacyCard journeyProfile={journeyProfile} />
+              <LegacyCard journeyProfile={journeyProfile} choiceHistory={choiceHistory} />
             </motion.div>
             <motion.p
               className={styles.prompt}

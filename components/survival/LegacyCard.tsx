@@ -6,9 +6,10 @@ import styles from "./LegacyCard.module.css";
 
 interface LegacyCardProps {
   journeyProfile?: JourneyProfile;
+  choiceHistory?: { year: number; title: string; text: string; pivotal?: boolean }[];
 }
 
-export default function LegacyCard({ journeyProfile }: LegacyCardProps) {
+export default function LegacyCard({ journeyProfile, choiceHistory }: LegacyCardProps) {
   const [copied, setCopied] = useState(false);
 
   const handleShare = useCallback(async () => {
@@ -53,22 +54,47 @@ export default function LegacyCard({ journeyProfile }: LegacyCardProps) {
         )}
         <div className={styles.cardStats}>
           <div className={styles.cardStat}>
-            <span className={styles.cardStatValue}>89% &rarr; 8.5%</span>
+            <span className={styles.cardStatFrom}>89%</span>
+            <span className={styles.cardStatArrow}>&rarr;</span>
+            <span className={styles.cardStatTo}>8.5%</span>
             <span className={styles.cardStatLabel}>POVERTY</span>
           </div>
           <div className={styles.cardStat}>
-            <span className={styles.cardStatValue}>460 &rarr; 37</span>
+            <span className={styles.cardStatFrom}>460</span>
+            <span className={styles.cardStatArrow}>&rarr;</span>
+            <span className={styles.cardStatTo}>37</span>
             <span className={styles.cardStatLabel}>CHILD DEATHS</span>
           </div>
           <div className={styles.cardStat}>
-            <span className={styles.cardStatValue}>12% &rarr; 87%</span>
+            <span className={styles.cardStatFrom}>12%</span>
+            <span className={styles.cardStatArrow}>&rarr;</span>
+            <span className={styles.cardStatTo}>87%</span>
             <span className={styles.cardStatLabel}>LITERACY</span>
           </div>
           <div className={styles.cardStat}>
-            <span className={styles.cardStatValue}>29 &rarr; 73 yr</span>
+            <span className={styles.cardStatFrom}>29 yr</span>
+            <span className={styles.cardStatArrow}>&rarr;</span>
+            <span className={styles.cardStatTo}>73 yr</span>
             <span className={styles.cardStatLabel}>LIFE EXPECTANCY</span>
           </div>
         </div>
+        {choiceHistory && choiceHistory.length > 0 && (
+          <>
+            <div className={styles.cardDivider} />
+            <div className={styles.cardJourney}>
+              <p className={styles.cardJourneyLabel}>YOUR CHOICES</p>
+              <div className={styles.cardJourneyTimeline}>
+                {choiceHistory.map((entry, i) => (
+                  <div key={i} className={`${styles.cardJourneyStep} ${entry.pivotal ? styles.cardJourneyPivotal : ""}`}>
+                    <span className={styles.cardJourneyYear}>{entry.year}</span>
+                    <span className={styles.cardJourneyDot} />
+                    <span className={styles.cardJourneyText}>{entry.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
         <div className={styles.cardDivider} />
         <p className={styles.cardFooter}>
           I witnessed humanity&apos;s greatest transformation.
