@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { MILESTONES, START_YEAR, END_YEAR, ERAS } from "@/lib/timeline-config";
+import { MILESTONES, START_YEAR, END_YEAR } from "@/lib/timeline-config";
 import styles from "./TimelineBar.module.css";
 
 interface TimelineBarProps {
@@ -84,20 +84,6 @@ export default function TimelineBar({
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
       >
-        {ERAS.map((era) => {
-          const left = yearToPercent(era.start);
-          const width = yearToPercent(era.end) - left;
-          return (
-            <div
-              key={era.id}
-              className={styles.eraSegment}
-              style={{ left: `${left}%`, width: `${width}%` }}
-            >
-              <span className={styles.eraLabel}>{era.label.replace("The ", "")}</span>
-            </div>
-          );
-        })}
-
         {MILESTONES.map((m, i) => (
           <button
             key={m.year}
